@@ -1,0 +1,21 @@
+580094d1c000-580094d1e000 r--p 00000000 00:48 562949953557745            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/results/e040_quick_holdout_linux/bench.bin
+580094d1e000-580094d6f000 r-xp 00002000 00:48 562949953557745            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/results/e040_quick_holdout_linux/bench.bin
+580094d6f000-580094d7a000 r--p 00053000 00:48 562949953557745            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/results/e040_quick_holdout_linux/bench.bin
+580094d7b000-580094d7d000 rw-p 0005e000 00:48 562949953557745            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/results/e040_quick_holdout_linux/bench.bin
+70c5815d1000-70c5815d2000 r--p 00000000 00:48 562949953557188            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss128.so
+70c5815d2000-70c5815db000 r-xp 00001000 00:48 562949953557188            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss128.so
+70c5815db000-70c5815e0000 r--p 0000a000 00:48 562949953557188            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss128.so
+70c5815e0000-70c5815e2000 rw-p 0000e000 00:48 562949953557188            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss128.so
+70c5815e2000-70c5815e3000 r--p 00000000 00:48 562949953557184            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss256.so
+70c5815e3000-70c5815f6000 r-xp 00001000 00:48 562949953557184            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss256.so
+70c5815f6000-70c5815fb000 r--p 00014000 00:48 562949953557184            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss256.so
+70c5815fb000-70c5815fd000 rw-p 00018000 00:48 562949953557184            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss256.so
+70c5815fd000-70c5815ff000 rw-p 00000000 00:00 0 
+70c5815ff000-70c581603000 r--p 00000000 00:00 0                          [vvar]
+70c581603000-70c581605000 r--p 00000000 00:00 0                          [vvar_vclock]
+70c581605000-70c581607000 r-xp 00000000 00:00 0                          [vdso]
+70c581607000-70c581609000 r--p 00000000 08:30 19850                      /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+70c581609000-70c581633000 r-xp 00002000 08:30 19850                      /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+70c581633000-70c58163e000 r--p 0002c000 08:30 19850                      /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+70c58163f000-70c581643000 rw-p 00037000 08:30 19850                      /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7fff09277000-7fff09299000 rw-p 00000000 00:00 0                          [stack]

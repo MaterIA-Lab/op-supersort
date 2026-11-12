@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "failures": [],
+  "min_budget_ms": 3.6121134000000055,
+  "samples": 112,
+  "checked": 160,
+  "checked_arms": 128,
+  "checked_captures": 32
+}

@@ -1,0 +1,241 @@
+void supersort::execute_tree_plan<false, false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]
+
+/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/bench.exe:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000017df0 <void supersort::execute_tree_plan<false, false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]>:
+   17df0:	push   %r15
+   17df2:	push   %r14
+   17df4:	push   %r13
+   17df6:	push   %r12
+   17df8:	push   %rbp
+   17df9:	push   %rbx
+   17dfa:	sub    $0x38,%rsp
+   17dfe:	mov    0x8(%rdx),%rax
+   17e02:	mov    (%rdx),%rbx
+   17e05:	mov    %rsi,0x10(%rsp)
+   17e0a:	mov    %rax,0x8(%rsp)
+   17e0f:	cmp    %rax,%rbx
+   17e12:	je     17f3f <void supersort::execute_tree_plan<false, false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x14f>
+   17e18:	mov    %rdi,%r14
+   17e1b:	nopl   0x0(%rax,%rax,1)
+   17e20:	mov    0x8(%rbx),%rax
+   17e24:	mov    (%rbx),%r8
+   17e27:	mov    0x10(%rbx),%r15
+   17e2b:	lea    0x0(,%rax,4),%rsi
+   17e33:	lea    (%r14,%rsi,1),%rdx
+   17e37:	mov    (%rdx),%eax
+   17e39:	cmp    %eax,-0x4(%r14,%rsi,1)
+   17e3e:	jbe    17f30 <void supersort::execute_tree_plan<false, false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x140>
+   17e44:	mov    0x10(%rsp),%rcx
+   17e49:	shl    $0x2,%r8
+   17e4d:	shl    $0x2,%r15
+   17e51:	mov    %rdx,%rbp
+   17e54:	lea    (%r14,%r8,1),%r13
+   17e58:	lea    (%r14,%r15,1),%r12
+   17e5c:	mov    %r13,%rsi
+   17e5f:	lea    (%rcx,%r8,1),%r9
+   17e63:	mov    %r9,%rdi
+   17e66:	cmp    %r12,%rdx
+   17e69:	je     17eb4 <void supersort::execute_tree_plan<false, false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0xc4>
+   17e6b:	cmp    %r13,%rdx
+   17e6e:	jne    17e97 <void supersort::execute_tree_plan<false, false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0xa7>
+   17e70:	jmp    17eb4 <void supersort::execute_tree_plan<false, false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0xc4>
+   17e72:	data16 cs nopw 0x0(%rax,%rax,1)
+   17e7d:	nopl   (%rax)
+   17e80:	add    $0x4,%rbp
+   17e84:	mov    %eax,(%rdi)
+   17e86:	add    $0x4,%rdi
+   17e8a:	cmp    %rbp,%r12
+   17e8d:	je     17eb4 <void supersort::execute_tree_plan<false, false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0xc4>
+   17e8f:	cmp    %rsi,%rdx
+   17e92:	je     17eb4 <void supersort::execute_tree_plan<false, false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0xc4>
+   17e94:	mov    0x0(%rbp),%eax
+   17e97:	mov    (%rsi),%r11d
+   17e9a:	cmp    %eax,%r11d
+   17e9d:	ja     17e80 <void supersort::execute_tree_plan<false, false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x90>
+   17e9f:	add    $0x4,%rsi
+   17ea3:	mov    %r11d,(%rdi)
+   17ea6:	add    $0x4,%rdi
+   17eaa:	cmp    %rsi,%rdx
+   17ead:	je     17eb4 <void supersort::execute_tree_plan<false, false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0xc4>
+   17eaf:	cmp    %rbp,%r12
+   17eb2:	jne    17e94 <void supersort::execute_tree_plan<false, false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0xa4>
+   17eb4:	mov    %rdx,%r11
+   17eb7:	sub    %rsi,%r11
+   17eba:	cmp    %rsi,%rdx
+   17ebd:	je     17ee8 <void supersort::execute_tree_plan<false, false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0xf8>
+   17ebf:	mov    %r11,%rdx
+   17ec2:	mov    %r9,0x28(%rsp)
+   17ec7:	mov    %r8,0x20(%rsp)
+   17ecc:	mov    %r11,0x18(%rsp)
+   17ed1:	call   26a0 <memmove@plt>
+   17ed6:	mov    0x28(%rsp),%r9
+   17edb:	mov    0x20(%rsp),%r8
+   17ee0:	mov    0x18(%rsp),%r11
+   17ee5:	mov    %rax,%rdi
+   17ee8:	cmp    %rbp,%r12
+   17eeb:	je     17f12 <void supersort::execute_tree_plan<false, false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x122>
+   17eed:	mov    %r12,%rdx
+   17ef0:	add    %r11,%rdi
+   17ef3:	mov    %rbp,%rsi
+   17ef6:	mov    %r9,0x20(%rsp)
+   17efb:	sub    %rbp,%rdx
+   17efe:	mov    %r8,0x18(%rsp)
+   17f03:	call   26a0 <memmove@plt>
+   17f08:	mov    0x20(%rsp),%r9
+   17f0d:	mov    0x18(%rsp),%r8
+   17f12:	mov    0x10(%rsp),%rax
+   17f17:	add    %r15,%rax
+   17f1a:	cmp    %rax,%r9
+   17f1d:	je     17f30 <void supersort::execute_tree_plan<false, false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x140>
+   17f1f:	mov    %r15,%rdx
+   17f22:	mov    %r9,%rsi
+   17f25:	mov    %r13,%rdi
+   17f28:	sub    %r8,%rdx
+   17f2b:	call   26a0 <memmove@plt>
+   17f30:	add    $0x18,%rbx
+   17f34:	cmp    %rbx,0x8(%rsp)
+   17f39:	jne    17e20 <void supersort::execute_tree_plan<false, false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x30>
+   17f3f:	add    $0x38,%rsp
+   17f43:	pop    %rbx
+   17f44:	pop    %rbp
+   17f45:	pop    %r12
+   17f47:	pop    %r13
+   17f49:	pop    %r14
+   17f4b:	pop    %r15
+   17f4d:	ret    
+
+void supersort::execute_tree_plan<false, true>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]
+
+/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/bench.exe:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000005b00 <void supersort::execute_tree_plan<false, true>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]>:
+    5b00:	push   %r15
+    5b02:	push   %r14
+    5b04:	push   %r13
+    5b06:	push   %r12
+    5b08:	push   %rbp
+    5b09:	push   %rbx
+    5b0a:	sub    $0x28,%rsp
+    5b0e:	mov    0x8(%rdx),%rbp
+    5b12:	mov    (%rdx),%r14
+    5b15:	cmp    %rbp,%r14
+    5b18:	je     5c9d <void supersort::execute_tree_plan<false, true>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x19d>
+    5b1e:	mov    %rdi,%rbx
+    5b21:	mov    %rsi,%r15
+    5b24:	jmp    5b3d <void supersort::execute_tree_plan<false, true>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x3d>
+    5b26:	cs nopw 0x0(%rax,%rax,1)
+    5b30:	add    $0x18,%r14
+    5b34:	cmp    %r14,%rbp
+    5b37:	je     5c9d <void supersort::execute_tree_plan<false, true>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x19d>
+    5b3d:	mov    0x8(%r14),%rdi
+    5b41:	mov    (%r14),%r8
+    5b44:	mov    0x10(%r14),%r13
+    5b48:	lea    0x0(,%rdi,4),%r10
+    5b50:	lea    (%rbx,%r10,1),%r11
+    5b54:	mov    (%r11),%edx
+    5b57:	cmp    %edx,-0x4(%rbx,%r10,1)
+    5b5c:	jbe    5b30 <void supersort::execute_tree_plan<false, true>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x30>
+    5b5e:	cmp    %r13,%rdi
+    5b61:	jae    5cb0 <void supersort::execute_tree_plan<false, true>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x1b0>
+    5b67:	cmp    %rdi,%r8
+    5b6a:	jae    5cb0 <void supersort::execute_tree_plan<false, true>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x1b0>
+    5b70:	lea    0x0(,%r8,4),%rax
+    5b78:	lea    0x1(%r8),%rsi
+    5b7c:	mov    (%rbx,%rax,1),%ecx
+    5b7f:	cmp    %ecx,%edx
+    5b81:	mov    %ecx,%r9d
+    5b84:	cmovbe %edx,%r9d
+    5b88:	mov    %r9d,(%r15,%rax,1)
+    5b8c:	setae  %al
+    5b8f:	movzbl %al,%eax
+    5b92:	add    %r8,%rax
+    5b95:	cmp    %ecx,%edx
+    5b97:	mov    %rdi,%rcx
+    5b9a:	adc    $0x0,%rcx
+    5b9e:	lea    0x0(,%rcx,4),%r9
+    5ba6:	lea    (%rbx,%r9,1),%r12
+    5baa:	cmp    %rax,%rdi
+    5bad:	ja     5c02 <void supersort::execute_tree_plan<false, true>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x102>
+    5baf:	jmp    5c07 <void supersort::execute_tree_plan<false, true>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x107>
+    5bb1:	data16 cs nopw 0x0(%rax,%rax,1)
+    5bbc:	nopl   0x0(%rax)
+    5bc0:	mov    (%rbx,%rax,4),%r9d
+    5bc4:	mov    (%r12),%edx
+    5bc8:	inc    %rsi
+    5bcb:	mov    %edx,%r12d
+    5bce:	cmp    %edx,%r9d
+    5bd1:	cmovbe %r9d,%r12d
+    5bd5:	mov    %r12d,-0x4(%r15,%rsi,4)
+    5bda:	setbe  %r12b
+    5bde:	movzbl %r12b,%r12d
+    5be2:	add    %r12,%rax
+    5be5:	cmp    %edx,%r9d
+    5be8:	seta   %dl
+    5beb:	movzbl %dl,%edx
+    5bee:	add    %rdx,%rcx
+    5bf1:	lea    0x0(,%rcx,4),%r9
+    5bf9:	lea    (%rbx,%r9,1),%r12
+    5bfd:	cmp    %rax,%rdi
+    5c00:	jbe    5c07 <void supersort::execute_tree_plan<false, true>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x107>
+    5c02:	cmp    %rcx,%r13
+    5c05:	ja     5bc0 <void supersort::execute_tree_plan<false, true>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0xc0>
+    5c07:	shl    $0x2,%rax
+    5c0b:	lea    (%r15,%rsi,4),%rdi
+    5c0f:	lea    (%rbx,%rax,1),%rsi
+    5c13:	sub    %rax,%r10
+    5c16:	cmp    %rsi,%r11
+    5c19:	je     5c44 <void supersort::execute_tree_plan<false, true>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x144>
+    5c1b:	mov    %r10,%rdx
+    5c1e:	mov    %r9,0x18(%rsp)
+    5c23:	mov    %r8,0x10(%rsp)
+    5c28:	mov    %r10,0x8(%rsp)
+    5c2d:	call   26a0 <memmove@plt>
+    5c32:	mov    0x18(%rsp),%r9
+    5c37:	mov    0x10(%rsp),%r8
+    5c3c:	mov    0x8(%rsp),%r10
+    5c41:	mov    %rax,%rdi
+    5c44:	shl    $0x2,%r13
+    5c48:	lea    (%rbx,%r13,1),%rax
+    5c4c:	cmp    %rax,%r12
+    5c4f:	je     5c6c <void supersort::execute_tree_plan<false, true>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x16c>
+    5c51:	mov    %r13,%rdx
+    5c54:	add    %r10,%rdi
+    5c57:	mov    %r12,%rsi
+    5c5a:	mov    %r8,0x8(%rsp)
+    5c5f:	sub    %r9,%rdx
+    5c62:	call   26a0 <memmove@plt>
+    5c67:	mov    0x8(%rsp),%r8
+    5c6c:	shl    $0x2,%r8
+    5c70:	lea    (%r15,%r13,1),%rax
+    5c74:	lea    (%r15,%r8,1),%rsi
+    5c78:	cmp    %rax,%rsi
+    5c7b:	je     5b30 <void supersort::execute_tree_plan<false, true>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x30>
+    5c81:	mov    %r13,%rdx
+    5c84:	lea    (%rbx,%r8,1),%rdi
+    5c88:	add    $0x18,%r14
+    5c8c:	sub    %r8,%rdx
+    5c8f:	call   26a0 <memmove@plt>
+    5c94:	cmp    %r14,%rbp
+    5c97:	jne    5b3d <void supersort::execute_tree_plan<false, true>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x3d>
+    5c9d:	add    $0x28,%rsp
+    5ca1:	pop    %rbx
+    5ca2:	pop    %rbp
+    5ca3:	pop    %r12
+    5ca5:	pop    %r13
+    5ca7:	pop    %r14
+    5ca9:	pop    %r15
+    5cab:	ret    
+    5cac:	nopl   0x0(%rax)
+    5cb0:	mov    %r11,%r12
+    5cb3:	mov    %r10,%r9
+    5cb6:	mov    %r8,%rsi
+    5cb9:	mov    %r8,%rax
+    5cbc:	jmp    5c07 <void supersort::execute_tree_plan<false, true>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x107>
+

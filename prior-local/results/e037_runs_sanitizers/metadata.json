@@ -1,0 +1,28 @@
+{
+  "utc": "2026-11-04T23:49:21.066755+00:00",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "cpu": 2,
+  "compiler": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0\nCopyright (C) 2021 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "flags": [
+    "g++",
+    "-O1",
+    "-g",
+    "-march=native",
+    "-std=c++17",
+    "-fsanitize=address,undefined",
+    "-fno-omit-frame-pointer",
+    "-I/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/vendor/x86-simd-sort/src",
+    "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/verify_runs.cpp",
+    "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/power_bridge.cpp",
+    "-o",
+    "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/results/e037_runs_sanitizers/verify.exe"
+  ],
+  "sha256": {
+    "verify_runs.cpp": "0273824923277e8e3aa22a10a0e013054010957f76ec03cdcb7051f5d836d982",
+    "power_bridge.cpp": "a38bfbd85722141e4594dec0ba43061a6e1ccd5c54179a7b2404a4ca317b8bbb",
+    "include/supersort/natural_merge_u32.hpp": "20e51323e2f7cf8faa22bcb3cb8d73a798875097ce4e611f9835ac12de37069f"
+  },
+  "power_commit": "1d078b6be9023e134c4f8f6de88e2406dc681e89",
+  "simd_commit": "6e059b14975df2e3c74260ec905167a1be5a34ca",
+  "dependency_sources": "exact Powersort sources retained in sibling e037_runs_verify_linux/vendor/powersort; SIMD fixed commit"
+}

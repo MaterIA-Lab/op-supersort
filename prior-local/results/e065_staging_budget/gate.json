@@ -1,0 +1,15 @@
+{
+  "passed": false,
+  "failures": [
+    "uniform/42701 dejó -24.750361 ms para la clasificación y el directorio.",
+    "uniform/91009 dejó -24.041012 ms para la clasificación y el directorio.",
+    "prefix_distinct/42701 dejó -24.815309 ms para la clasificación y el directorio.",
+    "prefix_distinct/91009 dejó -24.324162 ms para la clasificación y el directorio."
+  ],
+  "min_budget_ms": -24.8153086,
+  "fallbacks": 0,
+  "samples": 140,
+  "checked": 192,
+  "checked_arms": 160,
+  "checked_captures": 32
+}

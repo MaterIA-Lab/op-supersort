@@ -1,0 +1,8 @@
+{
+  "passed": false,
+  "failures": [
+    "few/62039 quedó por debajo de 0,90 frente a vqsort.",
+    "equal/15083 quedó por debajo de 0,90 frente a vqsort.",
+    "equal/62039 quedó por debajo de 0,90 frente a vqsort."
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "passed": false,
+  "failures": [
+    "uniform/42701 alcanzó 0.989243 frente a vqsort, por debajo de 1.25.",
+    "uniform/91009 alcanzó 1.003566 frente a vqsort, por debajo de 1.25.",
+    "prefix_distinct/42701 alcanzó 0.970859 frente a vqsort, por debajo de 1.25.",
+    "prefix_distinct/91009 alcanzó 0.988984 frente a vqsort, por debajo de 1.25."
+  ],
+  "samples": 126,
+  "checked": 144,
+  "verified": 1590
+}

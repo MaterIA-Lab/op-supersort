@@ -1,0 +1,64 @@
+{
+  "utc": "2026-11-04T22:55:17.816540+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "compiler": "g++ (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r2) 16.1.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "flags": [
+    "g++",
+    "-O3",
+    "-march=native",
+    "-DNDEBUG",
+    "-std=c++17",
+    "A:\\Users\\elseb\\Terminal\\AI\\Codex\\supersort\\bench.cpp",
+    "-o",
+    "A:\\Users\\elseb\\Terminal\\AI\\Codex\\supersort\\build\\bench.exe"
+  ],
+  "arguments": {
+    "sizes": [
+      0,
+      1,
+      2,
+      31,
+      63,
+      64,
+      65,
+      255,
+      256,
+      257,
+      4095,
+      4096,
+      4097
+    ],
+    "distributions": [
+      "uniform",
+      "dense16",
+      "few",
+      "equal",
+      "sorted",
+      "reverse",
+      "skew"
+    ],
+    "seeds": [
+      42
+    ],
+    "repeats": 1,
+    "tag": "e004_edges",
+    "algorithms": null,
+    "quiet": true
+  },
+  "vendor": {
+    "pdqsort.h": {
+      "url": "https://raw.githubusercontent.com/orlp/pdqsort/master/pdqsort.h",
+      "sha256": "1916aff237fc7ecc638dec6397662334552a1b6f823fa65011a8dfe831237fc0"
+    },
+    "ska_sort.hpp": {
+      "url": "https://raw.githubusercontent.com/skarupke/ska_sort/master/ska_sort.hpp",
+      "sha256": "440456435f9052998bd48fbc501870ce3975bcff400b906783768694f37264ca"
+    },
+    "x86-simd-sort": {
+      "url": "https://github.com/numpy/x86-simd-sort",
+      "commit": "6e059b14975df2e3c74260ec905167a1be5a34ca"
+    }
+  },
+  "source_sha256": "26d69a7cd83e4bd29cdb63ce3bbf4194a1c1852f90dbfcd47cd3d8b1cba12ccb",
+  "timing": "single-thread; allocation included; input copy and correctness excluded; one warmup per case; shuffled algorithm order"
+}

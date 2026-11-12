@@ -1,0 +1,5 @@
+# E045 — Una recuperación con el mismo binario
+
+La ejecución nativa terminó con `0xC0000005` en el primer caso `dense16` antes de dejar muestras para ese caso. Antes del fallo había verificado los dos uniformes y 144 casos del modo de comprobación. Por tamaño, el único grupo de `dense16` cae en la misma hoja copia + vqsort en ambos brazos. Una reproducción bajo GDB con el binario exacto terminó correctamente. Se archiva su salida diagnóstica separada y su causa sigue abierta.
+
+Se hace un solo intento de recuperación de cada entrada pendiente con el mismo ejecutable, opciones, orden de casos y afinidad. Verificar el hash del binario y comprobar los CSV originales. No se repiten los dos uniformes, no se mezclan tiempos del depurador, no se recompila. Conservar todos los intentos y sus códigos de salida. Si una entrada vuelve a fallar, registrar el fallo y continuar con las otras, sin inventar la celda ausente ni publicar la matriz como completa. El filtro ya falla por los dos uniformes. Recuperar la matriz documenta los otros costes y regresiones.

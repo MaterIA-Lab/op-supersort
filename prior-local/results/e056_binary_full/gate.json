@@ -1,0 +1,11 @@
+{
+  "passed": false,
+  "failures": [
+    "mixed/42701 alcanzó 1.195930 frente a Vqsort, por debajo de 1.25.",
+    "mixed/53309 alcanzó 1.227969 frente a Vqsort, por debajo de 1.25.",
+    "mixed/78041 alcanzó 1.238656 frente a Vqsort, por debajo de 1.25."
+  ],
+  "samples": 420,
+  "checked": 480,
+  "verified": 3293
+}

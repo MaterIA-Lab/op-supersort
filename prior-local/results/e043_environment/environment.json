@@ -1,0 +1,21 @@
+{
+  "utc": "2026-11-05T11:19:56.160341+00:00",
+  "meminfo": "MemTotal:       16318368 kB\nMemFree:        14250268 kB\nMemAvailable:   15504264 kB\nBuffers:           71568 kB\nCached:          1360780 kB\nSwapCached:            0 kB\nActive:           197016 kB\nInactive:        1426276 kB\nActive(anon):       3816 kB\nInactive(anon):   193968 kB\nActive(file):     193200 kB\nInactive(file):  1232308 kB\nUnevictable:           0 kB\nMlocked:               0 kB\nSwapTotal:       4194304 kB\nSwapFree:        4194304 kB\nDirty:              6804 kB\nWriteback:             0 kB\nAnonPages:        191704 kB\nMapped:           155500 kB\nShmem:              6356 kB\nKReclaimable:      31528 kB\nSlab:              95696 kB\nSReclaimable:      31528 kB\nSUnreclaim:        64168 kB\nKernelStack:        6224 kB\nPageTables:         9948 kB\nSecPageTables:         0 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    12353488 kB\nCommitted_AS:    1117712 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:       35244 kB\nVmallocChunk:          0 kB\nPercpu:             6784 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:       33792 kB\nDirectMap2M:     6197248 kB\nDirectMap1G:    19922944 kB\n",
+  "perf_event_paranoid": "2",
+  "pmu_probe": {
+    "command": [
+      "taskset",
+      "-c",
+      "2",
+      "perf",
+      "stat",
+      "-e",
+      "cycles,instructions,cache-misses,branch-misses",
+      "--",
+      "true"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "\n Performance counter stats for 'true':\n\n           507,594      cycles:u                                                              \n           136,496      instructions:u                   #    0.27  insn per cycle            \n             5,491      cache-misses:u                                                        \n             2,125      branch-misses:u                                                       \n\n       0.001270908 seconds time elapsed\n\n       0.001101000 seconds user\n       0.000000000 seconds sys\n\n\n"
+  }
+}

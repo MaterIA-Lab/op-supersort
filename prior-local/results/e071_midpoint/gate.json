@@ -1,0 +1,14 @@
+{
+  "passed": false,
+  "failures": [
+    "uniform/42701 registró un ahorro de 4.380076 ms frente a los 9.436431 ms requeridos.",
+    "uniform/91009 registró un ahorro de 4.487665 ms frente a los 9.473061 ms requeridos.",
+    "prefix_distinct/42701 registró un ahorro de 5.131980 ms frente a los 9.372913 ms requeridos.",
+    "prefix_distinct/91009 registró un ahorro de 5.016462 ms frente a los 9.387169 ms requeridos."
+  ],
+  "samples": 84,
+  "checked": 128,
+  "checked_arms": 96,
+  "checked_captures": 32,
+  "verified": 4806
+}

@@ -1,0 +1,152 @@
+{
+  "utc": "2026-11-05T00:17:10.520699+00:00",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "compiler": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0\nCopyright (C) 2021 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "flags": [
+    "g++",
+    "-O3",
+    "-march=native",
+    "-DNDEBUG",
+    "-std=c++17",
+    "-I/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/vendor/x86-simd-sort/src",
+    "-I/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/vendor/highway",
+    "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/bench.cpp",
+    "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/vq_bridge.cpp",
+    "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/vendor/highway/hwy/abort.cc",
+    "-o",
+    "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/bench.exe",
+    "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/power_bridge.cpp",
+    "-I/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/vendor/ips2ra/include",
+    "-I/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/vendor/ips4o/include",
+    "-DSUPERSORT_WITH_IPS",
+    "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/ips_bridge.cpp",
+    "-ltbb",
+    "-latomic",
+    "-pthread"
+  ],
+  "arguments": {
+    "sizes": [
+      0,
+      1,
+      2,
+      15,
+      16,
+      17,
+      23,
+      24,
+      25,
+      63,
+      64,
+      65,
+      127,
+      128,
+      129,
+      255,
+      256,
+      257,
+      511,
+      512,
+      513,
+      1025,
+      4097,
+      131073
+    ],
+    "distributions": [
+      "uniform",
+      "splitmix",
+      "dense16",
+      "few",
+      "equal",
+      "sorted",
+      "reverse",
+      "skew",
+      "sampletrap",
+      "samplemiss",
+      "prefixcluster",
+      "near_sorted",
+      "runs129",
+      "runs256",
+      "runs4096",
+      "runs_unequal",
+      "run_heavy",
+      "alternating",
+      "plateaus",
+      "forced_front",
+      "forced_middle",
+      "forced_tail"
+    ],
+    "seeds": [
+      9011,
+      29009
+    ],
+    "repeats": 1,
+    "tag": "e039_kernel_verify_linux",
+    "algorithms": [
+      "merge_tree_cmov",
+      "merge_tree_power",
+      "power"
+    ],
+    "quiet": true,
+    "runs_diagnostic": false,
+    "tree_diagnostic": false,
+    "kernel_diagnostic": false,
+    "cpu": 2
+  },
+  "vendor": {
+    "pdqsort.h": {
+      "url": "https://raw.githubusercontent.com/orlp/pdqsort/master/pdqsort.h",
+      "sha256": "1916aff237fc7ecc638dec6397662334552a1b6f823fa65011a8dfe831237fc0"
+    },
+    "ska_sort.hpp": {
+      "url": "https://raw.githubusercontent.com/skarupke/ska_sort/master/ska_sort.hpp",
+      "sha256": "440456435f9052998bd48fbc501870ce3975bcff400b906783768694f37264ca"
+    },
+    "x86-simd-sort": {
+      "url": "https://github.com/numpy/x86-simd-sort",
+      "commit": "6e059b14975df2e3c74260ec905167a1be5a34ca"
+    },
+    "highway": {
+      "url": "https://github.com/google/highway",
+      "commit": "a3f6f68fcc368e5e3025ca25805eabda9d8a456f",
+      "dispatch": "VQSORT_ONLY_STATIC + HWY_COMPILE_ONLY_STATIC, march=native"
+    },
+    "powersort": {
+      "url": "https://github.com/sebawild2/powersort",
+      "commit": "1d078b6be9023e134c4f8f6de88e2406dc681e89",
+      "api": "fresh algorithms::powersort<uint32_t*>; defaults minRunLen24 COPY_BOTH; no persistent workspace"
+    },
+    "ips2ra": {
+      "url": "https://github.com/ips4o/ips2ra",
+      "commit": "83f6b76ca308b277b2acc3a36426a3baa3c9cb73",
+      "api": "sequential sort"
+    },
+    "ips4o": {
+      "url": "https://github.com/ips4o/ips4o",
+      "commit": "08a5b926ee65cef19139057c6bde02bb5542c1cb",
+      "api": "sequential sort"
+    }
+  },
+  "source_sha256": "aeb84546241c973fe14bf5571f7b93c709e76f50cdcbd8d3211b9688e210f85e",
+  "source_files_sha256": {
+    "bench.cpp": "aeb84546241c973fe14bf5571f7b93c709e76f50cdcbd8d3211b9688e210f85e",
+    "vq_bridge.cpp": "db2857389c50bd0b283d117f31dc04be4633115521c1643263b039935d0c563b",
+    "ips_bridge.cpp": "867f881e43e2b7a184e1f7592ad0b553e4d2629346904a26faf3bd5de76d5bb5",
+    "power_bridge.cpp": "a38bfbd85722141e4594dec0ba43061a6e1ccd5c54179a7b2404a4ca317b8bbb",
+    "profile_predict.hpp": "2354e6fd4a00ad9d4bda9bbd898b2cc5df0d8f21783d31c30a6524eddd5dda9e",
+    "include/supersort/merge_u32.hpp": "b031ec0dab8ab043579de36fcb75cf17b1eff9fa6b7a971b000afa491a797462",
+    "include/supersort/natural_merge_u32.hpp": "20e51323e2f7cf8faa22bcb3cb8d73a798875097ce4e611f9835ac12de37069f",
+    "include/supersort/predictive_u32.hpp": "929141124854bede90cf29e81522bfdcd86c55e6b3b465ad84cf97607f1c7985",
+    "include/supersort/scatter_nt.hpp": "a49b941316144048e93c8569eac0f823dd646cb05548194b7f6eaeca7653a5eb",
+    "include/supersort/tree_merge_u32.hpp": "48d912d33d55eb06d6b589b4444d8e1c55f05646a51048284aa8842c9cda0972"
+  },
+  "vq_bridge_sha256": "db2857389c50bd0b283d117f31dc04be4633115521c1643263b039935d0c563b",
+  "header_sha256": {
+    "include/supersort/merge_u32.hpp": "b031ec0dab8ab043579de36fcb75cf17b1eff9fa6b7a971b000afa491a797462",
+    "include/supersort/natural_merge_u32.hpp": "20e51323e2f7cf8faa22bcb3cb8d73a798875097ce4e611f9835ac12de37069f",
+    "include/supersort/predictive_u32.hpp": "929141124854bede90cf29e81522bfdcd86c55e6b3b465ad84cf97607f1c7985",
+    "include/supersort/scatter_nt.hpp": "a49b941316144048e93c8569eac0f823dd646cb05548194b7f6eaeca7653a5eb",
+    "include/supersort/tree_merge_u32.hpp": "48d912d33d55eb06d6b589b4444d8e1c55f05646a51048284aa8842c9cda0972"
+  },
+  "logical_cpu": 2,
+  "timing": "single-thread; allocation included; input copy and correctness excluded; one warmup per case; shuffled algorithm order"
+}

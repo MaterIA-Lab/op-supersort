@@ -1,0 +1,46 @@
+57dcfbfad000-57dcfbfaf000 r--p 00000000 00:48 562949953557745            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/results/e040_quick_holdout_linux/bench.bin
+57dcfbfaf000-57dcfc000000 r-xp 00002000 00:48 562949953557745            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/results/e040_quick_holdout_linux/bench.bin
+57dcfc000000-57dcfc00b000 r--p 00053000 00:48 562949953557745            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/results/e040_quick_holdout_linux/bench.bin
+57dcfc00c000-57dcfc00e000 rw-p 0005e000 00:48 562949953557745            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/results/e040_quick_holdout_linux/bench.bin
+722d00200000-722d00228000 r--p 00000000 08:30 19853                      /usr/lib/x86_64-linux-gnu/libc.so.6
+722d00228000-722d003bd000 r-xp 00028000 08:30 19853                      /usr/lib/x86_64-linux-gnu/libc.so.6
+722d003bd000-722d00415000 r--p 001bd000 08:30 19853                      /usr/lib/x86_64-linux-gnu/libc.so.6
+722d00415000-722d00416000 ---p 00215000 08:30 19853                      /usr/lib/x86_64-linux-gnu/libc.so.6
+722d00416000-722d0041a000 r--p 00215000 08:30 19853                      /usr/lib/x86_64-linux-gnu/libc.so.6
+722d0041a000-722d0041c000 rw-p 00219000 08:30 19853                      /usr/lib/x86_64-linux-gnu/libc.so.6
+722d0041c000-722d00429000 rw-p 00000000 00:00 0 
+722d00600000-722d0069a000 r--p 00000000 08:30 6947                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30
+722d0069a000-722d007ab000 r-xp 0009a000 08:30 6947                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30
+722d007ab000-722d0081a000 r--p 001ab000 08:30 6947                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30
+722d0081a000-722d0081b000 ---p 0021a000 08:30 6947                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30
+722d0081b000-722d00829000 rw-p 0021a000 08:30 6947                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30
+722d00829000-722d0082c000 rw-p 00000000 00:00 0 
+722d00889000-722d0088e000 rw-p 00000000 00:00 0 
+722d0088e000-722d00891000 r--p 00000000 08:30 6709                       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+722d00891000-722d008a8000 r-xp 00003000 08:30 6709                       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+722d008a8000-722d008ac000 r--p 0001a000 08:30 6709                       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+722d008ac000-722d008ad000 r--p 0001d000 08:30 6709                       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+722d008ad000-722d008ae000 rw-p 0001e000 08:30 6709                       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+722d008ae000-722d008bc000 r--p 00000000 08:30 19856                      /usr/lib/x86_64-linux-gnu/libm.so.6
+722d008bc000-722d00938000 r-xp 0000e000 08:30 19856                      /usr/lib/x86_64-linux-gnu/libm.so.6
+722d00938000-722d00993000 r--p 0008a000 08:30 19856                      /usr/lib/x86_64-linux-gnu/libm.so.6
+722d00993000-722d00994000 r--p 000e4000 08:30 19856                      /usr/lib/x86_64-linux-gnu/libm.so.6
+722d00994000-722d00995000 rw-p 000e5000 08:30 19856                      /usr/lib/x86_64-linux-gnu/libm.so.6
+722d00995000-722d009b7000 r--p 00000000 08:30 1832                       /etc/ld.so.cache
+722d009b7000-722d009b8000 r--p 00000000 00:48 562949953557188            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss128.so
+722d009b8000-722d009c1000 r-xp 00001000 00:48 562949953557188            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss128.so
+722d009c1000-722d009c6000 r--p 0000a000 00:48 562949953557188            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss128.so
+722d009c6000-722d009c8000 rw-p 0000e000 00:48 562949953557188            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss128.so
+722d009c8000-722d009c9000 r--p 00000000 00:48 562949953557184            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss256.so
+722d009c9000-722d009dc000 r-xp 00001000 00:48 562949953557184            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss256.so
+722d009dc000-722d009e1000 r--p 00014000 00:48 562949953557184            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss256.so
+722d009e1000-722d009e3000 rw-p 00018000 00:48 562949953557184            /mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss256.so
+722d009e3000-722d009e5000 rw-p 00000000 00:00 0 
+722d009e5000-722d009e9000 r--p 00000000 00:00 0                          [vvar]
+722d009e9000-722d009eb000 r--p 00000000 00:00 0                          [vvar_vclock]
+722d009eb000-722d009ed000 r-xp 00000000 00:00 0                          [vdso]
+722d009ed000-722d009ef000 r--p 00000000 08:30 19850                      /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+722d009ef000-722d00a19000 r-xp 00002000 08:30 19850                      /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+722d00a19000-722d00a24000 r--p 0002c000 08:30 19850                      /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+722d00a25000-722d00a29000 rw-p 00037000 08:30 19850                      /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7ffcc9c5e000-7ffcc9c80000 rw-p 00000000 00:00 0                          [stack]

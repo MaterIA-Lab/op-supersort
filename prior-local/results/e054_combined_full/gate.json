@@ -1,0 +1,28 @@
+{
+  "passed": false,
+  "dictionary_coverage_passed": true,
+  "general_goal_passed": false,
+  "dictionary_coverage_failures": [],
+  "general_goal_failures": [
+    "uniform/42701 obtuvo 0.985511 frente a vq, por debajo de 1,25.",
+    "uniform/91009 obtuvo 1.003848 frente a vq, por debajo de 1,25.",
+    "prefix_distinct/42701 obtuvo 1.003477 frente a vq, por debajo de 1,25.",
+    "prefix_distinct/91009 obtuvo 1.018721 frente a vq, por debajo de 1,25.",
+    "mixed/42701 obtuvo 1.038778 frente a vq, por debajo de 1,25.",
+    "mixed/91009 obtuvo 0.992005 frente a vq, por debajo de 1,25.",
+    "few_dominant/42701 obtuvo 0.652227 frente a vq, por debajo de 1,25.",
+    "few_dominant/91009 obtuvo 0.686845 frente a simd, por debajo de 1,25.",
+    "few_powers/42701 obtuvo 1.188105 frente a vq, por debajo de 1,25.",
+    "few_powers/91009 obtuvo 1.136200 frente a vq, por debajo de 1,25.",
+    "equal/42701 obtuvo 1.040751 frente a simd, por debajo de 1,25.",
+    "equal/91009 obtuvo 1.050759 frente a vq, por debajo de 1,25."
+  ],
+  "wins": {
+    "simd": 24,
+    "ips2ra": 30,
+    "best_external": 18,
+    "e047": 14,
+    "vq": 19,
+    "striped": 14
+  }
+}

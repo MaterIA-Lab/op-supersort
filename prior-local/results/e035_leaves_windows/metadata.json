@@ -1,0 +1,20 @@
+{
+  "utc": "2026-11-04T23:35:52.330894+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "compiler": "g++ (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r2) 16.1.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "flags": [
+    "g++",
+    "-O3",
+    "-march=native",
+    "-DNDEBUG",
+    "-std=c++17",
+    "-IA:\\Users\\elseb\\Terminal\\AI\\Codex\\supersort\\vendor\\x86-simd-sort\\src",
+    "A:\\Users\\elseb\\Terminal\\AI\\Codex\\supersort\\diagnose_leaves.cpp",
+    "-o",
+    "A:\\Users\\elseb\\Terminal\\AI\\Codex\\supersort\\results\\e035_leaves_windows\\diagnose.exe"
+  ],
+  "source_sha256": "5a03ffce057ce4a28a930e256a0eb1717fbccd0ea5fbc88280f6b74e6530b3b9",
+  "simd_commit": "6e059b14975df2e3c74260ec905167a1be5a34ca",
+  "cpu": 2,
+  "contract": "isolated leaves; preallocated; copy and exact check excluded; not complete-sort times"
+}
