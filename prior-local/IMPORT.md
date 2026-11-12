@@ -1,6 +1,6 @@
 # Prior local research — import in progress
 
-This folder preserves notes, source, CSV samples and selected text evidence copied from the local SuperSort laboratory before its OpenPrototypes phase. The complete original is retained separately. This is not yet a self-contained reproduction package: large files, binaries and third-party `vendor/` snapshots have not been imported. Links to missing files will not resolve until the archive plan is completed.
+This folder preserves notes, source, CSV samples and selected text evidence copied from the local SuperSort laboratory before its OpenPrototypes phase. The complete original is retained separately. This is not yet a self-contained reproduction package: large files, binaries and most third-party `vendor/` snapshots have not been imported. The pdqsort and ska_sort headers used by the historical runner are included with their license notices; other dependencies can be fetched by the runner at the commits recorded in its source. Links to missing files will not resolve until the archive plan is completed.
 
 The secret scan flags some historical metadata checksums as possible keys. These were verified as source-file SHA-256 digests. The scanner configuration suppresses only those exact digest matches in the affected metadata paths; the remaining rules continue to apply.
 
