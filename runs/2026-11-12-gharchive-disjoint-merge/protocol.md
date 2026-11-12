@@ -16,3 +16,13 @@ Use the previous candidate's single-threaded Linux/WSL2 contract. Inputs are alr
 - Use one warm-up and five measured repetitions per method and case, rotating method order by case and repetition. Pin logical CPU 4 and touch the 64 MiB eviction buffer before each trial. Check every output byte and all mapped-byte and map-call counts. Publish raw samples, source commit, compiler, hardware, memory and timing bounds.
 
 Report all eight cases and the counts reaching 1.3× and 1.5×. A gain here applies to assembly of disjoint ranges under the stated memory contract. The sample does not decide whether the mechanism helps on actual overlapping arrivals or establishes a new sorting result. Report any gain at or above 1.5× directly to the owner before broader exploration.
+
+## Reproduction
+
+Run from the repository root in Linux or WSL2 with Python 3 and GCC. The cases are built from the published aggregates, so the archive downloads are unnecessary for timing.
+
+```sh
+python3 runs/2026-11-12-gharchive-disjoint-merge/analyze.py --cases > lab/gharchive-cases.tsv
+bash runs/2026-11-12-page-remapped-merge/run.sh lab/gharchive-disjoint-merge --disjoint-batches < lab/gharchive-cases.tsv
+python3 runs/2026-11-12-gharchive-disjoint-merge/analyze.py lab/gharchive-disjoint-merge/disjoint.csv
+```
