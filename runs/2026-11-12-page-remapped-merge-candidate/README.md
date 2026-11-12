@@ -14,3 +14,13 @@ The primary comparison uses the fastest of three references for fresh output: th
 Keep all pilot sizes and layouts, including adjacent and interleaved controls. Use **104729** and **130363** as fresh seeds. Run all five methods once as warm-up and five times for measurement, rotating order by repetition and seed. Pin one thread to logical CPU 4, evict 64 MiB before each trial, and verify every byte of every output after the first timed read. Report eligible bytes, bytes actually mapped and number of mapping calls. Record process peak RSS. Report teardown separately after verification and keep it outside the primary result interval, which ends when the first consumer scan completes.
 
 For each case and seed, report the median across paired repetitions of `fastest fresh reference / candidate`. Treat a ratio of at least 1.3× on both seeds in a non-control layout as a measured synthetic result worth validating on real data. Also report the paired ratio versus the pre-touched reference for every case. Keep negative results and regressions. Practical importance, portability, and novelty relative to prior work require further evidence. If a measured synthetic case reaches 1.5× on both seeds, report it directly to the owner at this checkpoint before broader exploration.
+
+## Reproduction
+
+Use the same [Linux/WSL2 toolchain](../2026-11-12-page-remapped-merge/README.md#reproduction) as the pilot. The [experimental slice materializer](../../prototypes/agents/page-remapped-merge/slice.hpp) is used by the shared harness.
+
+```sh
+bash runs/2026-11-12-page-remapped-merge/run.sh lab/page-merge-candidate-smoke --candidate --smoke
+bash runs/2026-11-12-page-remapped-merge/run.sh lab/page-merge-candidate --candidate
+python3 runs/2026-11-12-page-remapped-merge/analyze.py lab/page-merge-candidate --candidate
+```

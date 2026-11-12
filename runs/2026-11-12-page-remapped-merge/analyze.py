@@ -11,6 +11,9 @@ EXTENTS = (4096, 64 << 10, 2 * MIB, 16 * MIB, 128 * MIB)
 SIZES = (1 << 20, 1 << 22)
 LAYOUTS = ("adjacent", "edge_overlap", "bursty", "interleaved")
 SEEDS = (271, 1601)
+CANDIDATE_SEEDS = (104729, 130363)
+FRESH_REFERENCES = ("scalar", "bulk", "hybrid")
+CANDIDATE_METHODS = (*FRESH_REFERENCES, "hybrid_reused", "remap")
 
 
 def read(path, keys, expected):
@@ -78,7 +81,56 @@ def summarize(directory):
         print(f"- {count:,} records, {layout}")
 
 
+def summarize_candidate(directory):
+    data = read(directory / "candidate.csv", ("records", "layout", "seed", "repetition", "method"),
+                product(SIZES, LAYOUTS, CANDIDATE_SEEDS, range(6), CANDIDATE_METHODS))
+    print("| Records | Layout | Seed | Bytes mapped | Map calls | Fresh best (ms) | Reused (ms) | Remap (ms) | Remap teardown (ms) | Speedup vs fresh | Speedup vs reused |")
+    print("|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
+    passing = {1.3: [], 1.5: []}
+    for count, layout in product(SIZES, LAYOUTS):
+        ratios = []
+        for seed in CANDIDATE_SEEDS:
+            rows = [data[count, layout, seed, rep, method] for rep, method in product(range(6), CANDIDATE_METHODS)]
+            if any(row["teardown_ns"] <= 0 or
+                   (row["method"] != "remap" and (row["mapped_bytes"] or row["map_calls"])) for row in rows):
+                raise ValueError("invalid teardown or mapping counters")
+            mapped, calls = {(row["mapped_bytes"], row["map_calls"]) for row in rows if row["method"] == "remap"}.pop()
+            for rep in range(6):
+                row = data[count, layout, seed, rep, "remap"]
+                eligible = sum(row[f"eligible_{size}"] for size in EXTENTS if size >= 64 << 10)
+                if (row["mapped_bytes"] != mapped or row["map_calls"] != calls or
+                        mapped != eligible or not 0 <= calls <= row["extents"] or bool(mapped) != bool(calls)):
+                    raise ValueError("mapping counters do not match eligible ranges")
+
+            fresh, reused, remapped, teardown = [], [], [], []
+            for rep in range(1, 6):
+                fresh.append(min(data[count, layout, seed, rep, method]["total_ns"] for method in FRESH_REFERENCES))
+                reused.append(data[count, layout, seed, rep, "hybrid_reused"]["total_ns"])
+                row = data[count, layout, seed, rep, "remap"]
+                remapped.append(row["total_ns"])
+                teardown.append(row["teardown_ns"])
+            fresh_ratio = median(a / b for a, b in zip(fresh, remapped))
+            reused_ratio = median(a / b for a, b in zip(reused, remapped))
+            ratios.append(fresh_ratio)
+            medians = " | ".join(f"{median(values) / 1e6:.2f}" for values in (fresh, reused, remapped, teardown))
+            print(f"| {count:,} | {layout} | {seed} | {mapped / (count * 128):.2%} | {calls:,} | {medians} | "
+                  f"{fresh_ratio:.3f}× | {reused_ratio:.3f}× |")
+        if layout in ("edge_overlap", "bursty"):
+            for threshold in passing:
+                if min(ratios) >= threshold:
+                    passing[threshold].append((count, layout))
+    for threshold, cases in passing.items():
+        print(f"\nNon-control cases reaching {threshold}× against fresh output on both seeds ({len(cases)}/4)")
+        for count, layout in cases:
+            print(f"- {count:,} records, {layout}")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Validate and summarize the page-remapped merge pilot.")
     parser.add_argument("directory", type=Path)
-    summarize(parser.parse_args().directory)
+    parser.add_argument("--candidate", action="store_true")
+    args = parser.parse_args()
+    if args.candidate:
+        summarize_candidate(args.directory)
+    else:
+        summarize(args.directory)
