@@ -24,15 +24,15 @@ Find a genuinely new, architecture-aware mechanism that sorts a practically rele
 ## Do not retry
 
 - **Tile-and-sort payload permutation** (destination tiles of 256 KiB, descriptors sorted by source with vqsort). Materialization took 1.67–2.14× as long as a plain vqsort gather. [Run](../runs/2026-11-12-blocked-permutation/README.md)
-- **Page remapping with 4 KiB extents.** Mapping and first read cost 64 ms more than copying 128 MiB. Use at least 64 KiB extents. [Pilot](../runs/2026-11-12-page-remapped-merge/summary.md)
+- **Page remapping with 4 KiB extents on the measured WSL2 setup.** Mapping and first read cost 64 ms more than copying 128 MiB. The measured candidate used a 64 KiB cutoff, the smallest profitable size tested there. [Pilot](../runs/2026-11-12-page-remapped-merge/summary.md)
 - **Predicting reusable pages from long source slices alone.** Bursty runs had about 88% of bytes in full source pages, but only 2.7–6.9% aligned with the destination.
 - **Single-phase replacements inside vqsort** for high-entropy uint32 keys, and **dispatching between known sorters**. See [prior research](prior-research.md) and [GOAL.md](../GOAL.md).
 
 ## Controls and references to beat
 
-- **Records, out of place:** argsort with vqsort or x86-simd-sort on packed `(key, index)` words, then gather with software prefetch 32 rows ahead (both cache lines for 128-byte rows). It was fastest in all 48 paired repetitions of the blocked probe, 1.05–1.24× faster than a plain gather. pdqsort on whole rows is about 2× slower and is not a sufficient reference alone. IPS⁴o and a record-oriented SIMD merge are still unmeasured.
+- **Records, out of place.** Argsort with vqsort or x86-simd-sort on packed `(key, index)` words, then gather with software prefetch 32 rows ahead (both cache lines for 128-byte rows). It won all 48 paired repetitions of the blocked probe. The paired median speedup over the fastest reference without prefetch was 1.051–1.235×. IPS⁴o and a record-oriented SIMD merge are still unmeasured. [Reference timings](../runs/2026-11-12-blocked-permutation/summary.md)
 - **Merging two sorted runs:** fastest of a scalar two-finger merge, a galloping bulk merge and a hybrid that bulk-copies the non-overlapping prefix and suffix. Also report the hybrid writing into a pre-touched destination, which is a different memory contract.
-- **Sequential copy of the same bytes:** a useful lower bound for headroom estimates, not a competitive reference.
+- **Sequential copy of the same bytes.** An empirical proxy for headroom. Allocation and cache state differ from a gather, so use measured candidate times for performance claims. [Pilot timing contract](../runs/2026-11-12-record-permutation/README.md)
 
 ## Contracts used so far
 
@@ -43,10 +43,12 @@ Find a genuinely new, architecture-aware mechanism that sorts a practically rele
 ## Environment and harness notes
 
 - Machine: AMD Ryzen 7 5800X (8 cores, 16 threads, AVX2, no AVX-512, 512 KiB L2 per core, 32 MiB L3), about 32 GiB RAM. Windows 11 with GCC 16.1.0, and Ubuntu 22.04.3 under WSL2. See [hardware](hardware.md).
-- Page remapping uses `mmap(MAP_SHARED | MAP_FIXED)` on a `memfd`, so it runs only under Linux/WSL2. WSL2 limits memory to 50% of the host by default.
+- The page-remapping harness uses `mmap(MAP_SHARED | MAP_FIXED)` on a `memfd`. The measured WSL2 guest had about 15.6 GiB of RAM and 4 KiB base pages. [Candidate metadata](../runs/2026-11-12-page-remapped-merge-candidate/metadata.txt)
 - Pinned references: Highway `a3f6f68fcc368e5e3025ca25805eabda9d8a456f`, x86-simd-sort `6e059b14975df2e3c74260ec905167a1be5a34ca`, `pdqsort.h` from the archive at commit `195f578`.
 - The secret scan covers the full git history. Historical digests from the archived research are allowlisted in `.gitleaks.toml`; keep that allowlist.
 - Tokens and costs have not been captured so far. Write `not captured` rather than guessing.
+
+The [run index and analysis commands](../runs/README.md#check-the-published-measurements) let you recompute the reported comparisons from the tracked CSVs. Each run README links its protocol and reproduction commands.
 
 ## Run ledger
 
@@ -67,7 +69,7 @@ Summaries, oldest first:
 - **2026-11-12-smoke** (setup): The prior local runner still compiles and runs on Windows with GCC 16.1 and sorts 1,000 uint32 keys correctly. Not an evaluation of the goal.
 - **2026-11-12-repo-reset** (setup): Judged the original goal (25% faster in 90% of a large benchmark matrix) very unlikely to be reached, replaced it with an open search for new mechanisms and archived the prior research.
 - **2026-11-12-record-permutation** (diagnostic): Gathering the payload takes 51–68% of an indirect sort of 64- and 128-byte records, so a permutation as cheap as a sequential copy would give about 1.3–1.4×. Enough room to try a candidate, with little margin.
-- **2026-11-12-blocked-permutation** (failed): Writing records in cache-sized destination tiles after sorting their descriptors by source made the permutation 1.67–2.14× slower than a plain gather. The extra descriptor sort costs more than the locality saves. Gather with software prefetch won every repetition.
+- **2026-11-12-blocked-permutation** (failed): Rewriting and sorting descriptors and then moving the records in cache-sized tiles took 1.67–2.14× as long as the original gather phase. The probe measured those costs together. Gather with software prefetch won all 48 paired repetitions.
 - **2026-11-12-page-remapped-merge** (diagnostic): Mapping pages instead of copying them pays off from 64 KiB extents upwards (4 KiB extents lose). In a merge only page-aligned slices qualify, which was 37.5% of the output when two runs overlap at the edges and 3–7% for bursty runs.
 - **2026-11-12-page-remapped-merge-candidate** (promising): Mapping aligned input pages into the output beat the best fresh-output merge of two sorted runs of 128-byte records by 1.33–1.36×, and by 2.67× when 75% of the output was mapped. It lost to a merge into an already-touched buffer (0.36–0.74×) and regressed on bursty and interleaved runs (0.82–0.86×). Synthetic data only.
 <!-- RUNS:END -->
