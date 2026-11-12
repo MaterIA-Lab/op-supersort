@@ -25,7 +25,7 @@ For each paired repetition and each indirect reference, estimate `indirect total
 
 ## Reproduction
 
-Run from the repository root with Python 3 and an AVX2-capable x86-64 machine with GCC. Supply a vendor directory with clean checkouts of [Highway](https://github.com/google/highway/tree/a3f6f68fcc368e5e3025ca25805eabda9d8a456f) and [x86-simd-sort](https://github.com/numpy/x86-simd-sort/tree/6e059b14975df2e3c74260ec905167a1be5a34ca) in matching subdirectories. For `pdqsort.h`, use the [snapshot in the repository archive](https://github.com/MaterIA-Lab/op-supersort/blob/195f5781c0a1ddbd0fba53db0e47b7b3a18c3555/prior-local/vendor/pdqsort.h). The runner verifies revisions and the header hash. The historical lab already has the same revisions.
+Run from the repository root with Python 3 and GCC on an AVX2-capable x86-64 machine running Windows or Linux. Supply a vendor directory with clean checkouts of [Highway](https://github.com/google/highway/tree/a3f6f68fcc368e5e3025ca25805eabda9d8a456f) and [x86-simd-sort](https://github.com/numpy/x86-simd-sort/tree/6e059b14975df2e3c74260ec905167a1be5a34ca) in matching subdirectories. For `pdqsort.h`, use the [snapshot in the repository archive](https://github.com/MaterIA-Lab/op-supersort/blob/195f5781c0a1ddbd0fba53db0e47b7b3a18c3555/prior-local/vendor/pdqsort.h). The runner verifies revisions and the header hash. The historical lab already has the same revisions. For the exact source of the original run, use `source_commit` in [metadata.json](metadata.json).
 
 ```sh
 python runs/2026-11-12-record-permutation/run.py --vendor /path/to/vendor --output lab/record-smoke --cpu 4 --smoke
