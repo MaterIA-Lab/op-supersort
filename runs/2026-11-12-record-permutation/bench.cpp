@@ -13,6 +13,8 @@
 #include <pdqsort.h>
 #include <x86simdsort-static-incl.h>
 
+#include "../../prototypes/agents/record-permutation/blocked.hpp"
+
 #ifdef _WIN32
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -87,9 +89,12 @@ bool correct(const std::vector<Record<Width>>& input, const Record<Width>* outpu
     return true;
 }
 
-enum class Method { vq, x86, pdq, copy };
-constexpr std::array methods{Method::vq, Method::x86, Method::pdq, Method::copy};
-constexpr std::array method_names{"vq_gather", "x86_gather", "pdq_rows", "sequential_copy"};
+enum class Method { vq, x86, pdq, copy, vq_prefetch, x86_prefetch, blocked };
+constexpr std::array pilot_methods{Method::vq, Method::x86, Method::pdq, Method::copy};
+constexpr std::array probe_methods{Method::vq, Method::x86, Method::pdq, Method::vq_prefetch,
+                                   Method::x86_prefetch, Method::blocked};
+constexpr std::array method_names{"vq_gather", "x86_gather", "pdq_rows", "sequential_copy",
+                                  "vq_prefetch", "x86_prefetch", "blocked"};
 
 struct Times {
     int64_t total;
@@ -106,21 +111,25 @@ Times measure(const std::vector<Record<Width>>& input, Method method) {
     int64_t sort = 0;
     int64_t materialize = 0;
     const auto start = Clock::now();
-    if (method == Method::vq || method == Method::x86) {
+    if (method != Method::pdq && method != Method::copy) {
         std::unique_ptr<uint64_t[]> packed(new uint64_t[count]);
         for (size_t index = 0; index < count; ++index) {
             packed[index] = (uint64_t{input[index].key} << 32) | index;
         }
         const auto packed_at = Clock::now();
-        if (method == Method::vq) {
-            vq_sort_u64(packed.get(), count);
-        } else {
+        if (method == Method::x86 || method == Method::x86_prefetch) {
             x86simdsortStatic::qsort(packed.get(), count);
+        } else {
+            vq_sort_u64(packed.get(), count);
         }
         const auto sorted_at = Clock::now();
         output.reset(new Record<Width>[count]);
-        for (size_t index = 0; index < count; ++index) {
-            output[index] = input[static_cast<uint32_t>(packed[index])];
+        if (method == Method::blocked) {
+            record_permutation::blocked(input.data(), output.get(), packed.get(), count, vq_sort_u64);
+        } else if (method == Method::vq_prefetch || method == Method::x86_prefetch) {
+            record_permutation::materialize<0, true>(input.data(), output.get(), packed.get(), count);
+        } else {
+            record_permutation::materialize<0, false>(input.data(), output.get(), packed.get(), count);
         }
         pack = elapsed(start, packed_at);
         sort = elapsed(packed_at, sorted_at);
@@ -191,46 +200,66 @@ void evict(const std::vector<uint64_t>& buffer) {
     }
 }
 
-template <size_t Width>
+template <size_t Width, size_t MethodCount>
 void run_case(size_t count, std::string_view distribution, uint32_t mask,
               uint64_t seed, unsigned seed_order, unsigned repeats,
-              const std::vector<uint64_t>& eviction_buffer) {
+              const std::vector<uint64_t>& eviction_buffer, const std::array<Method, MethodCount>& methods) {
     const auto input = make_input<Width>(count, seed, mask);
     for (unsigned repetition = 0; repetition <= repeats; ++repetition) {
         for (size_t slot = 0; slot < methods.size(); ++slot) {
-            const size_t index = (slot + repetition + seed_order) % methods.size();
+            const Method method = methods[(slot + repetition + seed_order) % methods.size()];
             evict(eviction_buffer);
-            const auto times = measure(input, methods[index]);
+            const auto times = measure(input, method);
             std::cout << count << ',' << Width << ',' << distribution << ',' << seed << ',' << repetition
-                      << ',' << method_names[index] << ',' << (repetition == 0)
+                      << ',' << method_names[static_cast<size_t>(method)] << ',' << (repetition == 0)
                       << ',' << times.total << ',' << times.pack << ',' << times.sort
                       << ',' << times.materialize << std::endl;
         }
     }
 }
 
+template <size_t MethodCount>
+void run_grid(const std::array<uint64_t, 2>& seeds, const std::array<Method, MethodCount>& methods,
+              const std::vector<uint64_t>& buffer, size_t smoke_size) {
+    if (smoke_size != 0) {
+        run_case<64>(smoke_size, "uniform32", UINT32_MAX, 53, 0, 1, buffer, methods);
+        run_case<128>(smoke_size, "low12", 4095, 53, 0, 1, buffer, methods);
+        return;
+    }
+    for (const size_t count : {size_t{1} << 20, size_t{1} << 22}) {
+        for (unsigned index = 0; index < seeds.size(); ++index) {
+            run_case<64>(count, "uniform32", UINT32_MAX, seeds[index], index, 3, buffer, methods);
+            run_case<64>(count, "low12", 4095, seeds[index], index, 3, buffer, methods);
+            run_case<128>(count, "uniform32", UINT32_MAX, seeds[index], index, 3, buffer, methods);
+            run_case<128>(count, "low12", 4095, seeds[index], index, 3, buffer, methods);
+        }
+    }
+}
+
 int main(int argc, char** argv) {
     try {
-        const bool smoke = argc == 3 && std::string_view(argv[2]) == "--smoke";
-        if (argc != 2 && !smoke) {
-            throw std::runtime_error("usage: record-bench LOGICAL_CPU [--smoke]");
+        if (argc < 2) {
+            throw std::runtime_error("usage: record-bench LOGICAL_CPU [--blocked-probe] [--smoke]");
+        }
+        bool smoke = false;
+        bool probe = false;
+        for (int index = 2; index < argc; ++index) {
+            const std::string_view option(argv[index]);
+            if (option == "--smoke") {
+                smoke = true;
+            } else if (option == "--blocked-probe") {
+                probe = true;
+            } else {
+                throw std::runtime_error("unknown option: " + std::string(option));
+            }
         }
         pin_thread(static_cast<unsigned>(std::stoul(argv[1])));
         const std::vector<uint64_t> eviction_buffer((64 * 1024 * 1024) / sizeof(uint64_t), 1);
         std::cout << "n,record_bytes,distribution,seed,repetition,method,warmup,total_ns,pack_ns,sort_ns,materialize_ns\n";
-        if (smoke) {
-            run_case<64>(257, "uniform32", UINT32_MAX, 53, 0, 1, eviction_buffer);
-            run_case<128>(257, "low12", 4095, 53, 0, 1, eviction_buffer);
+        if (probe) {
+            run_grid({104729, 130363}, probe_methods, eviction_buffer, smoke ? 5003 : 0);
         } else {
-            constexpr std::array<uint64_t, 2> seeds{271, 1601};
-            for (const size_t count : {size_t{1} << 20, size_t{1} << 22}) {
-                for (unsigned index = 0; index < seeds.size(); ++index) {
-                    run_case<64>(count, "uniform32", UINT32_MAX, seeds[index], index, 3, eviction_buffer);
-                    run_case<64>(count, "low12", 4095, seeds[index], index, 3, eviction_buffer);
-                    run_case<128>(count, "uniform32", UINT32_MAX, seeds[index], index, 3, eviction_buffer);
-                    run_case<128>(count, "low12", 4095, seeds[index], index, 3, eviction_buffer);
-                }
-            }
+            run_grid({271, 1601}, pilot_methods, eviction_buffer, smoke ? 257 : 0);
         }
         std::cerr << peak_resident_bytes() << '\n';
     } catch (const std::exception& error) {

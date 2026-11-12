@@ -71,8 +71,11 @@ def run(args):
         "references": {"highway": HIGHWAY, "x86-simd-sort": X86_SIMD_SORT, "pdqsort_sha256": PDQ_SHA256},
         "cache_eviction_buffer_bytes": 64 * 1024 * 1024,
         "smoke": args.smoke,
+        "blocked_probe": args.blocked_probe,
     }
     command = [binary, str(args.cpu)]
+    if args.blocked_probe:
+        command.append("--blocked-probe")
     if args.smoke:
         command.append("--smoke")
     with (output / "raw.csv").open("w", encoding="utf-8", newline="") as raw:
@@ -89,6 +92,7 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=Path, required=True, help="new directory for the binary and results")
     parser.add_argument("--cpu", type=int, default=4, help="logical CPU on which to pin the benchmark thread")
     parser.add_argument("--compiler", default="g++")
+    parser.add_argument("--blocked-probe", action="store_true", help="use the fresh matrix with blocked permutation")
     parser.add_argument("--smoke", action="store_true", help="check the four paths on small development inputs")
     arguments = parser.parse_args()
     if arguments.cpu < 0:
