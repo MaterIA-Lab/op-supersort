@@ -1,0 +1,108 @@
+{
+  "source_commit": "d3ab7a9675df1cfbc52d12dcb089a195b0052ba3",
+  "python": "3.14.0",
+  "os": "Windows",
+  "started_utc": "2026-11-12T18:32:18+00:00",
+  "finished_utc": "2026-11-12T18:33:17+00:00",
+  "row_bytes": 128,
+  "page_bytes": 4096,
+  "min_extent_bytes": 65536,
+  "archives": [
+    {
+      "file": "2025-01-15-8.json.gz",
+      "url": "https://data.gharchive.org/2025-01-15-8.json.gz",
+      "status": "ok",
+      "sha256": "bc5ef91ca5a048085e33e9ba05825273719e4a3c6133c3334c78d850e6586190",
+      "compressed_bytes": 115288400,
+      "rows": 225913,
+      "invalid_json": 0,
+      "invalid_timestamp": 0,
+      "earliest": "2025-01-15T08:00:00Z",
+      "latest": "2025-01-15T08:59:59Z"
+    },
+    {
+      "file": "2025-01-15-9.json.gz",
+      "url": "https://data.gharchive.org/2025-01-15-9.json.gz",
+      "status": "ok",
+      "sha256": "157378115c0a8d029b9bd9dc4c8f86ec65f9dc1d9f8c7436d364180937bce26f",
+      "compressed_bytes": 124430115,
+      "rows": 241888,
+      "invalid_json": 0,
+      "invalid_timestamp": 0,
+      "earliest": "2025-01-15T09:00:00Z",
+      "latest": "2025-01-15T09:59:59Z"
+    },
+    {
+      "file": "2025-01-15-10.json.gz",
+      "url": "https://data.gharchive.org/2025-01-15-10.json.gz",
+      "status": "ok",
+      "sha256": "49bc6c879d71b53723ff4a8123a3d6dd625a0e8d45e5b905603ca384ba3cf6d6",
+      "compressed_bytes": 125257951,
+      "rows": 238383,
+      "invalid_json": 0,
+      "invalid_timestamp": 0,
+      "earliest": "2025-01-15T10:00:00Z",
+      "latest": "2025-01-15T10:59:59Z"
+    },
+    {
+      "file": "2025-01-15-11.json.gz",
+      "url": "https://data.gharchive.org/2025-01-15-11.json.gz",
+      "status": "ok",
+      "sha256": "bca38f0bf79f23825b1285e4609abf7d0bd001abe4976c72e3ebe0c2bfff09ac",
+      "compressed_bytes": 112783179,
+      "rows": 224818,
+      "invalid_json": 0,
+      "invalid_timestamp": 0,
+      "earliest": "2025-01-15T11:00:00Z",
+      "latest": "2025-01-15T11:59:59Z"
+    },
+    {
+      "file": "2025-01-18-8.json.gz",
+      "url": "https://data.gharchive.org/2025-01-18-8.json.gz",
+      "status": "ok",
+      "sha256": "44cd8fd3ecd4ad30d8e8e9d5f2934d12fe635ffd930f9b875493ffb8dfabb35f",
+      "compressed_bytes": 62603096,
+      "rows": 168232,
+      "invalid_json": 0,
+      "invalid_timestamp": 0,
+      "earliest": "2025-01-18T08:00:00Z",
+      "latest": "2025-01-18T08:59:59Z"
+    },
+    {
+      "file": "2025-01-18-9.json.gz",
+      "url": "https://data.gharchive.org/2025-01-18-9.json.gz",
+      "status": "ok",
+      "sha256": "4e9e3104099912cd54843d2bd71f0ff4877336e2910b0b6330d2987a1c7c283a",
+      "compressed_bytes": 64673918,
+      "rows": 180417,
+      "invalid_json": 0,
+      "invalid_timestamp": 0,
+      "earliest": "2025-01-18T09:00:00Z",
+      "latest": "2025-01-18T09:59:59Z"
+    },
+    {
+      "file": "2025-01-18-10.json.gz",
+      "url": "https://data.gharchive.org/2025-01-18-10.json.gz",
+      "status": "ok",
+      "sha256": "e1ed78358dd35cc081054e866d00d5fd7bcfbf89ee9c1bbdaa5d3f7223716267",
+      "compressed_bytes": 65284135,
+      "rows": 171904,
+      "invalid_json": 0,
+      "invalid_timestamp": 0,
+      "earliest": "2025-01-18T10:00:00Z",
+      "latest": "2025-01-18T10:59:59Z"
+    },
+    {
+      "file": "2025-01-18-11.json.gz",
+      "url": "https://data.gharchive.org/2025-01-18-11.json.gz",
+      "status": "ok",
+      "sha256": "87fb0acfbf14cc8acc2adabd36c1dbc45a252bd360a327849e3e461eb81935f2",
+      "compressed_bytes": 64037510,
+      "rows": 178394,
+      "invalid_json": 0,
+      "invalid_timestamp": 0,
+      "earliest": "2025-01-18T11:00:00Z",
+      "latest": "2025-01-18T11:59:59Z"
+    }
+  ]
+}

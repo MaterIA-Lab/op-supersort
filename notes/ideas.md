@@ -26,6 +26,8 @@ The [preregistered kill test](../runs/2026-11-12-page-remapped-merge/README.md) 
 
 **Real-data diagnostic (author: agent:gpt-6.1-sol-extra-high).** Use consecutive capture hours from GH Archive as natural batch boundaries. Sort each batch by the recorded event time and count how often whole source pages still align after the merge. The risk is that even sparse delayed events shift the output rank enough to block remapping for a long slice. This measures the input condition for the existing mechanism. [Preregistered pairs, tie policy and decision rule](../runs/2026-11-12-gharchive-page-coverage/protocol.md) · [GH Archive](https://www.gharchive.org/)
 
+**Diagnostic result.** All eight archive pairs were disjoint by event time and passed the coverage gate. The paired row counts are suitable for timing contiguous assembly. Real overlap needs a source whose batch boundaries are independent of the sort key. [Coverage](../runs/2026-11-12-gharchive-page-coverage/README.md) · [Preregistered timing](../runs/2026-11-12-gharchive-disjoint-merge/protocol.md)
+
 ## 2. Compressed keys in flight for bandwidth-bound regimes
 
 **Idea.** After a most-significant-digit pass, the bucket already encodes the high bits. Write the remaining keys in a narrower packed format (for example 3 bytes instead of 4, or deltas) so later passes move fewer bytes, and rebuild full keys only at the end.

@@ -16,7 +16,7 @@ Find a genuinely new, architecture-aware mechanism that sorts a practically rele
 
 | Line | Status | Evidence | Next step |
 |---|---|---|---|
-| Page-remapped merge of sorted runs (idea 1) | Promising, conditional | Candidate: 1.326–1.356× vs fresh-output merges on edge-overlap runs, 2.668× with 75% mapped. Loses to pre-touched output (0.364–0.738×), bursty 0.838–0.854×, interleaved 0.822–0.862×. | Measure mappable-page frequency in real sorted batches under the immutable-input, fresh-output contract. Check novelty against RUMA. |
+| Page-remapped merge of sorted runs (idea 1) | Promising, conditional | Synthetic candidate: 1.326–1.356× vs fresh-output merges on edge-overlap runs, 2.668× with 75% mapped. Loses to pre-touched output (0.364–0.738×), bursty 0.838–0.854×, interleaved 0.822–0.862×. GH Archive coverage is 48.25–99.99% across eight entirely disjoint pairs. | Time the eight archive pair sizes against bulk concatenation. Use a different dataset for real overlap and check novelty against RUMA. |
 | Payload permutation for records (idea 3) | Tile-and-sort closed | Headroom pilot estimated 1.29–1.40×. Blocked probe 0.542–0.648×. | Any new permutation must beat gather with software prefetch, IPS⁴o on rows and a record-oriented SIMD merge (Inoue and Taura). |
 | Compressed keys, small-array batches, rank sort, helper threads (ideas 2, 4, 5, 6) | Not started | — | Start with the kill test written in [ideas.md](ideas.md). |
 | Patching vqsort phases for uint32 random keys | Closed (prior research) | E055–E072 all failed; best saved about 4.4 of 9.4 ms needed. | Do not retry. |
@@ -53,7 +53,7 @@ The [run index and analysis commands](../runs/README.md#check-the-published-meas
 ## Run ledger
 
 <!-- RUNS:START -->
-6 runs: 1 promising, 1 failed, 2 diagnostic, 2 setup.
+7 runs: 1 promising, 1 failed, 3 diagnostic, 2 setup.
 
 | Run | Date | Verdict | Idea | Result | Baseline | Closes | Opens | Model |
 |---|---|---|---|---|---|---|---|---|
@@ -63,6 +63,7 @@ The [run index and analysis commands](../runs/README.md#check-the-published-meas
 | [2026-11-12-blocked-permutation](../runs/2026-11-12-blocked-permutation/) | 2026-11-12 16:48 | failed | 3. Payload permutation for records | 0.542–0.648× (0/8 cases ≥1.3×) | fastest measured reference, including gather with software prefetch | tile-and-sort payload permutation | gather with software prefetch as the control to beat | agent:gpt-6 (Codex) |
 | [2026-11-12-page-remapped-merge](../runs/2026-11-12-page-remapped-merge/) | 2026-11-12 17:21 | diagnostic | 1. Virtual memory as a data-movement engine | 1.52–1.59× estimated for edge overlap; at most 1.08× for bursty runs | fastest fresh-output merge (estimate from calibration) | — | page-remapped merge candidate | OpenAI GPT-6.1 Sol, Extra High |
 | [2026-11-12-page-remapped-merge-candidate](../runs/2026-11-12-page-remapped-merge-candidate/) | 2026-11-12 17:33 | promising | 1. Virtual memory as a data-movement engine | 1.326–2.668× on edge-overlap runs (2/4 cases ≥1.3×, 0/4 ≥1.5× on both seeds) | fastest merge into a fresh output | — | frequency of mappable pages in real sorted batches | OpenAI GPT-6.1 Sol, Extra High |
+| [2026-11-12-gharchive-page-coverage](../runs/2026-11-12-gharchive-page-coverage/) | 2026-11-12 18:25 | diagnostic | 1. Virtual memory as a data-movement engine | 8/8 pairs passed 37.5% coverage; 0/8 had timestamp overlap | — | — | timing against two bulk copies on the archive batch sizes | OpenAI GPT-6.1 Sol, Extra High |
 
 Summaries, oldest first:
 
@@ -72,4 +73,5 @@ Summaries, oldest first:
 - **2026-11-12-blocked-permutation** (failed): Rewriting and sorting descriptors and then moving the records in cache-sized tiles took 1.67–2.14× as long as the original gather phase. The probe measured those costs together. Gather with software prefetch won all 48 paired repetitions.
 - **2026-11-12-page-remapped-merge** (diagnostic): Mapping pages instead of copying them pays off from 64 KiB extents upwards (4 KiB extents lose). In a merge only page-aligned slices qualify, which was 37.5% of the output when two runs overlap at the edges and 3–7% for bursty runs.
 - **2026-11-12-page-remapped-merge-candidate** (promising): Mapping aligned input pages into the output beat the best fresh-output merge of two sorted runs of 128-byte records by 1.33–1.36×, and by 2.67× when 75% of the output was mapped. It lost to a merge into an already-touched buffer (0.36–0.74×) and regressed on bursty and interleaved runs (0.82–0.86×). Synthetic data only.
+- **2026-11-12-gharchive-page-coverage** (diagnostic): All eight registered archive pairs had disjoint event-time ranges. Between 48.25% and nearly 100% of the modeled bytes can be remapped, so these inputs measure assembly of preordered ranges and leave overlap untested.
 <!-- RUNS:END -->

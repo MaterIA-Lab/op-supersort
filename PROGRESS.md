@@ -16,7 +16,7 @@ The caveats matter:
 
 - With a reusable output buffer already in memory, an ordinary merge was faster in all four edge-overlap comparisons. The remapping method took about 1.4–2.7× as long.
 - Bursty and closely interleaved batches let the prototype reuse few or zero pages. It took 16–22% longer than the best fresh-output reference on those layouts.
-- The tests used synthetic data and one thread on a Ryzen 7 5800X under WSL2. How often real data (logs, time series) has this shape is still unknown.
+- The overlapping tests used synthetic data and one thread on a Ryzen 7 5800X under WSL2. Eight pairs of public GitHub event batches had disjoint time ranges, so those archives can test concatenation but leave actual overlap untested. [Archive coverage diagnostic](runs/2026-11-12-gharchive-page-coverage/README.md)
 
 ## What does not work
 
@@ -25,7 +25,7 @@ The caveats matter:
 
 ## What comes next
 
-- Measure how many bytes in real sorted batches are eligible for remapping. This depends on both the lengths of the contiguous slices and how they line up in the merged output. [Candidate contract and reproduction](runs/2026-11-12-page-remapped-merge-candidate/README.md)
+- Time all eight archive pairs against two bulk copies. For overlapping arrivals, use a source whose capture batches are formed independently of the event timestamp. [Archive timing protocol](runs/2026-11-12-gharchive-disjoint-merge/protocol.md)
 - Test other ideas from the [backlog](notes/ideas.md): compressed keys for large arrays, sorting many small arrays together, rank computation and helper threads.
 
 ## All experiments
@@ -33,10 +33,11 @@ The caveats matter:
 Generated from the run logs by `scripts/build_progress.py`. Newest first.
 
 <!-- RUNS:START -->
-6 runs: 1 promising, 1 failed, 2 diagnostic, 2 setup.
+7 runs: 1 promising, 1 failed, 3 diagnostic, 2 setup.
 
 | Date | Run | Verdict | Result | What we learned |
 |---|---|---|---|---|
+| 2026-11-12 18:25 | [GH Archive page coverage](runs/2026-11-12-gharchive-page-coverage/) | 🔎 diagnostic | 8/8 pairs passed 37.5% coverage; 0/8 had timestamp overlap | All eight registered archive pairs had disjoint event-time ranges. Between 48.25% and nearly 100% of the modeled bytes can be remapped, so these inputs measure assembly of preordered ranges and leave overlap untested. |
 | 2026-11-12 17:33 | [Page-remapped merge candidate](runs/2026-11-12-page-remapped-merge-candidate/) | 🟡 promising | 1.326–2.668× on edge-overlap runs (2/4 cases ≥1.3×, 0/4 ≥1.5× on both seeds) | Mapping aligned input pages into the output beat the best fresh-output merge of two sorted runs of 128-byte records by 1.33–1.36×, and by 2.67× when 75% of the output was mapped. It lost to a merge into an already-touched buffer (0.36–0.74×) and regressed on bursty and interleaved runs (0.82–0.86×). Synthetic data only. |
 | 2026-11-12 17:21 | [Page-remapped merge pilot](runs/2026-11-12-page-remapped-merge/) | 🔎 diagnostic | 1.52–1.59× estimated for edge overlap; at most 1.08× for bursty runs | Mapping pages instead of copying them pays off from 64 KiB extents upwards (4 KiB extents lose). In a merge only page-aligned slices qualify, which was 37.5% of the output when two runs overlap at the edges and 3–7% for bursty runs. |
 | 2026-11-12 16:48 | [Blocked record permutation probe](runs/2026-11-12-blocked-permutation/) | ❌ failed | 0.542–0.648× (0/8 cases ≥1.3×) | Rewriting and sorting descriptors and then moving the records in cache-sized tiles took 1.67–2.14× as long as the original gather phase. The probe measured those costs together. Gather with software prefetch won all 48 paired repetitions. |
