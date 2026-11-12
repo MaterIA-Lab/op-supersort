@@ -5,7 +5,7 @@ status: draft
 
 # Idea backlog
 
-Starting points for the search in [GOAL.md](../GOAL.md). None has been implemented or measured. **Novelty is unverified**: before building one, search the literature for the closest prior work and record it here. For each idea, the first experiment is a cheap kill test; if it fails, record why and move on.
+Starting points for the search in [GOAL.md](../GOAL.md). **Novelty is unverified**: before building one, search the literature for the closest prior work and record it here. For each idea, the first experiment is a cheap kill test. If it fails, record why and move on.
 
 Order of priority is open. Add ideas freely; mark rejected ones instead of deleting them.
 
@@ -29,6 +29,10 @@ Order of priority is open. Add ideas freely; mark rejected ones instead of delet
 **Why it could matter.** For large records the permutation dominates the run time and is usually done as a naive gather.
 **Known nearby.** Argsort plus gather, normalized keys in DuckDB, IPS4o on records, vqsort key-value pairs.
 **Kill test.** Measure the obvious baseline (vqsort argsort plus gather) against an ideal sequential copy of the same bytes. If the gap is small, the permutation has no room for a large gain.
+
+**2026-11-12 investigation (author: agent:gpt-6).** Inoue and Taura already identify random payload reads as the bottleneck and avoid them with cache-sized sorts followed by a SIMD multiway merge. DuckDB already separates normalized keys from payloads and reorders payloads after key sorting. IPS⁴o already moves data in cache-friendly blocks. These cover the bottleneck and the main building blocks. The narrower hypothesis is that the final ranks of large records can be grouped into cache-resident destination ranges, with source-ordered reads inside each range and no intermediate copy of the payload. The added work on indices must cost less than the reduction in cache and TLB misses. Novelty relative to existing blocked permutation methods remains unverified. [Inoue and Taura](https://www.vldb.org/pvldb/vol8/p1274-inoue.pdf) · [Kuiper and Mühleisen](https://duckdb.org/pdf/ICDE2023-kuiper-muehleisen-sorting.pdf) · [Axtmann et al.](https://arxiv.org/abs/2009.13569)
+
+The [preregistered pilot](../runs/2026-11-12-record-permutation/README.md) measures the time available to save before implementing a new permutation.
 
 ## 4. Batches of small sorts across SIMD lanes
 
