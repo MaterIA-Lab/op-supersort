@@ -18,6 +18,8 @@ No result against the new OpenPrototypes goal has been measured yet.
 - [Experimental prototypes](prototypes/agents/) and [usable prototypes](prototypes/humans/)
 - [Final summary](SUMMARY.md)
 
+`lab/` is a Git-ignored local workspace for research files and experiments. It is not shared or backed up by Git; meaningful findings and evidence are also recorded in the tracked project.
+
 ## Funding
 
 The project starts with personal funding and welcomes cofunding. Spending is reported after experiments or at checkpoints, rather than continuously.

@@ -10,6 +10,10 @@ __pycache__/
 *.py[cod]
 .venv/
 
+# Local research workspace; publish relevant evidence separately.
+/lab/*
+!/lab/.gitkeep
+
 # Obsidian per-user state (vault content itself is committed)
 .obsidian/workspace*.json
 .obsidian/cache
