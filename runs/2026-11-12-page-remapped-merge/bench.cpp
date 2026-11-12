@@ -6,6 +6,7 @@
 #include <cstring>
 #include <iostream>
 #include <new>
+#include <optional>
 #include <stdexcept>
 #include <string_view>
 #include <system_error>
@@ -15,9 +16,12 @@
 #include <sys/resource.h>
 #include <unistd.h>
 
+#include "../../prototypes/agents/page-remapped-merge/slice.hpp"
+
 namespace {
 
-constexpr size_t page_bytes = 4096;
+using page_remapped_merge::full_source_pages;
+using page_remapped_merge::page_bytes;
 constexpr size_t mib = 1024 * 1024;
 constexpr size_t calibration_bytes = 128 * mib;
 constexpr std::array extent_sizes{page_bytes, size_t{64 * 1024}, 2 * mib, 16 * mib, 128 * mib};
@@ -127,26 +131,41 @@ struct Times {
     int64_t assembly;
     int64_t scan;
     int64_t total;
+    int64_t teardown;
 };
 
 template <class Assemble, class Verify>
 Times sample(size_t bytes, uint64_t checksum, const std::vector<uint64_t>& buffer,
-             Assemble assemble, Verify verify) {
+             Assemble assemble, Verify verify, bool reuse = false) {
+    std::optional<Region> output;
+    if (reuse) {
+        output.emplace(bytes);
+        volatile char* data = output->data();
+        for (size_t offset = 0; offset < bytes; offset += page_bytes) {
+            data[offset] = 0;
+        }
+    }
     evict(buffer);
     const auto start = Clock::now();
-    Region output(bytes);
-    assemble(output);
-    output.make_read_only();
+    if (!reuse) {
+        output.emplace(bytes);
+    }
+    assemble(*output);
+    output->make_read_only();
     const auto assembled = Clock::now();
-    const uint64_t actual_checksum = cache_line_sum(output.data(), bytes);
+    const uint64_t actual_checksum = cache_line_sum(output->data(), bytes);
     const auto finished = Clock::now();
-    if (actual_checksum != checksum || !verify(output.data())) {
+    if (actual_checksum != checksum || !verify(output->data())) {
         throw std::runtime_error("output did not match every expected byte");
     }
+    const auto teardown = Clock::now();
+    output.reset();
+    const auto released = Clock::now();
     const auto nanoseconds = [](Clock::duration duration) {
         return std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count();
     };
-    return {nanoseconds(assembled - start), nanoseconds(finished - assembled), nanoseconds(finished - start)};
+    return {nanoseconds(assembled - start), nanoseconds(finished - assembled), nanoseconds(finished - start),
+            nanoseconds(released - teardown)};
 }
 
 void print_times(Times times) {
@@ -273,16 +292,6 @@ void visit_slices(const std::array<Run, 2>& runs, Emit emit) {
     }
 }
 
-struct Pages {
-    size_t prefix;
-    size_t bytes;
-};
-
-Pages full_source_pages(size_t source, size_t bytes) {
-    const size_t prefix = std::min((page_bytes - source % page_bytes) % page_bytes, bytes);
-    return {prefix, (bytes - prefix) / page_bytes * page_bytes};
-}
-
 struct Coverage {
     size_t source_aligned = 0;
     size_t extent_count = 0;
@@ -324,11 +333,48 @@ void scalar_merge(const std::array<Run, 2>& runs, char* output) {
     }
 }
 
+void hybrid_merge(std::array<Run, 2> runs, char* output) {
+    if (!runs[0].count || !runs[1].count) {
+        scalar_merge(runs, output);
+        return;
+    }
+    const unsigned first = runs[1].data[0].key < runs[0].data[0].key;
+    auto& leading = runs[first];
+    const size_t prefix = winning_prefix(leading.data, leading.count, runs[1 - first].data[0].key);
+    std::memcpy(output, leading.data, prefix * sizeof(Record));
+    output += prefix * sizeof(Record);
+    leading.data += prefix;
+    leading.count -= prefix;
+    if (!leading.count) {
+        std::memcpy(output, runs[1 - first].data, runs[1 - first].count * sizeof(Record));
+        return;
+    }
+
+    const unsigned last = runs[0].data[runs[0].count - 1].key < runs[1].data[runs[1].count - 1].key;
+    auto& trailing = runs[last];
+    const auto& other = runs[1 - last];
+    const auto* suffix = std::lower_bound(trailing.data, trailing.data + trailing.count,
+                                          other.data[other.count - 1].key,
+                                          [](const Record& row, uint64_t key) { return row.key < key; });
+    const size_t middle = static_cast<size_t>(suffix - trailing.data);
+    const size_t suffix_bytes = (trailing.count - middle) * sizeof(Record);
+    trailing.count = middle;
+    scalar_merge(runs, output);
+    std::memcpy(output + (runs[0].count + runs[1].count) * sizeof(Record), suffix, suffix_bytes);
+}
+
+enum class Method { scalar, bulk, hybrid, reused, remap };
+constexpr std::array method_names{"scalar", "bulk", "hybrid", "hybrid_reused", "remap"};
+constexpr std::array pilot_methods{Method::scalar, Method::bulk};
+constexpr std::array candidate_methods{Method::scalar, Method::bulk, Method::hybrid, Method::reused, Method::remap};
+
 size_t round_to_page(size_t bytes) {
     return (bytes + page_bytes - 1) / page_bytes * page_bytes;
 }
 
-void merge_case(size_t count, Layout layout, uint64_t seed, bool smoke, const std::vector<uint64_t>& buffer) {
+template <size_t MethodCount>
+void merge_case(size_t count, Layout layout, uint64_t seed, unsigned seed_order, bool smoke,
+                const std::vector<uint64_t>& buffer, const std::array<Method, MethodCount>& methods) {
     const auto labels = make_labels(count, layout, seed);
     const size_t left = std::count(labels.begin(), labels.end(), uint8_t{0});
     const size_t second_offset = round_to_page(left * sizeof(Record));
@@ -336,8 +382,8 @@ void merge_case(size_t count, Layout layout, uint64_t seed, bool smoke, const st
     MemoryFile file(input_bytes);
     Region input(input_bytes, file.fd());
     const std::array source{input.data(), input.data() + second_offset};
-    const std::array runs{Run{reinterpret_cast<Record*>(source[0]), left},
-                          Run{reinterpret_cast<Record*>(source[1]), count - left}};
+    const std::array rows{::new (source[0]) Record[left], ::new (source[1]) Record[count - left]};
+    const std::array runs{Run{rows[0], left}, Run{rows[1], count - left}};
     std::array<size_t, 2> next{};
     std::vector<Record> expected(count);
     SplitMix64 jitter(seed ^ 0xc13fa9a902a6328fULL);
@@ -350,7 +396,7 @@ void merge_case(size_t count, Layout layout, uint64_t seed, bool smoke, const st
             word = payload.next();
         }
         const unsigned side = labels[rank];
-        new (source[side] + next[side]++ * sizeof(Record)) Record(row);
+        rows[side][next[side]++] = row;
     }
     input.make_read_only();
     const auto geometry = coverage(runs, expected);
@@ -358,40 +404,70 @@ void merge_case(size_t count, Layout layout, uint64_t seed, bool smoke, const st
     const size_t bytes = count * sizeof(Record);
     const uint64_t checksum = cache_line_sum(expected_bytes, bytes);
     for (unsigned repetition = 0; repetition <= (smoke ? 1U : 5U); ++repetition) {
-        for (unsigned slot = 0; slot < 2; ++slot) {
-            const bool bulk = (slot + repetition) % 2;
+        for (size_t slot = 0; slot < methods.size(); ++slot) {
+            const Method method = methods[(slot + repetition + seed_order) % methods.size()];
+            size_t mapped_bytes = 0;
+            size_t map_calls = 0;
             const Times times = sample(bytes, checksum, buffer, [&](Region& output) {
-                if (bulk) {
-                    visit_slices(runs, [&](unsigned side, size_t from, size_t to, size_t length) {
-                        std::memcpy(output.data() + to * sizeof(Record), runs[side].data + from,
-                                    length * sizeof(Record));
-                    });
-                } else {
+                if (method == Method::scalar) {
                     scalar_merge(runs, output.data());
+                } else if (method == Method::hybrid || method == Method::reused) {
+                    hybrid_merge(runs, output.data());
+                } else {
+                    visit_slices(runs, [&](unsigned side, size_t from, size_t to, size_t length) {
+                        const size_t source_offset = from * sizeof(Record);
+                        const size_t destination = to * sizeof(Record);
+                        const size_t length_bytes = length * sizeof(Record);
+                        const auto copy = [&](size_t relative, size_t amount) {
+                            std::memcpy(output.data() + destination + relative,
+                                        source[side] + source_offset + relative, amount);
+                        };
+                        if (method == Method::remap) {
+                            const size_t backing_offset = side == 0 ? 0 : second_offset;
+                            mapped_bytes += page_remapped_merge::materialize_slice(source_offset, destination, length_bytes,
+                                copy, [&](size_t relative, size_t amount) {
+                                    output.map_slice(file.fd(), backing_offset + source_offset + relative,
+                                                     destination + relative, amount);
+                                    ++map_calls;
+                                });
+                        } else {
+                            copy(0, length_bytes);
+                        }
+                    });
                 }
-            }, [&](const char* output) { return std::memcmp(output, expected_bytes, bytes) == 0; });
+            }, [&](const char* output) { return std::memcmp(output, expected_bytes, bytes) == 0; },
+            method == Method::reused);
             std::cout << count << ',' << layout_names[static_cast<size_t>(layout)] << ',' << seed << ','
-                      << repetition << ',' << (bulk ? "bulk" : "scalar") << ',' << (repetition == 0);
+                      << repetition << ',' << method_names[static_cast<size_t>(method)] << ',' << (repetition == 0);
             print_times(times);
             std::cout << ',' << geometry.source_aligned << ',' << geometry.extent_count;
             for (size_t bucket : geometry.bytes) {
                 std::cout << ',' << bucket;
+            }
+            if constexpr (MethodCount == candidate_methods.size()) {
+                std::cout << ',' << mapped_bytes << ',' << map_calls << ',' << times.teardown;
             }
             std::cout << '\n';
         }
     }
 }
 
-void benchmark_merge(bool smoke, const std::vector<uint64_t>& buffer) {
+template <size_t MethodCount>
+void benchmark_merge(bool smoke, const std::vector<uint64_t>& buffer, const std::array<Method, MethodCount>& methods,
+                     const std::array<uint64_t, 2>& seeds) {
     std::cout << "records,layout,seed,repetition,method,warmup,assembly_ns,scan_ns,total_ns,source_aligned_bytes,extents";
     for (size_t size : extent_sizes) {
         std::cout << ",eligible_" << size;
     }
+    if constexpr (MethodCount == candidate_methods.size()) {
+        std::cout << ",mapped_bytes,map_calls,teardown_ns";
+    }
     std::cout << '\n';
     for (size_t count : {size_t{1} << 20, size_t{1} << 22}) {
         for (auto layout : {Layout::adjacent, Layout::edge, Layout::bursty, Layout::interleaved}) {
-            for (uint64_t seed : {271, 1601}) {
-                merge_case(smoke ? size_t{1} << 15 : count, layout, seed, smoke, buffer);
+            for (unsigned index = 0; index < seeds.size(); ++index) {
+                const unsigned order = MethodCount == candidate_methods.size() ? index : 0;
+                merge_case(smoke ? size_t{1} << 15 : count, layout, seeds[index], order, smoke, buffer, methods);
             }
         }
         if (smoke) {
@@ -406,7 +482,7 @@ int main(int argc, char** argv) {
     try {
         const bool smoke = argc == 3 && std::string_view(argv[2]) == "--smoke";
         if (argc != 2 && !smoke) {
-            throw std::runtime_error("usage: bench calibrate|merge [--smoke]");
+            throw std::runtime_error("usage: bench calibrate|merge|candidate [--smoke]");
         }
         if (sysconf(_SC_PAGESIZE) != page_bytes) {
             throw std::runtime_error("experiment requires 4 KiB pages");
@@ -416,7 +492,9 @@ int main(int argc, char** argv) {
         if (mode == "calibrate") {
             calibrate(smoke, buffer);
         } else if (mode == "merge") {
-            benchmark_merge(smoke, buffer);
+            benchmark_merge(smoke, buffer, pilot_methods, {271, 1601});
+        } else if (mode == "candidate") {
+            benchmark_merge(smoke, buffer, candidate_methods, {104729, 130363});
         } else {
             throw std::runtime_error("unknown benchmark mode");
         }

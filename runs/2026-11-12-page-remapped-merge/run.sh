@@ -1,10 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -lt 1 || $# -gt 2 || ( $# -eq 2 && $2 != --smoke ) ]]; then
-    echo 'usage: bash run.sh NEW_OUTPUT_DIRECTORY [--smoke]' >&2
+if [[ $# -lt 1 || $# -gt 3 ]]; then
+    echo 'usage: bash run.sh NEW_OUTPUT_DIRECTORY [--candidate] [--smoke]' >&2
     exit 2
 fi
+variant=pilot
+smoke=()
+for option in "${@:2}"; do
+    case "$option" in
+        --candidate) variant=candidate ;;
+        --smoke) smoke=(--smoke) ;;
+        *) printf 'unknown option: %s\n' "$option" >&2; exit 2 ;;
+    esac
+done
 
 source_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 build=$(mktemp -d)
@@ -27,8 +36,9 @@ flags=(-O3 -DNDEBUG -std=c++20 -march=native -Wall -Wextra -Wpedantic)
     echo "page_bytes=$(getconf PAGESIZE)"
     echo "affinity_logical_cpu=$cpu"
     echo "thread_count=1"
-    echo "compiler=$($compiler -dumpfullversion -dumpversion)"
+    echo "compiler=$("$compiler" -dumpfullversion -dumpversion)"
     echo "flags=${flags[*]}"
+    echo "variant=$variant"
     getconf GNU_LIBC_VERSION
     for setting in enabled shmem_enabled; do
         path="/sys/kernel/mm/transparent_hugepage/$setting"
@@ -41,7 +51,10 @@ flags=(-O3 -DNDEBUG -std=c++20 -march=native -Wall -Wextra -Wpedantic)
     echo "load_before=$(cut -d ' ' -f 1-3 /proc/loadavg)"
 } > "$output/metadata.txt"
 
-mode=("${@:2}")
-taskset -c "$cpu" "$build/bench" calibrate "${mode[@]}" > "$output/calibration.csv" 2>> "$output/metadata.txt"
-taskset -c "$cpu" "$build/bench" merge "${mode[@]}" > "$output/merge.csv" 2>> "$output/metadata.txt"
+if [[ $variant == pilot ]]; then
+    taskset -c "$cpu" "$build/bench" calibrate "${smoke[@]}" > "$output/calibration.csv" 2>> "$output/metadata.txt"
+    taskset -c "$cpu" "$build/bench" merge "${smoke[@]}" > "$output/merge.csv" 2>> "$output/metadata.txt"
+else
+    taskset -c "$cpu" "$build/bench" candidate "${smoke[@]}" > "$output/candidate.csv" 2>> "$output/metadata.txt"
+fi
 echo "utc_finished=$(date -u +%FT%TZ)" >> "$output/metadata.txt"
