@@ -10,9 +10,11 @@ WIDTHS = (64, 128)
 DISTRIBUTIONS = ("uniform32", "low12")
 SEEDS = (271, 1601)
 METHODS = ("vq_gather", "x86_gather", "pdq_rows", "sequential_copy")
+PROBE_SEEDS = (104729, 130363)
+PROBE_METHODS = ("vq_gather", "x86_gather", "pdq_rows", "vq_prefetch", "x86_prefetch", "blocked")
 
 
-def read_samples(path):
+def read_samples(path, seeds, methods):
     samples = {}
     with path.open(newline="", encoding="utf-8") as handle:
         for row in csv.DictReader(handle):
@@ -24,7 +26,7 @@ def read_samples(path):
                     min(times) < 0 or not times[0] or times[0] < sum(times[1:])):
                 raise ValueError(f"invalid or duplicated sample {key}")
             samples[key] = times
-    expected = set(product(COUNTS, WIDTHS, DISTRIBUTIONS, SEEDS, range(4), METHODS))
+    expected = set(product(COUNTS, WIDTHS, DISTRIBUTIONS, seeds, range(4), methods))
     if samples.keys() != expected:
         raise ValueError(f"expected {len(expected)} unique preregistered samples")
     return samples
@@ -57,7 +59,34 @@ def summarize(samples):
         print(f"- {count:,} records, {width} bytes, {distribution}")
 
 
+def summarize_probe(samples):
+    passed = []
+    print("| Records | Bytes per row | Keys | Seed | vq + gather | x86 + gather | pdqsort rows | vq + prefetch | x86 + prefetch | Blocked | Blocked materialization | Blocked speedup |")
+    print("|---:|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
+    for case in product(COUNTS, WIDTHS, DISTRIBUTIONS):
+        seed_ratios = []
+        for seed in PROBE_SEEDS:
+            trials = [[samples[(*case, seed, rep, method)] for method in PROBE_METHODS] for rep in range(1, 4)]
+            totals = [median(trial[index][0] for trial in trials) / 1e6 for index in range(len(PROBE_METHODS))]
+            materialization = median(trial[-1][3] for trial in trials) / 1e6
+            ratio = median(min(timing[0] for timing in trial[:-1]) / trial[-1][0] for trial in trials)
+            seed_ratios.append(ratio)
+            times = " | ".join(f"{time:.2f}" for time in totals)
+            print(f"| {case[0]:,} | {case[1]} | {case[2]} | {seed} | {times} | "
+                  f"{materialization:.2f} | {ratio:.3f}× |")
+        if min(seed_ratios) >= 1.3:
+            passed.append(case)
+    print(f"\nCases reaching the candidate threshold on both fresh seeds ({len(passed)}/8)")
+    for count, width, distribution in passed:
+        print(f"- {count:,} records, {width} bytes, {distribution}")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Check the paired samples and summarize the pilot.")
     parser.add_argument("raw", type=Path)
-    summarize(read_samples(parser.parse_args().raw))
+    parser.add_argument("--blocked-probe", action="store_true")
+    arguments = parser.parse_args()
+    if arguments.blocked_probe:
+        summarize_probe(read_samples(arguments.raw, PROBE_SEEDS, PROBE_METHODS))
+    else:
+        summarize(read_samples(arguments.raw, SEEDS, METHODS))
