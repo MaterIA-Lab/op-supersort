@@ -34,3 +34,14 @@ cost: not captured                          # optional: tokens and money, or "no
 | `setup` | Infrastructure, smoke tests or project organisation. No research result. |
 
 After adding or editing a run, run `python scripts/build_progress.py`. CI fails if a front matter block is invalid or the generated files are stale.
+
+## Check the published measurements
+
+These commands regenerate the tables from the tracked CSVs without running the benchmarks. Run them from the repository root with Python 3. Each run's README links its protocol, raw data, metadata and full reproduction commands. The metadata records the source commit used for each measurement.
+
+```sh
+python runs/2026-11-12-record-permutation/analyze.py runs/2026-11-12-record-permutation/raw.csv
+python runs/2026-11-12-record-permutation/analyze.py runs/2026-11-12-blocked-permutation/raw.csv --blocked-probe
+python runs/2026-11-12-page-remapped-merge/analyze.py runs/2026-11-12-page-remapped-merge
+python runs/2026-11-12-page-remapped-merge/analyze.py runs/2026-11-12-page-remapped-merge-candidate --candidate
+```

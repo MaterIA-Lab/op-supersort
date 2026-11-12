@@ -46,7 +46,7 @@
       "date": "2026-11-12 16:48",
       "verdict": "failed",
       "idea": "3. Payload permutation for records",
-      "summary": "Writing records in cache-sized destination tiles after sorting their descriptors by source made the permutation 1.67–2.14× slower than a plain gather. The extra descriptor sort costs more than the locality saves. Gather with software prefetch won every repetition.",
+      "summary": "Rewriting and sorting descriptors and then moving the records in cache-sized tiles took 1.67–2.14× as long as the original gather phase. The probe measured those costs together. Gather with software prefetch won all 48 paired repetitions.",
       "result": "0.542–0.648× (0/8 cases ≥1.3×)",
       "baseline": "fastest measured reference, including gather with software prefetch",
       "closes": [
