@@ -1,19 +1,14 @@
-# Project metadata. Keep it in sync with projects/registry.yaml in MaterIA-Lab/OpenPrototypes.
-
-id: <project-id>                 # kebab-case; the repo is MaterIA-Lab/op-<project-id>
-title: <Project title>
-status: proposed                 # proposed | approved | active | paused | done | failed | abandoned
-goal: <One-sentence research goal.>
-started:                         # YYYY-MM-DD, when status becomes active
-models: []                       # e.g. [claude-opus-5-5]
+id: supersort
+title: SuperSort
+status: active
+goal: >-
+  Research architecture-aware CPU sorting for numeric types and objects, aiming
+  for at least 25% less time than the fastest applicable reference in 90% of
+  predefined cases at each of three input sizes.
+started: 2026-11-12
+models: [gpt-6.1-sol]
 budget:
   currency: EUR
-  limit: 0                       # hard cap for this project; agents stop before reaching it
-tags: []
-
-# Headline results, shown in README.md and on the website. Only measured results.
+  limit: null # No fixed project cap.
+tags: [performance, sorting, cpu, algorithms]
 results: []
-#  - metric: <what was measured>
-#    value: <number and unit>
-#    baseline: <what it is compared against>
-#    link: SUMMARY.md
