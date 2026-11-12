@@ -20,6 +20,8 @@ Order of priority is open. Add ideas freely; mark rejected ones instead of delet
 
 The [preregistered kill test](../runs/2026-11-12-page-remapped-merge/README.md) measures both page eligibility and the cost of mapping versus copying before building a full candidate.
 
+**Pilot.** Both sizes of the edge-overlap layout cleared the diagnostic threshold on both seeds. In that layout 37.5% of the output could reuse pages. In the bursty layout, only 2.7–6.9% could reuse pages even though about 88% of bytes belonged to full source pages. The [fresh-seed candidate protocol](../runs/2026-11-12-page-remapped-merge-candidate/README.md) includes a competitive merge specialized for long edges and a reusable-buffer control. [Pilot results](../runs/2026-11-12-page-remapped-merge/summary.md)
+
 ## 2. Compressed keys in flight for bandwidth-bound regimes
 
 **Idea.** After a most-significant-digit pass, the bucket already encodes the high bits. Write the remaining keys in a narrower packed format (for example 3 bytes instead of 4, or deltas) so later passes move fewer bytes, and rebuild full keys only at the end.
