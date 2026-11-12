@@ -1,0 +1,60 @@
+name: Agent auto-merge
+
+# Agents push to agent/* branches. If the secret scan passes, this workflow
+# opens (or reuses) a pull request into main and merges it right away, so the
+# research is published live while keeping a PR record of every merge.
+# If the merge fails (for example a conflict), the PR stays open for a human.
+#
+# Requires: Settings → Actions → General →
+#   "Read and write permissions" and "Allow GitHub Actions to create and approve pull requests".
+
+on:
+  push:
+    branches: ["agent/**"]
+
+concurrency:
+  group: agent-automerge-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  secret-scan:
+    uses: ./.github/workflows/gitleaks.yml
+
+  merge:
+    needs: secret-scan
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BRANCH: ${{ github.ref_name }}
+      BASE: ${{ github.event.repository.default_branch }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Skip if there is nothing to merge
+        id: diff
+        run: |
+          ahead=$(git rev-list --count "origin/${BASE}..${GITHUB_SHA}")
+          echo "ahead=${ahead}" >> "$GITHUB_OUTPUT"
+          echo "${BRANCH} is ${ahead} commit(s) ahead of ${BASE}"
+
+      - name: Open or reuse pull request
+        if: steps.diff.outputs.ahead != '0'
+        run: |
+          pr=$(gh pr list --head "$BRANCH" --base "$BASE" --state open --json number -q '.[0].number')
+          if [ -z "$pr" ]; then
+            gh pr create --head "$BRANCH" --base "$BASE" \
+              --title "agent: ${BRANCH#agent/}" \
+              --body "Automated PR from \`${BRANCH}\`. Merged automatically once the secret scan passes."
+            pr=$(gh pr list --head "$BRANCH" --base "$BASE" --state open --json number -q '.[0].number')
+          fi
+          echo "PR=${pr}" >> "$GITHUB_ENV"
+
+      - name: Merge
+        if: steps.diff.outputs.ahead != '0'
+        run: gh pr merge "$PR" --merge --match-head-commit "$GITHUB_SHA"

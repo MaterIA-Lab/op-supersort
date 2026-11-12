@@ -1,0 +1,21 @@
+# Secrets: never commit these
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Obsidian per-user state (vault content itself is committed)
+.obsidian/workspace*.json
+.obsidian/cache
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

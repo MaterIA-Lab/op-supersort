@@ -1,0 +1,19 @@
+# Project metadata. Keep it in sync with projects/registry.yaml in MaterIA-Lab/OpenPrototypes.
+
+id: <project-id>                 # kebab-case; the repo is MaterIA-Lab/op-<project-id>
+title: <Project title>
+status: proposed                 # proposed | approved | active | paused | done | failed | abandoned
+goal: <One-sentence research goal.>
+started:                         # YYYY-MM-DD, when status becomes active
+models: []                       # e.g. [claude-opus-5-5]
+budget:
+  currency: EUR
+  limit: 0                       # hard cap for this project; agents stop before reaching it
+tags: []
+
+# Headline results, shown in README.md and on the website. Only measured results.
+results: []
+#  - metric: <what was measured>
+#    value: <number and unit>
+#    baseline: <what it is compared against>
+#    link: SUMMARY.md

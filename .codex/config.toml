@@ -1,0 +1,5 @@
+# Project-level Codex configuration. Keep MCP servers in sync with .mcp.json.
+# Example:
+# [mcp_servers.example]
+# command = "npx"
+# args = ["-y", "example-mcp-server"]
