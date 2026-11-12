@@ -33,3 +33,15 @@ Measure a straight two-finger row merge and a run-aware merge that uses gallopin
 For each size, layout and seed, start from the median paired minimum of the two measured reference totals. For each calibrated extent bucket, credit eligible bytes with the positive part of the median paired time saved by mapping instead of copying in A, scaled by bytes relative to the calibration volume. Subtract the sum from the reference time. The result is an optimistic estimate that assigns zero extra cost to planning and mixed mapping/copying. Treat a nonpositive prediction as an invalid estimate and inspect it before drawing conclusions.
 
 Continue only if a non-control layout at one size estimates at least 1.3× on both seeds. A passing pilot permits a real candidate with fresh seeds and the same I/O contract. Report controls and regressions as well. These synthetic layouts test the mechanism, with practical relevance on real data still to be established.
+
+## Reproduction
+
+From the repository root on Linux or in WSL2, use GCC, Python 3 and 4 KiB base pages. The runner pins both processes to logical CPU 4 by default (`PAGE_MERGE_CPU` can override it), builds in a temporary directory and writes CSV and machine metadata to a new output directory.
+
+```sh
+bash runs/2026-11-12-page-remapped-merge/run.sh lab/page-merge-smoke --smoke
+bash runs/2026-11-12-page-remapped-merge/run.sh lab/page-merge-pilot
+python3 runs/2026-11-12-page-remapped-merge/analyze.py lab/page-merge-pilot
+```
+
+`source_aligned_bytes` counts full pages in each source slice while ignoring the destination offset. `eligible_*` columns count only pages that also align at the destination. The output is read-only, and assembly plus first scan are timed. Byte-for-byte verification and output teardown follow the timed interval.
