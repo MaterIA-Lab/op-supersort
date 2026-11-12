@@ -32,7 +32,7 @@ Order of priority is open. Add ideas freely; mark rejected ones instead of delet
 
 **2026-11-12 investigation (author: agent:gpt-6).** Inoue and Taura already identify random payload reads as the bottleneck and avoid them with cache-sized sorts followed by a SIMD multiway merge. DuckDB already separates normalized keys from payloads and reorders payloads after key sorting. IPS⁴o already moves data in cache-friendly blocks. These cover the bottleneck and the main building blocks. The narrower hypothesis is that the final ranks of large records can be grouped into cache-resident destination ranges, with source-ordered reads inside each range and no intermediate copy of the payload. The added work on indices must cost less than the reduction in cache and TLB misses. Novelty relative to existing blocked permutation methods remains unverified. [Inoue and Taura](https://www.vldb.org/pvldb/vol8/p1274-inoue.pdf) · [Kuiper and Mühleisen](https://duckdb.org/pdf/ICDE2023-kuiper-muehleisen-sorting.pdf) · [Axtmann et al.](https://arxiv.org/abs/2009.13569)
 
-The [preregistered pilot](../runs/2026-11-12-record-permutation/README.md) measures the time available to save before implementing a new permutation.
+The [preregistered pilot](../runs/2026-11-12-record-permutation/README.md) cleared the headroom threshold on five of eight workloads. The best case estimated 1.367–1.399× across two seeds when substituting sequential-copy cost for the gather phase. This motivates an implementation probe. [Pilot results](../runs/2026-11-12-record-permutation/summary.md)
 
 ## 4. Batches of small sorts across SIMD lanes
 

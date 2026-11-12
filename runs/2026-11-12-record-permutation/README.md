@@ -1,8 +1,8 @@
 # Record permutation pilot — 2026-11-12
 
-- **Author and model** `agent:gpt-6` (Codex session model family). Exact model variant, token count and billed model cost are unavailable to this session. No paid compute is planned. The benchmark runs locally.
+- **Author and model** `agent:gpt-6` (Codex session model family). Exact model variant, token count and billed model cost are unavailable to this session. The benchmark ran locally with no paid compute services.
 - **Question** How much of a competitive sort of wide records is spent gathering the payload, and would replacing that phase with a sequential-copy cost leave enough room for a 1.3× end-to-end speedup?
-- **State** Protocol registered before timing. Results pending.
+- **State** Pilot complete. Five of eight workloads cleared the diagnostic threshold on both seeds. See [results](summary.md), [raw samples](raw.csv) and [machine and build metadata](metadata.json).
 
 ## Workload
 
