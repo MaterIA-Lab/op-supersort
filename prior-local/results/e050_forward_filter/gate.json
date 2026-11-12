@@ -1,7 +1,0 @@
-{
-  "passed": false,
-  "failures": [
-    "half_random/32653 obtuvo 1.034044 frente a vq, por debajo de 1.10.",
-    "half_random/77347 obtuvo 1.025247 frente a vq, por debajo de 1.10."
-  ]
-}

@@ -2,15 +2,15 @@
 
 **Status:** `active` · Part of [OpenPrototypes](https://github.com/MaterIA-Lab/OpenPrototypes)
 
-Research a general CPU sorting system for basic numeric types and objects that uses architectural techniques to outperform competitive references on the project's machine.
+Search for genuinely new ideas that exploit how a computer works (SIMD, caches, virtual memory, memory bandwidth, multiple cores) to make sorting substantially faster than the best existing implementations.
 
-For each of three input sizes—1,000, 10 million and 1 billion elements—the goal is at least 25% less execution time than the fastest applicable reference in at least 90% of predefined type-and-distribution cases. Every output must be correct. Single-threaded and multithreaded modes are assessed separately. The detailed benchmark protocol remains to be agreed; see [GOAL.md](GOAL.md).
+The project keeps exploring until a relevant finding appears: at least 1.3× faster than the best competitive reference on a practically relevant task, with correct output. A finding of 1.5× or more on an important task is reported to the owner, who decides whether to focus all research on it. Tuning or recombining known sorters does not count. See [GOAL.md](GOAL.md) and the [idea backlog](notes/ideas.md).
 
 ## Prior research
 
-SuperSort was researched locally before joining OpenPrototypes. The prior work includes prototypes, notes and benchmark evidence, with promising narrow results and negative findings. It used a narrower contract and does not demonstrate the new goal. See the [prior research import](prior-local/IMPORT.md) for its scope and remaining archive work.
+SuperSort was researched locally before joining OpenPrototypes. Its lessons, including the negative results, are summarised in [notes/prior-research.md](notes/prior-research.md). The full archive is kept in the git history and is not a constraint on the current work.
 
-No result against the new OpenPrototypes goal has been measured yet.
+No result against the current goal has been measured yet.
 
 ## Explore
 

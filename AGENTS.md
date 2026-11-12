@@ -41,4 +41,10 @@ The prompts, skills, MCP servers and models used here are part of the research a
 
 ## Project-specific rules
 
-The project targets numeric types and objects, with correctness mandatory for every case. Do not claim the new goal has been reached from older local experiments, which use a different contract. Define and preregister balanced distributions and the full benchmark protocol before using results to score the goal. Compare single-threaded and multithreaded modes separately with equivalent resources. Preserve prior evidence, failures and attribution; never invent prior models, tokens or costs. Document hardware, reference versions, memory and timing boundaries. Do not run concurrent heavy workloads during benchmark measurements. Build and test commands will be added after the prior code is inventoried and imported.
+- Work on genuinely new mechanisms. Before building an idea, record in `notes/ideas.md` the closest known work and why the mechanism could give a large gain. Tuning parameters, patching phases of existing sorters or dispatching between known algorithms do not count as findings.
+- Start every idea with a cheap kill test. Abandon it quickly when the test fails, and record why.
+- Declare the workload class and inputs before measuring a candidate on them. Use the strongest applicable references with the same thread count, and verify the output of every run.
+- A finding of at least 1.5× on an important class must be reported to the owner (a GitHub issue labelled `major-finding` or a direct report) before continuing broad exploration.
+- The prior local research is background only; see `notes/prior-research.md`. Its archive lives in the git history, not in `main`. Never invent its models, tokens or costs.
+- Document hardware, reference versions, memory use and timing boundaries. Do not run heavy workloads concurrently with benchmark measurements.
+- Build and test commands will be added with the first benchmark harness.

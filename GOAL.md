@@ -1,25 +1,25 @@
 # SuperSort: research goal
 
-Can a general CPU sorting system exploit computer architecture to sort basic numeric types and objects by key substantially faster than the fastest applicable references on the project owner's machine?
+Can a genuinely new idea that exploits how a computer works (SIMD units, caches, TLB and virtual memory, memory bandwidth, multiple cores, or any other component of the machine) make sorting **substantially faster** than the best existing implementation for a practically relevant task?
 
-The project builds on SuperSort research previously conducted locally. That work is background, not an OpenPrototypes result; preserve its provenance and limitations.
+The project searches for such an idea, iteration after iteration, until a relevant finding appears. Sorting numeric keys, records and objects, at any size and in single- or multithreaded mode, are all in scope. The prior local SuperSort research is background, not a constraint: see [notes/prior-research.md](notes/prior-research.md).
 
-## Success criteria
+## What counts
 
-Assess three sizes independently: **1,000**, **10,000,000**, and **1,000,000,000** elements. For each size at least 90% of predefined cases must meet the ambitious performance target. A useful partial result is possible without reaching this target: document where it works, its limitations, and all regressions. Assess single-threaded and multithreaded comparisons separately under equivalent resource conditions.
+**Innovation is required.** Each idea must state what is new relative to the closest known work and why its mechanism could yield a large gain (for example less memory traffic, fewer passes, fewer instructions or mispredictions per key). The following do not count as findings: tuning parameters of existing libraries, patching phases of an existing sorter, or dispatching between known algorithms. Known techniques are welcome as references and as building blocks when the new mechanism is what produces the gain.
 
-- A case is one combination of type and distribution, evaluated with multiple seeds. Define balanced distribution families in advance so similar cases cannot inflate the score.
-- Treat records with numeric keys and associated payload, and generic objects sorted through a comparator, as separate modalities. Evaluate real workloads separately from the primary synthetic matrix.
-- SuperSort must take at most **75% of the time** of the fastest applicable reference. This is a 25% time reduction, not a 1.25× speedup.
-- Correctness is mandatory for every case, including the up to 10% missing the performance target. Object sorting preserves all objects and associated data; stability for equal keys is not required.
-- Use competitive applicable references and equivalent resources. There is no preset memory cap; record memory use and account for relevant costs consistently.
-- Document hardware, software, references, seeds, source, raw results, timing and limitations for reproducibility.
-- Separately evaluate representative real-world workloads. Publish the full per-case results, regressions and memory use; no maximum regression threshold is imposed.
+**Relevant finding:** on a declared workload class of practical relevance (data layout, key type, distribution, size range, thread mode), SuperSort takes **at most 77% of the time (≥1.3×)** of the fastest competitive reference, on fresh inputs not used during development, with every output verified correct.
 
-The intended usable deliverable is a reusable library with a simple interface and examples. Generality is desirable but not a prerequisite for a useful result: prioritize finding a working, valuable algorithm and expand support where justified. Implementation language is open to experimentation, provided comparisons remain valid.
+**Very relevant finding:** at least **1.5×** on an important class, such as random keys, records sorted by key, or large arrays, or a new mechanism that clearly opens a line of work. When this happens, notify the owner (a GitHub issue labelled `major-finding` or a direct report) and pause broad exploration until the owner decides whether to dedicate the research to it.
 
-## Protocol to define before evaluation
+If neither happens, keep exploring new ideas. Publish every negative result with its cause, as far as it is known.
 
-Specify numeric types and object layouts, balanced distributions, seeds and independence, references, aggregation across seeds, repetitions and uncertainty, timing and allocation boundaries, resource rules, and treatment of NaNs, infinities and signed zeros. Mark cases exceeding machine capacity as not evaluable, publish the reason and never count them as passed. Calculate the percentage over evaluated cases and prominently disclose coverage and missing cases; do not present incomplete coverage as full achievement. The owner must review the protocol before it is frozen.
+## Fair comparison
 
-The existing E054 result used a different goal and narrower contract. It is historical evidence and does not establish success against this goal.
+- References are the strongest available implementations for the same task and contract, including the obvious strong solution for that class, not only `std::sort`. Record versions and build flags.
+- Use the same thread count and machine. Time allocation, copies and conversions that the user would pay. Data starts and ends in main memory.
+- Declare the workload class and inputs before measuring the candidate on them. Do not choose inputs, seeds or classes after seeing results.
+- Verify the output of every run. A faster but incorrect result does not count.
+- Record hardware, software, raw samples and limitations. Report the scope honestly: a win on one class is not a win on all.
+
+The intended deliverable of a finding is a reusable library with a simple interface and examples, in `prototypes/humans/`.
