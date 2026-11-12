@@ -6,7 +6,7 @@
 
 ## Workload
 
-- Contiguous records of exactly 64 or 128 bytes with a `uint32_t` key, a unique `uint32_t` origin identifier and deterministic payload bytes.
+- Contiguous records of exactly 64 or 128 bytes, aligned to a 64-byte cache line, with a `uint32_t` key, a unique `uint32_t` origin identifier and deterministic payload bytes.
 - Ascending, unstable sort on the key, with an immutable input and a fully materialized, contiguous output in RAM. Every original record must appear exactly once with its payload intact.
 - Two sizes, 1,048,576 and 4,194,304 records. The primary synthetic inputs model full-width randomly ordered keys and randomly ordered 12-bit keys with duplicates. Use SplitMix64, taking the high 32 bits of each key draw and masking to 12 bits for the latter distribution. The payload uses a separate deterministic stream.
 - Seeds 271 and 1601. One warm-up and three measured repetitions per method and seed. Rotate method order between repetitions and seeds. Use one thread on the project owner's Ryzen 7 5800X and record the OS, compiler, flags, CPU affinity and exact reference revisions.
@@ -22,3 +22,13 @@ Prepare the input outside timing and touch a 64 MiB eviction buffer before each 
 ## Decision before implementing a candidate
 
 For each paired repetition and each indirect reference, estimate `indirect total − gather phase + sequential copy`. Divide the fastest actual sort time among the three references by the smallest of those estimated times. Take the median ratio over repetitions within each seed. Continue only if at least one size, width and distribution reaches 1.3× on **both** seeds. Publish the full matrix. The sequential-copy estimate is an optimistic diagnostic, with uncertainty from cache state and allocation. A pass justifies a candidate experiment and a deeper novelty review. Any later performance claim needs measured end-to-end candidate times on fresh inputs.
+
+## Reproduction
+
+Run from the repository root with Python 3 and an AVX2-capable x86-64 machine with GCC. Supply a vendor directory with clean checkouts of [Highway](https://github.com/google/highway/tree/a3f6f68fcc368e5e3025ca25805eabda9d8a456f) and [x86-simd-sort](https://github.com/numpy/x86-simd-sort/tree/6e059b14975df2e3c74260ec905167a1be5a34ca) in matching subdirectories. For `pdqsort.h`, use the [snapshot in the repository archive](https://github.com/MaterIA-Lab/op-supersort/blob/195f5781c0a1ddbd0fba53db0e47b7b3a18c3555/prior-local/vendor/pdqsort.h). The runner verifies revisions and the header hash. The historical lab already has the same revisions.
+
+```sh
+python runs/2026-11-12-record-permutation/run.py --vendor /path/to/vendor --output lab/record-smoke --cpu 4 --smoke
+python runs/2026-11-12-record-permutation/run.py --vendor /path/to/vendor --output lab/record-pilot --cpu 4
+python runs/2026-11-12-record-permutation/analyze.py lab/record-pilot/raw.csv
+```
