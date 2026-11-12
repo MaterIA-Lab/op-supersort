@@ -1,7 +1,7 @@
 # Page-remapped merge pilot — 2026-11-12
 
 - **Model** OpenAI GPT-6.1 Sol, Extra High, as identified by the owner. Exact token count and billed model cost are unavailable in the session. Local WSL compute has no incremental cloud charges.
-- **State** Protocol registered before implementation and timing.
+- **State** Complete. Two of four non-control cases cleared the diagnostic threshold on both seeds. See [summary](summary.md), [calibration samples](calibration.csv), [merge samples](merge.csv) and [machine metadata](metadata.txt).
 
 ## Contract
 
