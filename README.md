@@ -8,7 +8,7 @@ For each of three input sizes—1,000, 10 million and 1 billion elements—the g
 
 ## Prior research
 
-SuperSort was researched locally before joining OpenPrototypes. The prior work includes prototypes, notes and benchmark evidence, with promising narrow results and negative findings. It used a narrower contract and does not demonstrate the new goal. Evidence is being inventoried for preservation and publication.
+SuperSort was researched locally before joining OpenPrototypes. The prior work includes prototypes, notes and benchmark evidence, with promising narrow results and negative findings. It used a narrower contract and does not demonstrate the new goal. See the [prior research import](prior-local/IMPORT.md) for its scope and remaining archive work.
 
 No result against the new OpenPrototypes goal has been measured yet.
 

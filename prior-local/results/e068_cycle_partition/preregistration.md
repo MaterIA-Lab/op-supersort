@@ -1,0 +1,13 @@
+# E068 — Reparto por ciclos con límites preparados
+
+## Hipótesis
+
+Con los mismos rangos adaptativos de E066 y límites calculados por histograma exacto, recorrer las posiciones de cada rango y saltar las claves ya correctas. Una clave incorrecta abre un hueco. Llevar la clave en mano al siguiente hueco incorrecto de su rango, extraer la que ocupaba esa posición y continuar hasta cerrar el ciclo. Los cursores avanzan y las posiciones corregidas quedan fuera de la búsqueda. Cada posición originalmente incorrecta recibe una escritura. Esto sustituye el llenado de bloques y su permutación posterior. Paga los cursores, la clasificación por tabla y los accesos dispersos que dependen de la clave extraída. En uniforme casi todas las posiciones son incorrectas y los ciclos saltan entre rangos. En el control agrupado se mantienen los valores y cambia solo su orden para que toda clave empiece en su rango. Una cubeta dominante estresa el tamaño del finalizador.
+
+## Filtro preparado
+
+10M `uint32`, un hilo, resultado en el array original. Ubuntu WSL CPU lógica 2, GCC `-O3 -march=native -DNDEBUG -std=c++17`, Highway e IPS2Ra fijados. Mismos generadores y elección de rangos que E066 para `uniform`, `prefix_distinct` y `dominant`. `grouped` deriva de la misma uniforme, con la misma tabla y agrupación estable por los límites del histograma antes de cronometrar. Semillas `42701` y `91009`, una ronda de calentamiento y siete medidas, brazos permutados con estado inicial de vqsort común.
+
+`cycles` recibe tabla y límites preparados. `blocks` recibe la misma tabla y calcula sus límites con el reparto de IPS2Ra de E066, incluido su scratch. Los dos terminan con vqsort por rango y pagan toda escritura al array. `vq` ordena directamente la misma entrada que los otros dos. Medir reparto, finalización y total. La elección de la tabla y el histograma de los ciclos quedan fuera por tratarse de un filtro favorable. La copia inicial común, generación y comprobación quedan fuera. Verificar cada resultado y calentamiento contra `std::sort`. Previamente comprobar pertenencia, multiconjunto, guardas, colas, duplicados y posiciones extremas. Contar escrituras de los ciclos fuera del reloj y exigir coincidencia con el número de posiciones originalmente incorrectas.
+
+Solo construir una variante completa si `mediana(vq)/mediana(cycles) ≥ 1,25` y `mediana(blocks)/mediana(cycles) > 1` en las cuatro entradas de uniforme y prefijos amplios. En ese caso se cobrarían elección, histograma, reservas y respaldo antes de comparar las tres referencias. Un reparto por ciclos cambia el orden interno que ve el finalizador. Las escrituras contadas son posiciones lógicas. [Fases E067](../results/e067_block_phases/summary.md).

@@ -1,0 +1,36 @@
+{
+  "passed": false,
+  "eligible_phases": [],
+  "failed_cases_by_phase": {
+    "class_ms": [
+      "prefix_distinct/42701"
+    ],
+    "permute_ms": [
+      "uniform/42701",
+      "uniform/91009",
+      "prefix_distinct/42701",
+      "prefix_distinct/91009"
+    ],
+    "margins_ms": [
+      "uniform/42701",
+      "uniform/91009",
+      "prefix_distinct/42701",
+      "prefix_distinct/91009"
+    ],
+    "rest_ms": [
+      "uniform/42701",
+      "uniform/91009",
+      "prefix_distinct/42701",
+      "prefix_distinct/91009"
+    ]
+  },
+  "min_adaptive_budget_ms": {
+    "class_ms": -1.7240152000000109,
+    "permute_ms": -9.520168800000008,
+    "margins_ms": -16.782881800000006,
+    "rest_ms": -16.103293800000003
+  },
+  "samples": 84,
+  "checked": 96,
+  "verified": 170
+}

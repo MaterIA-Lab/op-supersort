@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures": [
+    "half_periodic/23143 obtuvo 0.791303, por debajo de 0.90."
+  ]
+}

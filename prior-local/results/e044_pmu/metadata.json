@@ -1,0 +1,78 @@
+{
+  "utc": "2026-11-05T11:27:36.790703+00:00",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "logical_cpu": 2,
+  "cases": [
+    [
+      8193,
+      "skew",
+      33013
+    ],
+    [
+      8209,
+      "forced_middle",
+      58013
+    ],
+    [
+      180013,
+      "splitmix",
+      14009
+    ],
+    [
+      180013,
+      "few",
+      58013
+    ],
+    [
+      180013,
+      "equal",
+      14009
+    ],
+    [
+      10000000,
+      "uniform",
+      60101
+    ],
+    [
+      10000000,
+      "few",
+      73529
+    ],
+    [
+      10000000,
+      "forced_middle",
+      60101
+    ]
+  ],
+  "flags": [
+    "g++",
+    "-O3",
+    "-DNDEBUG",
+    "-march=native",
+    "-std=c++17",
+    "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/results/e044_pmu/e044_pmu.cpp",
+    "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss256.so",
+    "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss128.so",
+    "-Wl,-rpath,/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux",
+    "-o",
+    "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/results/e044_pmu/pmu.bin"
+  ],
+  "compiler": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0\nCopyright (C) 2021 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "source_sha256": {
+    "e042_generator.inc": "a9ca55d088a0373f0da591d0db3db6c0659dd593280e069ed3016dce7180da67",
+    "e042_process.py": "adcc029e7507fe8b1841ee83f186934960a4b0944087a6b36e71f6d6d55a7fb2",
+    "e044_pmu.cpp": "86d615993d60f110d42730c0be057a7b20d305d19395556f5b6dfade1bd87e51",
+    "e044_pmu.py": "80fcb052929e593c539b6b14e28d5778ce82fae684acc2c0281df0283ad2a0a5",
+    "preregistration.md": "b9535dbea16d0c2166a7bfa79c1915ee4260d67bd76b581084f1ff48007c4c7b"
+  },
+  "binary_sha256": "0fa294aed7253d2b6f0f29cc434fd6b0e4a1be328ee22d186e999d192715fca8",
+  "e040_integrity": {
+    "binary_sha256": "2d5d92c92b558e01a32b0fa246e3effaf78ea9d34469ef00284bf50a46ee181b",
+    "linked_dso_sha256": {
+      "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss256.so": "032ceebf40e1d07ad38b985fc07c8354283ee8a414e0d32f1520cf4267a51260",
+      "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/quick_e040_quick_holdout_linux/libss_xss128.so": "bbf6ecc6921d2a11eadd8f5da006575dbc80144db6d52829be501d79bb7ad0e1"
+    }
+  },
+  "perf_event_paranoid": "2",
+  "region": "calling thread user mode; enable before DSO call and disable after return"
+}

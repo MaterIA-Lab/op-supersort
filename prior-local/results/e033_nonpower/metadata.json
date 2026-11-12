@@ -1,0 +1,107 @@
+{
+  "utc": "2026-11-04T23:26:41.292673+00:00",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "compiler": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0\nCopyright (C) 2021 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "flags": [
+    "g++",
+    "-O3",
+    "-march=native",
+    "-DNDEBUG",
+    "-std=c++17",
+    "-I/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/vendor/x86-simd-sort/src",
+    "-I/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/vendor/highway",
+    "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/bench.cpp",
+    "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/vq_bridge.cpp",
+    "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/vendor/highway/hwy/abort.cc",
+    "-o",
+    "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/bench.exe",
+    "-I/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/vendor/ips2ra/include",
+    "-I/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/vendor/ips4o/include",
+    "-DSUPERSORT_WITH_IPS",
+    "/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/ips_bridge.cpp",
+    "-ltbb",
+    "-latomic",
+    "-pthread"
+  ],
+  "arguments": {
+    "sizes": [
+      70000,
+      100000,
+      130000,
+      1000000
+    ],
+    "distributions": [
+      "uniform",
+      "splitmix"
+    ],
+    "seeds": [
+      1009,
+      12347,
+      99991
+    ],
+    "repeats": 21,
+    "tag": "e033_nonpower",
+    "algorithms": [
+      "simd",
+      "vq",
+      "ips2ra",
+      "ips4o",
+      "predict_fixed",
+      "predictk768",
+      "predictk1280",
+      "predictk1536",
+      "predictk2048",
+      "predictk12288",
+      "predictk24576",
+      "predict13raw",
+      "predict14raw"
+    ],
+    "quiet": true,
+    "cpu": 2
+  },
+  "vendor": {
+    "pdqsort.h": {
+      "url": "https://raw.githubusercontent.com/orlp/pdqsort/master/pdqsort.h",
+      "sha256": "1916aff237fc7ecc638dec6397662334552a1b6f823fa65011a8dfe831237fc0"
+    },
+    "ska_sort.hpp": {
+      "url": "https://raw.githubusercontent.com/skarupke/ska_sort/master/ska_sort.hpp",
+      "sha256": "440456435f9052998bd48fbc501870ce3975bcff400b906783768694f37264ca"
+    },
+    "x86-simd-sort": {
+      "url": "https://github.com/numpy/x86-simd-sort",
+      "commit": "6e059b14975df2e3c74260ec905167a1be5a34ca"
+    },
+    "highway": {
+      "url": "https://github.com/google/highway",
+      "commit": "a3f6f68fcc368e5e3025ca25805eabda9d8a456f",
+      "dispatch": "VQSORT_ONLY_STATIC + HWY_COMPILE_ONLY_STATIC, march=native"
+    },
+    "ips2ra": {
+      "url": "https://github.com/ips4o/ips2ra",
+      "commit": "83f6b76ca308b277b2acc3a36426a3baa3c9cb73",
+      "api": "sequential sort"
+    },
+    "ips4o": {
+      "url": "https://github.com/ips4o/ips4o",
+      "commit": "08a5b926ee65cef19139057c6bde02bb5542c1cb",
+      "api": "sequential sort"
+    }
+  },
+  "source_sha256": "3381c0a76e65769912042478c700844aea43e70e589d58ee778635ced9db52be",
+  "source_files_sha256": {
+    "bench.cpp": "3381c0a76e65769912042478c700844aea43e70e589d58ee778635ced9db52be",
+    "vq_bridge.cpp": "db2857389c50bd0b283d117f31dc04be4633115521c1643263b039935d0c563b",
+    "ips_bridge.cpp": "867f881e43e2b7a184e1f7592ad0b553e4d2629346904a26faf3bd5de76d5bb5",
+    "profile_predict.hpp": "2354e6fd4a00ad9d4bda9bbd898b2cc5df0d8f21783d31c30a6524eddd5dda9e",
+    "include/supersort/predictive_u32.hpp": "929141124854bede90cf29e81522bfdcd86c55e6b3b465ad84cf97607f1c7985",
+    "include/supersort/scatter_nt.hpp": "a49b941316144048e93c8569eac0f823dd646cb05548194b7f6eaeca7653a5eb"
+  },
+  "vq_bridge_sha256": "db2857389c50bd0b283d117f31dc04be4633115521c1643263b039935d0c563b",
+  "header_sha256": {
+    "include/supersort/predictive_u32.hpp": "929141124854bede90cf29e81522bfdcd86c55e6b3b465ad84cf97607f1c7985",
+    "include/supersort/scatter_nt.hpp": "a49b941316144048e93c8569eac0f823dd646cb05548194b7f6eaeca7653a5eb"
+  },
+  "logical_cpu": 2,
+  "timing": "single-thread; allocation included; input copy and correctness excluded; one warmup per case; shuffled algorithm order"
+}

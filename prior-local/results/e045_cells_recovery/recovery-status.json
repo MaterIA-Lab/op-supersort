@@ -1,0 +1,21 @@
+{
+  "complete": false,
+  "completed_cases": 15,
+  "failed_cases": [
+    {
+      "distribution": "skew",
+      "seed": 47143,
+      "error": "case-skew-47143 exited with 3221225477. See A:\\Users\\elseb\\Terminal\\AI\\Codex\\supersort\\results\\e045_cells_recovery\\case-skew-47143.stderr.txt."
+    },
+    {
+      "distribution": "mixed",
+      "seed": 47143,
+      "error": "case-mixed-47143 exited with 3221225477. See A:\\Users\\elseb\\Terminal\\AI\\Codex\\supersort\\results\\e045_cells_recovery\\case-mixed-47143.stderr.txt."
+    },
+    {
+      "distribution": "mixed",
+      "seed": 92671,
+      "error": "case-mixed-92671 exited with 3221225477. See A:\\Users\\elseb\\Terminal\\AI\\Codex\\supersort\\results\\e045_cells_recovery\\case-mixed-92671.stderr.txt."
+    }
+  ]
+}

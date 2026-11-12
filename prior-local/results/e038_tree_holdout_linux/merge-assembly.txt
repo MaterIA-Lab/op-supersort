@@ -1,0 +1,110 @@
+void supersort::execute_tree_plan<false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]
+
+/mnt/a/Users/elseb/Terminal/AI/Codex/supersort/build/linux/bench.exe:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000017840 <void supersort::execute_tree_plan<false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]>:
+   17840:	push   %r15
+   17842:	push   %r14
+   17844:	push   %r13
+   17846:	push   %r12
+   17848:	push   %rbp
+   17849:	push   %rbx
+   1784a:	sub    $0x38,%rsp
+   1784e:	mov    0x8(%rdx),%rax
+   17852:	mov    (%rdx),%rbx
+   17855:	mov    %rsi,0x10(%rsp)
+   1785a:	mov    %rax,0x8(%rsp)
+   1785f:	cmp    %rax,%rbx
+   17862:	je     1798f <void supersort::execute_tree_plan<false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x14f>
+   17868:	mov    %rdi,%r14
+   1786b:	nopl   0x0(%rax,%rax,1)
+   17870:	mov    0x8(%rbx),%rax
+   17874:	mov    (%rbx),%r8
+   17877:	mov    0x10(%rbx),%r15
+   1787b:	lea    0x0(,%rax,4),%rsi
+   17883:	lea    (%r14,%rsi,1),%rdx
+   17887:	mov    (%rdx),%eax
+   17889:	cmp    %eax,-0x4(%r14,%rsi,1)
+   1788e:	jbe    17980 <void supersort::execute_tree_plan<false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x140>
+   17894:	mov    0x10(%rsp),%rcx
+   17899:	shl    $0x2,%r8
+   1789d:	shl    $0x2,%r15
+   178a1:	mov    %rdx,%rbp
+   178a4:	lea    (%r14,%r8,1),%r13
+   178a8:	lea    (%r14,%r15,1),%r12
+   178ac:	mov    %r13,%rsi
+   178af:	lea    (%rcx,%r8,1),%r9
+   178b3:	mov    %r9,%rdi
+   178b6:	cmp    %r12,%rdx
+   178b9:	je     17904 <void supersort::execute_tree_plan<false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0xc4>
+   178bb:	cmp    %r13,%rdx
+   178be:	jne    178e7 <void supersort::execute_tree_plan<false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0xa7>
+   178c0:	jmp    17904 <void supersort::execute_tree_plan<false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0xc4>
+   178c2:	data16 cs nopw 0x0(%rax,%rax,1)
+   178cd:	nopl   (%rax)
+   178d0:	add    $0x4,%rbp
+   178d4:	mov    %eax,(%rdi)
+   178d6:	add    $0x4,%rdi
+   178da:	cmp    %rbp,%r12
+   178dd:	je     17904 <void supersort::execute_tree_plan<false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0xc4>
+   178df:	cmp    %rsi,%rdx
+   178e2:	je     17904 <void supersort::execute_tree_plan<false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0xc4>
+   178e4:	mov    0x0(%rbp),%eax
+   178e7:	mov    (%rsi),%r11d
+   178ea:	cmp    %eax,%r11d
+   178ed:	ja     178d0 <void supersort::execute_tree_plan<false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x90>
+   178ef:	add    $0x4,%rsi
+   178f3:	mov    %r11d,(%rdi)
+   178f6:	add    $0x4,%rdi
+   178fa:	cmp    %rsi,%rdx
+   178fd:	je     17904 <void supersort::execute_tree_plan<false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0xc4>
+   178ff:	cmp    %rbp,%r12
+   17902:	jne    178e4 <void supersort::execute_tree_plan<false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0xa4>
+   17904:	mov    %rdx,%r11
+   17907:	sub    %rsi,%r11
+   1790a:	cmp    %rsi,%rdx
+   1790d:	je     17938 <void supersort::execute_tree_plan<false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0xf8>
+   1790f:	mov    %r11,%rdx
+   17912:	mov    %r9,0x28(%rsp)
+   17917:	mov    %r8,0x20(%rsp)
+   1791c:	mov    %r11,0x18(%rsp)
+   17921:	call   26a0 <memmove@plt>
+   17926:	mov    0x28(%rsp),%r9
+   1792b:	mov    0x20(%rsp),%r8
+   17930:	mov    0x18(%rsp),%r11
+   17935:	mov    %rax,%rdi
+   17938:	cmp    %rbp,%r12
+   1793b:	je     17962 <void supersort::execute_tree_plan<false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x122>
+   1793d:	mov    %r12,%rdx
+   17940:	add    %r11,%rdi
+   17943:	mov    %rbp,%rsi
+   17946:	mov    %r9,0x20(%rsp)
+   1794b:	sub    %rbp,%rdx
+   1794e:	mov    %r8,0x18(%rsp)
+   17953:	call   26a0 <memmove@plt>
+   17958:	mov    0x20(%rsp),%r9
+   1795d:	mov    0x18(%rsp),%r8
+   17962:	mov    0x10(%rsp),%rax
+   17967:	add    %r15,%rax
+   1796a:	cmp    %rax,%r9
+   1796d:	je     17980 <void supersort::execute_tree_plan<false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x140>
+   1796f:	mov    %r15,%rdx
+   17972:	mov    %r9,%rsi
+   17975:	mov    %r13,%rdi
+   17978:	sub    %r8,%rdx
+   1797b:	call   26a0 <memmove@plt>
+   17980:	add    $0x18,%rbx
+   17984:	cmp    %rbx,0x8(%rsp)
+   17989:	jne    17870 <void supersort::execute_tree_plan<false>(unsigned int*, unsigned int*, std::vector<supersort::tree_op, std::allocator<supersort::tree_op> > const&, supersort::tree_stats*) [clone .isra.0]+0x30>
+   1798f:	add    $0x38,%rsp
+   17993:	pop    %rbx
+   17994:	pop    %rbp
+   17995:	pop    %r12
+   17997:	pop    %r13
+   17999:	pop    %r14
+   1799b:	pop    %r15
+   1799d:	ret    
+

@@ -1,0 +1,54 @@
+
+results/e051_shadow_filter/e051_shadow:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .plt.got:
+
+Disassembly of section .plt.sec:
+
+Disassembly of section .text:
+
+0000000000008220 <_ZN9supersort13window_detail21compact_window_shadowEPjmjS1_>:
+    8220:	f3 0f 1e fa          	endbr64 
+    8224:	48 85 f6             	test   rsi,rsi
+    8227:	74 67                	je     8290 <_ZN9supersort13window_detail21compact_window_shadowEPjmjS1_+0x70>
+    8229:	49 89 c9             	mov    r9,rcx
+    822c:	53                   	push   rbx
+    822d:	41 89 d2             	mov    r10d,edx
+    8230:	48 89 f9             	mov    rcx,rdi
+    8233:	4c 8d 1c b7          	lea    r11,[rdi+rsi*4]
+    8237:	45 31 c0             	xor    r8d,r8d
+    823a:	66 0f 1f 44 00 00    	nop    WORD PTR [rax+rax*1+0x0]
+    8240:	8b 19                	mov    ebx,DWORD PTR [rcx]
+    8242:	89 d8                	mov    eax,ebx
+    8244:	c1 e8 10             	shr    eax,0x10
+    8247:	44 39 d0             	cmp    eax,r10d
+    824a:	0f 95 c2             	setne  dl
+    824d:	40 0f 95 c6          	setne  sil
+    8251:	48 83 c1 04          	add    rcx,0x4
+    8255:	0f b6 d2             	movzx  edx,dl
+    8258:	69 c2 00 ff 00 00    	imul   eax,edx,0xff00
+    825e:	c1 e2 10             	shl    edx,0x10
+    8261:	35 ff ff 00 00       	xor    eax,0xffff
+    8266:	21 d8                	and    eax,ebx
+    8268:	01 d0                	add    eax,edx
+    826a:	41 ff 04 81          	inc    DWORD PTR [r9+rax*4]
+    826e:	40 0f b6 c6          	movzx  eax,sil
+    8272:	42 89 1c 87          	mov    DWORD PTR [rdi+r8*4],ebx
+    8276:	49 01 c0             	add    r8,rax
+    8279:	49 39 cb             	cmp    r11,rcx
+    827c:	75 c2                	jne    8240 <_ZN9supersort13window_detail21compact_window_shadowEPjmjS1_+0x20>
+    827e:	4c 89 c0             	mov    rax,r8
+    8281:	5b                   	pop    rbx
+    8282:	c3                   	ret    
+    8283:	66 66 2e 0f 1f 84 00 	data16 cs nop WORD PTR [rax+rax*1+0x0]
+    828a:	00 00 00 00 
+    828e:	66 90                	xchg   ax,ax
+    8290:	31 c0                	xor    eax,eax
+    8292:	c3                   	ret    
+
+Disassembly of section .fini:

@@ -1,0 +1,3 @@
+mode,runs,run_hash,simd_elements,reversed_elements,operations,tree_elements,executed_elements,copied_elements,skipped
+pair,1086,5556300700036311238,44,0,1085,1508274,1508274,1508274,0
+weighted,1086,5556300700036311238,44,0,1085,1416001,1416001,1416001,0

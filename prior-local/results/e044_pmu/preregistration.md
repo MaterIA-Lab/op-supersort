@@ -1,0 +1,11 @@
+# E044 — contadores en la llamada de ordenación
+
+2026-11-05. La prueba `perf stat` de E043 devolvió los cuatro eventos genéricos solicitados en Ubuntu WSL. Se fija un diagnóstico de la llamada real a las dos DSOs de E040. La validación de escala E043 usa su ejecutable original y constituye una serie separada.
+
+Ocho entradas fijas. (8193,skew,33013), (8209,forced_middle,58013), (180013,splitmix,14009), (180013,few,58013), (180013,equal,14009), (10000000,uniform,60101), (10000000,few,73529), (10000000,forced_middle,60101). Fallos y controles deliberadamente reutilizados. Once rondas medidas y un calentamiento por umbral. CPU2, un hilo, uint32 sin payload. Comparación exacta con std::sort y copia común fuera de la región contada. Orden entre umbrales barajado por ronda con el mecanismo del benchmark E040. Un proceso por entrada. 176 llamadas medidas y 192 salidas exactas previstas.
+
+Nuevo host pequeño con el mismo generador archivado en E042 y las DSOs exactas de rendimiento de E040. Verificar fuentes y hashes. Abrir un grupo de `perf_event_open` por proceso con ciclos, instrucciones retiradas, cache-misses y branch-misses. Cuenta solo el hilo actual en modo usuario. Habilitar justo antes de la llamada C y deshabilitar al regresar. Conservar contadores crudos y delta de tiempo habilitado/activo por muestra. Once controles vacíos por entrada estiman el suelo de observación. Mantener todas las filas. Si la fracción activa cae bajo 99%, señalar fila/caso y dejar su mediana fuera de la comparación interpretable. No reintentar según los valores. La medida vacía no se resta.
+
+El observador cambia el host y el entorno de la llamada. Usar contadores para contrastar cantidades de trabajo, sin tiempos de este host en ranking. `cache-misses` es el evento genérico disponible bajo WSL. El evento no identifica por sí solo un nivel físico de caché o bytes DRAM. Las diferencias de eventos tampoco demuestran la causa de las regresiones históricas. [Manual de perf_event_open](https://man7.org/linux/man-pages/man2/perf_event_open.2.html).
+
+Compilar el host solo al terminar ambas matrices E043. No recompilar las bibliotecas ni solapar cargas intensivas. Resultados nuevos en `results/e044_pmu` con flags, hashes, copia de fuente, logs, CSV y análisis.
