@@ -1,0 +1,42 @@
+[extend]
+useDefault = true
+
+[[rules]]
+id = "generic-api-key"
+
+[[rules.allowlists]]
+description = "Known source-file SHA-256 checksums in historical experiment metadata"
+condition = "AND"
+regexTarget = "secret"
+paths = [
+  '''^prior-local[\\/]results[\\/]e040_quick_holdout_linux[\\/]metadata\.json$''',
+  '''^prior-local[\\/]results[\\/]e040_quick_holdout_linux[\\/]quick[\\/]preparation\.json$''',
+  '''^prior-local[\\/]results[\\/]e040_quick_sanitizers[\\/]metadata\.json$''',
+  '''^prior-local[\\/]results[\\/]e040_quick_sanitizers[\\/]quick[\\/]preparation\.json$''',
+  '''^prior-local[\\/]results[\\/]e040_quick_verify_linux[\\/]metadata\.json$''',
+  '''^prior-local[\\/]results[\\/]e040_quick_verify_linux[\\/]quick[\\/]preparation\.json$''',
+  '''^prior-local[\\/]results[\\/]e041_quick_holdout_exact[\\/]metadata\.json$''',
+  '''^prior-local[\\/]results[\\/]e041_quick_holdout_exact[\\/]quick[\\/]preparation\.json$''',
+  '''^prior-local[\\/]results[\\/]e041_quick_problem_recheck[\\/]metadata\.json$''',
+  '''^prior-local[\\/]results[\\/]e041_quick_problem_recheck[\\/]quick[\\/]preparation\.json$''',
+  '''^prior-local[\\/]results[\\/]e042_process_variation[\\/]metadata\.json$''',
+  '''^prior-local[\\/]results[\\/]e042_process_variation[\\/]origin[\\/]metadata\.json$''',
+  '''^prior-local[\\/]results[\\/]e042_process_variation[\\/]origin[\\/]quick[\\/]preparation\.json$''',
+  '''^prior-local[\\/]results[\\/]e042_work_diagnostic[\\/]metadata\.json$''',
+  '''^prior-local[\\/]results[\\/]e043_scale_100m[\\/]metadata\.json$''',
+  '''^prior-local[\\/]results[\\/]e043_scale_100m[\\/]quick[\\/]preparation\.json$''',
+  '''^prior-local[\\/]results[\\/]e043_scale_main[\\/]metadata\.json$''',
+  '''^prior-local[\\/]results[\\/]e043_scale_main[\\/]quick[\\/]preparation\.json$''',
+  '''^prior-local[\\/]results[\\/]e046_windows_filter[\\/]metadata\.json$''',
+  '''^prior-local[\\/]results[\\/]e047_windows_filter[\\/]metadata\.json$''',
+  '''^prior-local[\\/]results[\\/]e047_windows_full[\\/]metadata\.json$''',
+  '''^prior-local[\\/]results[\\/]e054_combined_full[\\/]metadata\.json$''',
+  '''^prior-local[\\/]results[\\/]e056_binary_full[\\/]metadata\.json$''',
+]
+regexes = [
+  '''^227277e1095b999bcd338fcaee1c47f19e246051e5$''',
+  '''^227277e1095b999bcd338fcaee1c47f19e246051e58e4f98803404f0f8cc4a6f$''',
+  '''^412bbdba713503fcb8b5d235fb5cd3492c76f776c9a3a8c27e1b91edfc29f0bd$''',
+  '''^5fe826d7ffa461da40c1b330c924cfe01b8ca5512ff6e8419c0fad9594ca18e4$''',
+  '''^71976494166efa92a1c470a7604bfac77afb040555a77b522265b5da8d1ca52d$''',
+]

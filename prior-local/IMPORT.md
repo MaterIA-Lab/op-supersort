@@ -1,6 +1,8 @@
 # Prior local research — import in progress
 
-This folder preserves notes, source, CSV samples and selected text evidence copied from the local SuperSort laboratory before its OpenPrototypes phase. The complete original is retained separately. This is not yet a self-contained reproduction package: large files, binaries and third-party `vendor/` snapshots have not been imported, and 23 metadata files were excluded because the mandatory secret scan flags SHA-256 hashes in their filenames as possible keys. The findings were checked as hash entries, and the originals remain intact locally. Links to missing files will not resolve until the archive plan is completed.
+This folder preserves notes, source, CSV samples and selected text evidence copied from the local SuperSort laboratory before its OpenPrototypes phase. The complete original is retained separately. This is not yet a self-contained reproduction package: large files, binaries and third-party `vendor/` snapshots have not been imported. Links to missing files will not resolve until the archive plan is completed.
+
+The secret scan flags some historical metadata checksums as possible keys. These were verified as source-file SHA-256 digests. The scanner configuration suppresses only those exact digest matches in the affected metadata paths; the remaining rules continue to apply.
 
 Do not report historical measurements as results against the new project goal. The original local continuation instructions are preserved as `AGENTS.previous.md` for provenance and are not the current project instructions.
 
