@@ -1,7 +1,7 @@
 # Page-remapped merge candidate — 2026-11-12
 
 - **Model** OpenAI GPT-6.1 Sol, Extra High, as identified by the owner. Exact token count and billed model cost are unavailable in the session. Local WSL compute has no incremental cloud charges.
-- **State** Protocol registered before candidate implementation and timing.
+- **State** Complete. Two non-control cases cleared 1.3× on both seeds for fresh output. See [summary](summary.md), [raw samples](candidate.csv) and [machine metadata](metadata.txt).
 
 ## Candidate and controls
 
