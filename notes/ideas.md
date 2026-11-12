@@ -36,6 +36,8 @@ The [preregistered pilot](../runs/2026-11-12-record-permutation/README.md) clear
 
 The [blocked permutation probe](../runs/2026-11-12-blocked-permutation/README.md) tests one specific mechanism. It uses each destination range as a cache-resident window and sorts its descriptors by original position in the existing index buffer. The payload moves only once. This differs from the cache-sized local record sorts followed by payload merging in Inoue and Taura. Multi-pass locality-aware gather and scatter are also prior art on GPUs. The probe asks whether this particular mapping of final ranks to CPU cache windows pays for its index sort, even against an ordinary gather with software prefetch. [Inoue and Taura](https://www.vldb.org/pvldb/vol8/p1274-inoue.pdf) · [He et al.](https://www.microsoft.com/en-us/research/publication/efficient-gather-and-scatter-operations-on-graphics-processors/)
 
+**Result.** Closed the tile-and-sort design after it missed the threshold in all eight cases. Its end-to-end speedup was 0.542–0.648× against the fastest measured reference. Gather with software prefetch won every paired repetition, making it a useful control for any future permutation experiments under this contract. [Probe results](../runs/2026-11-12-blocked-permutation/summary.md)
+
 ## 4. Batches of small sorts across SIMD lanes
 
 **Idea.** Many workloads sort many independent small arrays (groups, windows, per-key lists). Sort them together, with each SIMD lane or vector handling a different array, instead of calling a sorter once per array.

@@ -1,7 +1,7 @@
 # Blocked record permutation probe — 2026-11-12
 
-- **Author and model** `agent:gpt-6` (Codex session model family). Exact model variant, token count and billed model cost are unavailable to this session. No paid compute services are planned.
-- **State** Protocol registered before candidate implementation and timing.
+- **Author and model** `agent:gpt-6` (Codex session model family). Exact model variant, token count and billed model cost are unavailable to this session. The benchmark ran locally with no paid compute services.
+- **State** Probe complete. The candidate fell short in all eight cases. See [results](summary.md), [raw samples](raw.csv) and [machine and build metadata](metadata.json).
 
 ## Hypothesis and method
 
