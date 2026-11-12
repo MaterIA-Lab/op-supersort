@@ -16,6 +16,10 @@ Order of priority is open. Add ideas freely; mark rejected ones instead of delet
 **Known nearby.** Page remapping in allocators and zero-copy I/O. Block-based in-place permutation (IPS4o/IPS2Ra).
 **Kill test.** Measure remapping N pages versus copying N pages on the target machine, including system-call and TLB-shootdown cost. If remapping is not much cheaper per byte at large sizes, drop it.
 
+**2026-11-12 investigation (author: agent:gpt-6.1-sol-extra-high).** Target two already sorted runs of wide timestamped records in RAM, as with batches that arrive out of order. A maximal slice taken from one run can be mapped directly into a contiguous, read-only output when the source and destination offsets have the same page alignment. The hypothesis is that the long slices in slightly overlapping runs save a full payload copy, even after the first consumer read. RUMA already uses `mmap` aliases to assemble contiguous radix partitions and found its `mremap`-based partition variant slower. Merge Path and DuckDB already identify contiguous slices for merging. The question here is how much of a merge output can actually reuse pages when final ranks depend on key interleaving. Novelty and practical frequency of these layouts remain unverified. [RUMA](https://www.vldb.org/pvldb/vol9/p768-schuhknecht.pdf) · [Merge Path](https://arxiv.org/abs/1406.2628) · [DuckDB](https://duckdb.org/2025/09/24/sorting-again)
+
+The [preregistered kill test](../runs/2026-11-12-page-remapped-merge/README.md) measures both page eligibility and the cost of mapping versus copying before building a full candidate.
+
 ## 2. Compressed keys in flight for bandwidth-bound regimes
 
 **Idea.** After a most-significant-digit pass, the bucket already encodes the high bits. Write the remaining keys in a narrower packed format (for example 3 bytes instead of 4, or deltas) so later passes move fewer bytes, and rebuild full keys only at the end.
