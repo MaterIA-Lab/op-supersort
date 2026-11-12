@@ -44,4 +44,6 @@ python runs/2026-11-12-record-permutation/analyze.py runs/2026-11-12-record-perm
 python runs/2026-11-12-record-permutation/analyze.py runs/2026-11-12-blocked-permutation/raw.csv --blocked-probe
 python runs/2026-11-12-page-remapped-merge/analyze.py runs/2026-11-12-page-remapped-merge
 python runs/2026-11-12-page-remapped-merge/analyze.py runs/2026-11-12-page-remapped-merge-candidate --candidate
+python -X utf8 runs/2026-11-12-gharchive-page-coverage/probe.py --report runs/2026-11-12-gharchive-page-coverage/coverage.csv
+python -X utf8 runs/2026-11-12-gharchive-disjoint-merge/analyze.py runs/2026-11-12-gharchive-disjoint-merge/disjoint.csv
 ```

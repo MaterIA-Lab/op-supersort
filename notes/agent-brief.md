@@ -16,7 +16,7 @@ Find a genuinely new, architecture-aware mechanism that sorts a practically rele
 
 | Line | Status | Evidence | Next step |
 |---|---|---|---|
-| Page-remapped merge of sorted runs (idea 1) | Promising, conditional | Synthetic candidate: 1.326–1.356× vs fresh-output merges on edge-overlap runs, 2.668× with 75% mapped. Loses to pre-touched output (0.364–0.738×), bursty 0.838–0.854×, interleaved 0.822–0.862×. GH Archive coverage is 48.25–99.99% across eight entirely disjoint pairs. | Time the eight archive pair sizes against bulk concatenation. Use a different dataset for real overlap and check novelty against RUMA. |
+| Page-remapped merge of sorted runs (idea 1) | Promising, conditional | Synthetic edge overlap: 1.326–1.356× vs fresh-output merges, 2.668× with 75% mapped. Loses to pre-touched output (0.364–0.738×). Eight disjoint GH Archive pairs: 1.431–7.252× vs fresh references. The two fully aligned pairs reached 1.663–1.739× vs a resident buffer. | Find a real source with separate arrival and event clocks. Measure overlap and mappable pages, and check novelty against RUMA. |
 | Payload permutation for records (idea 3) | Tile-and-sort closed | Headroom pilot estimated 1.29–1.40×. Blocked probe 0.542–0.648×. | Any new permutation must beat gather with software prefetch, IPS⁴o on rows and a record-oriented SIMD merge (Inoue and Taura). |
 | Compressed keys, small-array batches, rank sort, helper threads (ideas 2, 4, 5, 6) | Not started | — | Start with the kill test written in [ideas.md](ideas.md). |
 | Patching vqsort phases for uint32 random keys | Closed (prior research) | E055–E072 all failed; best saved about 4.4 of 9.4 ms needed. | Do not retry. |
@@ -32,6 +32,7 @@ Find a genuinely new, architecture-aware mechanism that sorts a practically rele
 
 - **Records, out of place.** Argsort with vqsort or x86-simd-sort on packed `(key, index)` words, then gather with software prefetch 32 rows ahead (both cache lines for 128-byte rows). It won all 48 paired repetitions of the blocked probe. The paired median speedup over the fastest reference without prefetch was 1.051–1.235×. IPS⁴o and a record-oriented SIMD merge are still unmeasured. [Reference timings](../runs/2026-11-12-blocked-permutation/summary.md)
 - **Merging two sorted runs:** fastest of a scalar two-finger merge, a galloping bulk merge and a hybrid that bulk-copies the non-overlapping prefix and suffix. Also report the hybrid writing into a pre-touched destination, which is a different memory contract.
+- **Assembling disjoint key ranges.** Include the endpoint check plus two bulk copies in both fresh and resident modes. The eight GH Archive cases preserve real row counts and the verified two-slice order, with synthetic 128-byte records. [Measurements](../runs/2026-11-12-gharchive-disjoint-merge/summary.md)
 - **Sequential copy of the same bytes.** An empirical proxy for headroom. Allocation and cache state differ from a gather, so use measured candidate times for performance claims. [Pilot timing contract](../runs/2026-11-12-record-permutation/README.md)
 
 ## Contracts used so far
@@ -53,7 +54,7 @@ The [run index and analysis commands](../runs/README.md#check-the-published-meas
 ## Run ledger
 
 <!-- RUNS:START -->
-7 runs: 1 promising, 1 failed, 3 diagnostic, 2 setup.
+8 runs: 2 promising, 1 failed, 3 diagnostic, 2 setup.
 
 | Run | Date | Verdict | Idea | Result | Baseline | Closes | Opens | Model |
 |---|---|---|---|---|---|---|---|---|
@@ -64,6 +65,7 @@ The [run index and analysis commands](../runs/README.md#check-the-published-meas
 | [2026-11-12-page-remapped-merge](../runs/2026-11-12-page-remapped-merge/) | 2026-11-12 17:21 | diagnostic | 1. Virtual memory as a data-movement engine | 1.52–1.59× estimated for edge overlap; at most 1.08× for bursty runs | fastest fresh-output merge (estimate from calibration) | — | page-remapped merge candidate | OpenAI GPT-6.1 Sol, Extra High |
 | [2026-11-12-page-remapped-merge-candidate](../runs/2026-11-12-page-remapped-merge-candidate/) | 2026-11-12 17:33 | promising | 1. Virtual memory as a data-movement engine | 1.326–2.668× on edge-overlap runs (2/4 cases ≥1.3×, 0/4 ≥1.5× on both seeds) | fastest merge into a fresh output | — | frequency of mappable pages in real sorted batches | OpenAI GPT-6.1 Sol, Extra High |
 | [2026-11-12-gharchive-page-coverage](../runs/2026-11-12-gharchive-page-coverage/) | 2026-11-12 18:25 | diagnostic | 1. Virtual memory as a data-movement engine | 8/8 pairs passed 37.5% coverage; 0/8 had timestamp overlap | — | — | timing against two bulk copies on the archive batch sizes | OpenAI GPT-6.1 Sol, Extra High |
+| [2026-11-12-gharchive-disjoint-merge](../runs/2026-11-12-gharchive-disjoint-merge/) | 2026-11-12 18:34 | promising | 1. Virtual memory as a data-movement engine | 1.431–7.252× fresh (7/8 ≥1.5×); 2/8 resident ≥1.5× | fastest of scalar, galloping bulk, hybrid and two-copy concatenation for fresh output; hybrid and two-copy concatenation for resident output | — | test overlapping batches from a source with independent arrival and event clocks | OpenAI GPT-6.1 Sol, Extra High |
 
 Summaries, oldest first:
 
@@ -74,4 +76,5 @@ Summaries, oldest first:
 - **2026-11-12-page-remapped-merge** (diagnostic): Mapping pages instead of copying them pays off from 64 KiB extents upwards (4 KiB extents lose). In a merge only page-aligned slices qualify, which was 37.5% of the output when two runs overlap at the edges and 3–7% for bursty runs.
 - **2026-11-12-page-remapped-merge-candidate** (promising): Mapping aligned input pages into the output beat the best fresh-output merge of two sorted runs of 128-byte records by 1.33–1.36×, and by 2.67× when 75% of the output was mapped. It lost to a merge into an already-touched buffer (0.36–0.74×) and regressed on bursty and interleaved runs (0.82–0.86×). Synthetic data only.
 - **2026-11-12-gharchive-page-coverage** (diagnostic): All eight registered archive pairs had disjoint event-time ranges. Between 48.25% and nearly 100% of the modeled bytes can be remapped, so these inputs measure assembly of preordered ranges and leave overlap untested.
+- **2026-11-12-gharchive-disjoint-merge** (promising): On eight disjoint pairs with batch sizes and order derived from GH Archive, remapping beat every fresh-output reference. It beat the resident-buffer references in the two cases where almost all pages could be mapped. Real overlapping arrivals remain untested.
 <!-- RUNS:END -->
