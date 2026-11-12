@@ -1,0 +1,29 @@
+name: Progress check
+
+# Checks that every run log has valid front matter and that the generated
+# run ledger (runs/index.json, PROGRESS.md, notes/agent-brief.md) and the
+# Claude Code copy of the skills are up to date.
+
+on:
+  pull_request:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  progress:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Check run ledger and progress views
+        run: python scripts/build_progress.py --check
+
+      - name: Check skills mirror
+        run: python scripts/sync_skills.py --check

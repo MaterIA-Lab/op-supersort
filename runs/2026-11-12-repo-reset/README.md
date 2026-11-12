@@ -1,3 +1,13 @@
+---
+title: Viability review and repository reset
+date: 2026-11-12 15:37
+verdict: setup
+summary: Judged the original goal (25% faster in 90% of a large benchmark matrix) very unlikely to be reached, replaced it with an open search for new mechanisms and archived the prior research.
+model: Claude (Claude Code on the web)
+cost: not captured
+opens: [idea backlog in notes/ideas.md]
+---
+
 # Viability review and repository reset — 2026-11-12
 
 - **Model:** Claude (Anthropic), via Claude Code on the web. Tokens and cost were not captured.

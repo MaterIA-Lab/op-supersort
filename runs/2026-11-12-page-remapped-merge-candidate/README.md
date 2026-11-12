@@ -1,3 +1,16 @@
+---
+title: Page-remapped merge candidate
+date: 2026-11-12 17:33
+verdict: promising
+idea: 1. Virtual memory as a data-movement engine
+summary: Mapping aligned input pages into the output beat the best fresh-output merge of two sorted runs of 128-byte records by 1.33–1.36×, and by 2.67× when 75% of the output was mapped. It lost to a merge into an already-touched buffer (0.36–0.74×) and regressed on bursty and interleaved runs (0.82–0.86×). Synthetic data only.
+result: 1.326–2.668× on edge-overlap runs (2/4 cases ≥1.3×, 0/4 ≥1.5× on both seeds)
+baseline: fastest merge into a fresh output
+opens: [frequency of mappable pages in real sorted batches]
+model: OpenAI GPT-6.1 Sol, Extra High
+cost: not captured
+---
+
 # Page-remapped merge candidate — 2026-11-12
 
 - **Model** OpenAI GPT-6.1 Sol, Extra High, as identified by the owner. Exact token count and billed model cost are unavailable in the session. Local WSL compute has no incremental cloud charges.

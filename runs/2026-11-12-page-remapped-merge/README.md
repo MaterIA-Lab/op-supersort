@@ -1,3 +1,16 @@
+---
+title: Page-remapped merge pilot
+date: 2026-11-12 17:21
+verdict: diagnostic
+idea: 1. Virtual memory as a data-movement engine
+summary: Mapping pages instead of copying them pays off from 64 KiB extents upwards (4 KiB extents lose). In a merge only page-aligned slices qualify, which was 37.5% of the output when two runs overlap at the edges and 3–7% for bursty runs.
+result: 1.52–1.59× estimated for edge overlap; at most 1.08× for bursty runs
+baseline: fastest fresh-output merge (estimate from calibration)
+opens: [page-remapped merge candidate]
+model: OpenAI GPT-6.1 Sol, Extra High
+cost: not captured
+---
+
 # Page-remapped merge pilot — 2026-11-12
 
 - **Model** OpenAI GPT-6.1 Sol, Extra High, as identified by the owner. Exact token count and billed model cost are unavailable in the session. Local WSL compute has no incremental cloud charges.

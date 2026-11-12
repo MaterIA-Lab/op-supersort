@@ -1,3 +1,17 @@
+---
+title: Blocked record permutation probe
+date: 2026-11-12 16:48
+verdict: failed
+idea: 3. Payload permutation for records
+summary: Writing records in cache-sized destination tiles after sorting their descriptors by source made the permutation 1.67–2.14× slower than a plain gather. The extra descriptor sort costs more than the locality saves. Gather with software prefetch won every repetition.
+result: 0.542–0.648× (0/8 cases ≥1.3×)
+baseline: fastest measured reference, including gather with software prefetch
+closes: [tile-and-sort payload permutation]
+opens: [gather with software prefetch as the control to beat]
+model: agent:gpt-6 (Codex)
+cost: not captured
+---
+
 # Blocked record permutation probe — 2026-11-12
 
 - **Author and model** `agent:gpt-6` (Codex session model family). Exact model variant, token count and billed model cost are unavailable to this session. The benchmark ran locally with no paid compute services.
