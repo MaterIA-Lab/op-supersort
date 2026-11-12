@@ -5,9 +5,11 @@
 #include <cstdint>
 #include <cstring>
 #include <iostream>
+#include <limits>
 #include <new>
 #include <optional>
 #include <stdexcept>
+#include <string>
 #include <string_view>
 #include <system_error>
 #include <vector>
@@ -363,19 +365,34 @@ void hybrid_merge(std::array<Run, 2> runs, char* output) {
     std::memcpy(output + (runs[0].count + runs[1].count) * sizeof(Record), suffix, suffix_bytes);
 }
 
-enum class Method { scalar, bulk, hybrid, reused, remap };
-constexpr std::array method_names{"scalar", "bulk", "hybrid", "hybrid_reused", "remap"};
+void concatenate(const std::array<Run, 2>& runs, char* output) {
+    const bool first_before_second = runs[0].data[runs[0].count - 1].key < runs[1].data[0].key;
+    const unsigned first = first_before_second ? 0 : 1;
+    const auto& earlier = runs[first];
+    const auto& later = runs[1 - first];
+    if (!first_before_second && earlier.data[earlier.count - 1].key >= later.data[0].key) {
+        throw std::logic_error("concatenation requires disjoint key ranges");
+    }
+    const size_t prefix = earlier.count * sizeof(Record);
+    std::memcpy(output, earlier.data, prefix);
+    std::memcpy(output + prefix, later.data, later.count * sizeof(Record));
+}
+
+enum class Method { scalar, bulk, hybrid, reused, remap, concat, concat_reused };
+constexpr std::array method_names{"scalar", "bulk", "hybrid", "hybrid_reused", "remap", "concat", "concat_reused"};
 constexpr std::array pilot_methods{Method::scalar, Method::bulk};
 constexpr std::array candidate_methods{Method::scalar, Method::bulk, Method::hybrid, Method::reused, Method::remap};
+constexpr std::array disjoint_methods{Method::scalar, Method::bulk, Method::hybrid, Method::reused, Method::remap,
+                                      Method::concat, Method::concat_reused};
 
 size_t round_to_page(size_t bytes) {
     return (bytes + page_bytes - 1) / page_bytes * page_bytes;
 }
 
 template <size_t MethodCount>
-void merge_case(size_t count, Layout layout, uint64_t seed, unsigned seed_order, bool smoke,
+void merge_case(const std::vector<uint8_t>& labels, std::string_view case_name, uint64_t seed, unsigned case_order, bool smoke,
                 const std::vector<uint64_t>& buffer, const std::array<Method, MethodCount>& methods) {
-    const auto labels = make_labels(count, layout, seed);
+    const size_t count = labels.size();
     const size_t left = std::count(labels.begin(), labels.end(), uint8_t{0});
     const size_t second_offset = round_to_page(left * sizeof(Record));
     const size_t input_bytes = second_offset + round_to_page((count - left) * sizeof(Record));
@@ -405,7 +422,7 @@ void merge_case(size_t count, Layout layout, uint64_t seed, unsigned seed_order,
     const uint64_t checksum = cache_line_sum(expected_bytes, bytes);
     for (unsigned repetition = 0; repetition <= (smoke ? 1U : 5U); ++repetition) {
         for (size_t slot = 0; slot < methods.size(); ++slot) {
-            const Method method = methods[(slot + repetition + seed_order) % methods.size()];
+            const Method method = methods[(slot + repetition + case_order) % methods.size()];
             size_t mapped_bytes = 0;
             size_t map_calls = 0;
             const Times times = sample(bytes, checksum, buffer, [&](Region& output) {
@@ -413,6 +430,8 @@ void merge_case(size_t count, Layout layout, uint64_t seed, unsigned seed_order,
                     scalar_merge(runs, output.data());
                 } else if (method == Method::hybrid || method == Method::reused) {
                     hybrid_merge(runs, output.data());
+                } else if (method == Method::concat || method == Method::concat_reused) {
+                    concatenate(runs, output.data());
                 } else {
                     visit_slices(runs, [&](unsigned side, size_t from, size_t to, size_t length) {
                         const size_t source_offset = from * sizeof(Record);
@@ -436,15 +455,15 @@ void merge_case(size_t count, Layout layout, uint64_t seed, unsigned seed_order,
                     });
                 }
             }, [&](const char* output) { return std::memcmp(output, expected_bytes, bytes) == 0; },
-            method == Method::reused);
-            std::cout << count << ',' << layout_names[static_cast<size_t>(layout)] << ',' << seed << ','
+            method == Method::reused || method == Method::concat_reused);
+            std::cout << count << ',' << case_name << ',' << seed << ','
                       << repetition << ',' << method_names[static_cast<size_t>(method)] << ',' << (repetition == 0);
             print_times(times);
             std::cout << ',' << geometry.source_aligned << ',' << geometry.extent_count;
             for (size_t bucket : geometry.bytes) {
                 std::cout << ',' << bucket;
             }
-            if constexpr (MethodCount == candidate_methods.size()) {
+            if constexpr (MethodCount != pilot_methods.size()) {
                 std::cout << ',' << mapped_bytes << ',' << map_calls << ',' << times.teardown;
             }
             std::cout << '\n';
@@ -452,27 +471,53 @@ void merge_case(size_t count, Layout layout, uint64_t seed, unsigned seed_order,
     }
 }
 
-template <size_t MethodCount>
-void benchmark_merge(bool smoke, const std::vector<uint64_t>& buffer, const std::array<Method, MethodCount>& methods,
-                     const std::array<uint64_t, 2>& seeds) {
+void print_merge_header(bool include_mapping) {
     std::cout << "records,layout,seed,repetition,method,warmup,assembly_ns,scan_ns,total_ns,source_aligned_bytes,extents";
     for (size_t size : extent_sizes) {
         std::cout << ",eligible_" << size;
     }
-    if constexpr (MethodCount == candidate_methods.size()) {
+    if (include_mapping) {
         std::cout << ",mapped_bytes,map_calls,teardown_ns";
     }
     std::cout << '\n';
+}
+
+template <size_t MethodCount>
+void benchmark_merge(bool smoke, const std::vector<uint64_t>& buffer, const std::array<Method, MethodCount>& methods,
+                     const std::array<uint64_t, 2>& seeds) {
+    print_merge_header(MethodCount != pilot_methods.size());
     for (size_t count : {size_t{1} << 20, size_t{1} << 22}) {
         for (auto layout : {Layout::adjacent, Layout::edge, Layout::bursty, Layout::interleaved}) {
             for (unsigned index = 0; index < seeds.size(); ++index) {
                 const unsigned order = MethodCount == candidate_methods.size() ? index : 0;
-                merge_case(smoke ? size_t{1} << 15 : count, layout, seeds[index], order, smoke, buffer, methods);
+                const auto labels = make_labels(smoke ? size_t{1} << 15 : count, layout, seeds[index]);
+                merge_case(labels, layout_names[static_cast<size_t>(layout)], seeds[index], order, smoke, buffer, methods);
             }
         }
         if (smoke) {
             break;
         }
+    }
+}
+
+void benchmark_disjoint_batches(bool smoke, const std::vector<uint64_t>& buffer) {
+    print_merge_header(true);
+    std::string name;
+    unsigned order = 0;
+    while (std::cin >> name) {
+        size_t first;
+        size_t second;
+        constexpr size_t max_records = std::numeric_limits<size_t>::max() / sizeof(Record) / 2;
+        if (!(std::cin >> first >> second) || !first || !second || first > max_records || second > max_records ||
+            name.find(',') != std::string::npos) {
+            throw std::runtime_error("invalid disjoint input case");
+        }
+        std::vector<uint8_t> labels(first + second);
+        std::fill(labels.begin() + first, labels.end(), 1);
+        merge_case(labels, name, 53, order++, smoke, buffer, disjoint_methods);
+    }
+    if (!order || !std::cin.eof()) {
+        throw std::runtime_error("no complete disjoint batch cases");
     }
 }
 
@@ -482,7 +527,7 @@ int main(int argc, char** argv) {
     try {
         const bool smoke = argc == 3 && std::string_view(argv[2]) == "--smoke";
         if (argc != 2 && !smoke) {
-            throw std::runtime_error("usage: bench calibrate|merge|candidate [--smoke]");
+            throw std::runtime_error("usage: bench calibrate|merge|candidate|disjoint [--smoke]");
         }
         if (sysconf(_SC_PAGESIZE) != page_bytes) {
             throw std::runtime_error("experiment requires 4 KiB pages");
@@ -495,6 +540,8 @@ int main(int argc, char** argv) {
             benchmark_merge(smoke, buffer, pilot_methods, {271, 1601});
         } else if (mode == "candidate") {
             benchmark_merge(smoke, buffer, candidate_methods, {104729, 130363});
+        } else if (mode == "disjoint") {
+            benchmark_disjoint_batches(smoke, buffer);
         } else {
             throw std::runtime_error("unknown benchmark mode");
         }

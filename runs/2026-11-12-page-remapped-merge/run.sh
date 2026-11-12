@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if [[ $# -lt 1 || $# -gt 3 ]]; then
-    echo 'usage: bash run.sh NEW_OUTPUT_DIRECTORY [--candidate] [--smoke]' >&2
+    echo 'usage: bash run.sh NEW_OUTPUT_DIRECTORY [--candidate|--disjoint-batches] [--smoke]' >&2
     exit 2
 fi
 variant=pilot
@@ -10,6 +10,7 @@ smoke=()
 for option in "${@:2}"; do
     case "$option" in
         --candidate) variant=candidate ;;
+        --disjoint-batches) variant=disjoint ;;
         --smoke) smoke=(--smoke) ;;
         *) printf 'unknown option: %s\n' "$option" >&2; exit 2 ;;
     esac
@@ -54,7 +55,9 @@ flags=(-O3 -DNDEBUG -std=c++20 -march=native -Wall -Wextra -Wpedantic)
 if [[ $variant == pilot ]]; then
     taskset -c "$cpu" "$build/bench" calibrate "${smoke[@]}" > "$output/calibration.csv" 2>> "$output/metadata.txt"
     taskset -c "$cpu" "$build/bench" merge "${smoke[@]}" > "$output/merge.csv" 2>> "$output/metadata.txt"
-else
+elif [[ $variant == candidate ]]; then
     taskset -c "$cpu" "$build/bench" candidate "${smoke[@]}" > "$output/candidate.csv" 2>> "$output/metadata.txt"
+else
+    taskset -c "$cpu" "$build/bench" disjoint "${smoke[@]}" > "$output/disjoint.csv" 2>> "$output/metadata.txt"
 fi
 echo "utc_finished=$(date -u +%FT%TZ)" >> "$output/metadata.txt"
