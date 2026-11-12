@@ -22,6 +22,8 @@ The [preregistered kill test](../runs/2026-11-12-page-remapped-merge/README.md) 
 
 **Pilot.** Both sizes of the edge-overlap layout cleared the diagnostic threshold on both seeds. In that layout 37.5% of the output could reuse pages. In the bursty layout, only 2.7–6.9% could reuse pages even though about 88% of bytes belonged to full source pages. The [fresh-seed candidate protocol](../runs/2026-11-12-page-remapped-merge-candidate/README.md) includes a competitive merge specialized for long edges and a reusable-buffer control. [Pilot results](../runs/2026-11-12-page-remapped-merge/summary.md)
 
+**Candidate result.** The edge-overlap layout cleared 1.3× at both sizes with fresh output. With 37.5% of bytes mapped, the measured gain was 1.326–1.356×. One seed at 4.2 million records mapped both outer runs (75% of bytes) and reached 2.668×. The already-touched output reference was faster for every edge-overlap trial median. Bursty and interleaved layouts regressed. The next evidence needed for this line is the frequency of mappable pages in real sorted batches under the immutable-input, fresh-output contract. [Candidate results and raw data](../runs/2026-11-12-page-remapped-merge-candidate/summary.md)
+
 ## 2. Compressed keys in flight for bandwidth-bound regimes
 
 **Idea.** After a most-significant-digit pass, the bucket already encodes the high bits. Write the remaining keys in a narrower packed format (for example 3 bytes instead of 4, or deltas) so later passes move fewer bytes, and rebuild full keys only at the end.
