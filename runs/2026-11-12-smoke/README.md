@@ -1,3 +1,12 @@
+---
+title: Continuity smoke test
+date: 2026-11-12 14:57
+verdict: setup
+summary: The prior local runner still compiles and runs on Windows with GCC 16.1 and sorts 1,000 uint32 keys correctly. Not an evaluation of the goal.
+model: not captured
+cost: not captured
+---
+
 # Continuity smoke test — 2026-11-12
 
 Checked that the prior local runner compiles and executes in the new preparation workspace on Windows with GCC 16.1. The run used 1,000 `uint32` elements, `uniform` and `few`, seeds 271 and 811, five algorithms and three measured repetitions. All outputs were checked by the runner against `std::sort`; 60 timed samples were recorded.

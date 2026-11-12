@@ -1,0 +1,94 @@
+{
+  "runs": [
+    {
+      "id": "2026-11-12-smoke",
+      "path": "runs/2026-11-12-smoke/",
+      "title": "Continuity smoke test",
+      "date": "2026-11-12 14:57",
+      "verdict": "setup",
+      "summary": "The prior local runner still compiles and runs on Windows with GCC 16.1 and sorts 1,000 uint32 keys correctly. Not an evaluation of the goal.",
+      "model": "not captured",
+      "cost": "not captured"
+    },
+    {
+      "id": "2026-11-12-repo-reset",
+      "path": "runs/2026-11-12-repo-reset/",
+      "title": "Viability review and repository reset",
+      "date": "2026-11-12 15:37",
+      "verdict": "setup",
+      "summary": "Judged the original goal (25% faster in 90% of a large benchmark matrix) very unlikely to be reached, replaced it with an open search for new mechanisms and archived the prior research.",
+      "model": "Claude (Claude Code on the web)",
+      "cost": "not captured",
+      "opens": [
+        "idea backlog in notes/ideas.md"
+      ]
+    },
+    {
+      "id": "2026-11-12-record-permutation",
+      "path": "runs/2026-11-12-record-permutation/",
+      "title": "Record permutation headroom pilot",
+      "date": "2026-11-12 16:06",
+      "verdict": "diagnostic",
+      "idea": "3. Payload permutation for records",
+      "summary": "Gathering the payload takes 51–68% of an indirect sort of 64- and 128-byte records, so a permutation as cheap as a sequential copy would give about 1.3–1.4×. Enough room to try a candidate, with little margin.",
+      "result": "1.29–1.40× estimated headroom; 5/8 cases ≥1.3× on both seeds",
+      "baseline": "fastest of vqsort + gather, x86-simd-sort + gather and pdqsort on rows",
+      "opens": [
+        "blocked permutation probe"
+      ],
+      "model": "agent:gpt-6 (Codex)",
+      "cost": "not captured"
+    },
+    {
+      "id": "2026-11-12-blocked-permutation",
+      "path": "runs/2026-11-12-blocked-permutation/",
+      "title": "Blocked record permutation probe",
+      "date": "2026-11-12 16:48",
+      "verdict": "failed",
+      "idea": "3. Payload permutation for records",
+      "summary": "Writing records in cache-sized destination tiles after sorting their descriptors by source made the permutation 1.67–2.14× slower than a plain gather. The extra descriptor sort costs more than the locality saves. Gather with software prefetch won every repetition.",
+      "result": "0.542–0.648× (0/8 cases ≥1.3×)",
+      "baseline": "fastest measured reference, including gather with software prefetch",
+      "closes": [
+        "tile-and-sort payload permutation"
+      ],
+      "opens": [
+        "gather with software prefetch as the control to beat"
+      ],
+      "model": "agent:gpt-6 (Codex)",
+      "cost": "not captured"
+    },
+    {
+      "id": "2026-11-12-page-remapped-merge",
+      "path": "runs/2026-11-12-page-remapped-merge/",
+      "title": "Page-remapped merge pilot",
+      "date": "2026-11-12 17:21",
+      "verdict": "diagnostic",
+      "idea": "1. Virtual memory as a data-movement engine",
+      "summary": "Mapping pages instead of copying them pays off from 64 KiB extents upwards (4 KiB extents lose). In a merge only page-aligned slices qualify, which was 37.5% of the output when two runs overlap at the edges and 3–7% for bursty runs.",
+      "result": "1.52–1.59× estimated for edge overlap; at most 1.08× for bursty runs",
+      "baseline": "fastest fresh-output merge (estimate from calibration)",
+      "opens": [
+        "page-remapped merge candidate"
+      ],
+      "model": "OpenAI GPT-6.1 Sol, Extra High",
+      "cost": "not captured"
+    },
+    {
+      "id": "2026-11-12-page-remapped-merge-candidate",
+      "path": "runs/2026-11-12-page-remapped-merge-candidate/",
+      "title": "Page-remapped merge candidate",
+      "date": "2026-11-12 17:33",
+      "verdict": "promising",
+      "idea": "1. Virtual memory as a data-movement engine",
+      "summary": "Mapping aligned input pages into the output beat the best fresh-output merge of two sorted runs of 128-byte records by 1.33–1.36×, and by 2.67× when 75% of the output was mapped. It lost to a merge into an already-touched buffer (0.36–0.74×) and regressed on bursty and interleaved runs (0.82–0.86×). Synthetic data only.",
+      "result": "1.326–2.668× on edge-overlap runs (2/4 cases ≥1.3×, 0/4 ≥1.5× on both seeds)",
+      "baseline": "fastest merge into a fresh output",
+      "opens": [
+        "frequency of mappable pages in real sorted batches"
+      ],
+      "model": "OpenAI GPT-6.1 Sol, Extra High",
+      "cost": "not captured"
+    }
+  ]
+}

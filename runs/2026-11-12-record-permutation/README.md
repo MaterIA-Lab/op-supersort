@@ -1,3 +1,16 @@
+---
+title: Record permutation headroom pilot
+date: 2026-11-12 16:06
+verdict: diagnostic
+idea: 3. Payload permutation for records
+summary: Gathering the payload takes 51–68% of an indirect sort of 64- and 128-byte records, so a permutation as cheap as a sequential copy would give about 1.3–1.4×. Enough room to try a candidate, with little margin.
+result: 1.29–1.40× estimated headroom; 5/8 cases ≥1.3× on both seeds
+baseline: fastest of vqsort + gather, x86-simd-sort + gather and pdqsort on rows
+opens: [blocked permutation probe]
+model: agent:gpt-6 (Codex)
+cost: not captured
+---
+
 # Record permutation pilot — 2026-11-12
 
 - **Author and model** `agent:gpt-6` (Codex session model family). Exact model variant, token count and billed model cost are unavailable to this session. The benchmark ran locally with no paid compute services.

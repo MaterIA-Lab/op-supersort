@@ -1,6 +1,6 @@
 name: Agent auto-merge
 
-# Agents push to agent/* branches. If the secret scan passes, this workflow
+# Agents push to agent/* branches. If the secret scan and the progress check pass, this workflow
 # opens (or reuses) a pull request into main and merges it right away, so the
 # research is published live while keeping a PR record of every merge.
 # If the merge fails (for example a conflict), the PR stays open for a human.
@@ -24,8 +24,11 @@ jobs:
   secret-scan:
     uses: ./.github/workflows/gitleaks.yml
 
+  progress:
+    uses: ./.github/workflows/progress.yml
+
   merge:
-    needs: secret-scan
+    needs: [secret-scan, progress]
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
