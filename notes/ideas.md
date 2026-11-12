@@ -28,6 +28,8 @@ The [preregistered kill test](../runs/2026-11-12-page-remapped-merge/README.md) 
 
 **Diagnostic result.** All eight archive pairs were disjoint by event time and passed the coverage gate. The paired row counts are suitable for timing contiguous assembly. Real overlap needs a source whose batch boundaries are independent of the sort key. [Coverage](../runs/2026-11-12-gharchive-page-coverage/README.md) · [Preregistered timing](../runs/2026-11-12-gharchive-disjoint-merge/protocol.md)
 
+**Disjoint timing.** The archive-derived pairs cleared 1.3× against fresh output in all eight cases and 1.5× in seven. Against a resident destination, only the two pairs with nearly complete page alignment cleared those thresholds. This confirms the contiguous-assembly benefit for these batch sizes, with actual overlapping arrivals still open. [Results and raw samples](../runs/2026-11-12-gharchive-disjoint-merge/summary.md)
+
 ## 2. Compressed keys in flight for bandwidth-bound regimes
 
 **Idea.** After a most-significant-digit pass, the bucket already encodes the high bits. Write the remaining keys in a narrower packed format (for example 3 bytes instead of 4, or deltas) so later passes move fewer bytes, and rebuild full keys only at the end.

@@ -1,0 +1,21 @@
+source_commit=917e4e1db2b593d5fa3e2b699c57d4ce25bec32b
+utc_started=2026-11-12T18:58:15Z
+kernel=6.18.54.1-microsoft-standard-WSL2
+os="Ubuntu 22.04.3 LTS"
+processor=AMD Ryzen 7 5800X 8-Core Processor
+MemTotal: 16318364 kB
+MemAvailable: 15233296 kB
+logical_cpu_count=16
+page_bytes=4096
+affinity_logical_cpu=4
+thread_count=1
+compiler=11.4.0
+flags=-O3 -DNDEBUG -std=c++20 -march=native -Wall -Wextra -Wpedantic
+variant=disjoint
+glibc 2.35
+thp_enabled=always [madvise] never
+thp_shmem_enabled=always within_size advise [never] deny force
+max_map_count=65530
+load_before=0.99 0.91 0.91
+disjoint_peak_rss_kib=419492
+utc_finished=2026-11-12T18:58:30Z
