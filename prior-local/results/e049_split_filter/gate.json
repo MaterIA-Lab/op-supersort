@@ -1,8 +1,0 @@
-{
-  "passed": false,
-  "failures": [
-    "half_random/28729 obtuvo 0.955377 frente a vq, por debajo de 1.10.",
-    "half_random/80149 obtuvo 0.967900 frente a vq, por debajo de 1.10.",
-    "skew_random/28729 obtuvo 0.898790 frente a scalar_scratch, por debajo de 0.90."
-  ]
-}

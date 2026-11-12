@@ -5,6 +5,8 @@ useDefault = true
 id = "generic-api-key"
 
 [[rules.allowlists]]
+# prior-local/ was removed from main (see notes/prior-research.md), but the secret
+# scan covers the full git history, so these exact digest matches stay allowlisted.
 description = "Known source-file SHA-256 checksums in historical experiment metadata"
 condition = "AND"
 regexTarget = "secret"

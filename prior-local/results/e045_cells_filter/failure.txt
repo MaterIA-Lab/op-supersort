@@ -1,1 +1,0 @@
-RuntimeError: case-dense16-47143 exited with 3221225477. See A:\Users\elseb\Terminal\AI\Codex\supersort\results\e045_cells_filter\case-dense16-47143.stderr.txt.

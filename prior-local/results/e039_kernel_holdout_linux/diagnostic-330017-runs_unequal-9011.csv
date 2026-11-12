@@ -1,3 +1,0 @@
-mode,runs,run_hash,simd_elements,reversed_elements,operations,tree_elements,executed_elements,copied_elements,skipped
-weighted,160,7950025939267969392,10240,0,159,2442215,2442215,2442215,0
-cmov,160,7950025939267969392,10240,0,159,2442215,2442215,2442215,0
