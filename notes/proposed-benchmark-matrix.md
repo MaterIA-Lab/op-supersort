@@ -5,7 +5,7 @@ status: draft
 
 # Proposed benchmark matrix — for owner review
 
-This is a proposal, not a frozen protocol. All types are evaluated at 1,000, 10 million and 1 billion elements where feasible, separately for one thread and multiple threads. Mark unavailable cases explicitly and report the denominator and coverage.
+This is a menu of candidates, not a frozen protocol or a requirement to support every type before delivering a useful result. Start with a promising practical scope, such as the existing uint32 work, and expand to more types and objects when useful. Evaluate selected cases at 1,000, 10 million and 1 billion elements where feasible, separately for one thread and multiple threads. Mark unavailable cases explicitly and report the denominator and coverage.
 
 ## Numeric types
 

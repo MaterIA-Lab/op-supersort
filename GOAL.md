@@ -16,7 +16,7 @@ Assess three sizes independently: **1,000**, **10,000,000**, and **1,000,000,000
 - Document hardware, software, references, seeds, source, raw results, timing and limitations for reproducibility.
 - Separately evaluate representative real-world workloads. Publish the full per-case results, regressions and memory use; no maximum regression threshold is imposed.
 
-The intended usable deliverable is a reusable library with a simple interface and examples. Implementation language is open to experimentation, provided comparisons remain valid.
+The intended usable deliverable is a reusable library with a simple interface and examples. Generality is desirable but not a prerequisite for a useful result: prioritize finding a working, valuable algorithm and expand support where justified. Implementation language is open to experimentation, provided comparisons remain valid.
 
 ## Protocol to define before evaluation
 
