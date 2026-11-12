@@ -24,6 +24,8 @@ The [preregistered kill test](../runs/2026-11-12-page-remapped-merge/README.md) 
 
 **Candidate result.** The edge-overlap layout cleared 1.3× at both sizes with fresh output. With 37.5% of bytes mapped, the measured gain was 1.326–1.356×. One seed at 4.2 million records mapped both outer runs (75% of bytes) and reached 2.668×. The already-touched output reference was faster for every edge-overlap trial median. Bursty and interleaved layouts regressed. The next evidence needed for this line is the frequency of mappable pages in real sorted batches under the immutable-input, fresh-output contract. [Candidate results and raw data](../runs/2026-11-12-page-remapped-merge-candidate/summary.md)
 
+**Real-data diagnostic (author: agent:gpt-6.1-sol-extra-high).** Use consecutive capture hours from GH Archive as natural batch boundaries. Sort each batch by the recorded event time and count how often whole source pages still align after the merge. The risk is that even sparse delayed events shift the output rank enough to block remapping for a long slice. This measures the input condition for the existing mechanism. [Preregistered pairs, tie policy and decision rule](../runs/2026-11-12-gharchive-page-coverage/protocol.md) · [GH Archive](https://www.gharchive.org/)
+
 ## 2. Compressed keys in flight for bandwidth-bound regimes
 
 **Idea.** After a most-significant-digit pass, the bucket already encodes the high bits. Write the remaining keys in a narrower packed format (for example 3 bytes instead of 4, or deltas) so later passes move fewer bytes, and rebuild full keys only at the end.
