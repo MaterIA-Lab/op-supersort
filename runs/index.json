@@ -89,6 +89,21 @@
       ],
       "model": "OpenAI GPT-6.1 Sol, Extra High",
       "cost": "not captured"
+    },
+    {
+      "id": "2026-11-12-gharchive-page-coverage",
+      "path": "runs/2026-11-12-gharchive-page-coverage/",
+      "title": "GH Archive page coverage",
+      "date": "2026-11-12 18:25",
+      "verdict": "diagnostic",
+      "summary": "All eight registered archive pairs had disjoint event-time ranges. Between 48.25% and nearly 100% of the modeled bytes can be remapped, so these inputs measure assembly of preordered ranges and leave overlap untested.",
+      "model": "OpenAI GPT-6.1 Sol, Extra High",
+      "idea": "1. Virtual memory as a data-movement engine",
+      "result": "8/8 pairs passed 37.5% coverage; 0/8 had timestamp overlap",
+      "opens": [
+        "timing against two bulk copies on the archive batch sizes"
+      ],
+      "cost": "not captured"
     }
   ]
 }
