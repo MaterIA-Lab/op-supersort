@@ -1,0 +1,129 @@
+{
+  "utc": "2026-11-12T14:55:59.669650+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "compiler": "g++ (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r2) 16.1.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "flags": [
+    "g++",
+    "-O3",
+    "-march=native",
+    "-DNDEBUG",
+    "-std=c++17",
+    "-I<local-user>\\Documents\\Codex\\2026-11-12\\vale-ahora-quiero-que-revises-2\\supersort-pilot\\vendor\\x86-simd-sort\\src",
+    "-I<local-user>\\Documents\\Codex\\2026-11-12\\vale-ahora-quiero-que-revises-2\\supersort-pilot\\vendor\\highway",
+    "<local-user>\\Documents\\Codex\\2026-11-12\\vale-ahora-quiero-que-revises-2\\supersort-pilot\\bench.cpp",
+    "<local-user>\\Documents\\Codex\\2026-11-12\\vale-ahora-quiero-que-revises-2\\supersort-pilot\\vq_bridge.cpp",
+    "<local-user>\\Documents\\Codex\\2026-11-12\\vale-ahora-quiero-que-revises-2\\supersort-pilot\\vendor\\highway\\hwy\\abort.cc",
+    "-o",
+    "<local-user>\\Documents\\Codex\\2026-11-12\\vale-ahora-quiero-que-revises-2\\supersort-pilot\\build\\windows\\bench.exe"
+  ],
+  "arguments": {
+    "sizes": [
+      1000
+    ],
+    "distributions": [
+      "uniform",
+      "few"
+    ],
+    "seeds": [
+      271,
+      811
+    ],
+    "repeats": 3,
+    "tag": "op_smoke",
+    "algorithms": [
+      "std",
+      "pdq",
+      "simd",
+      "vq",
+      "adaptive_fixed"
+    ],
+    "quiet": true,
+    "runs_diagnostic": false,
+    "tree_diagnostic": false,
+    "kernel_diagnostic": false,
+    "quick_threshold": false,
+    "cpu": null
+  },
+  "vendor": {
+    "pdqsort.h": {
+      "url": "https://raw.githubusercontent.com/orlp/pdqsort/master/pdqsort.h",
+      "sha256": "1916aff237fc7ecc638dec6397662334552a1b6f823fa65011a8dfe831237fc0"
+    },
+    "ska_sort.hpp": {
+      "url": "https://raw.githubusercontent.com/skarupke/ska_sort/master/ska_sort.hpp",
+      "sha256": "440456435f9052998bd48fbc501870ce3975bcff400b906783768694f37264ca"
+    },
+    "x86-simd-sort": {
+      "url": "https://github.com/numpy/x86-simd-sort",
+      "commit": "6e059b14975df2e3c74260ec905167a1be5a34ca"
+    },
+    "highway": {
+      "url": "https://github.com/google/highway",
+      "commit": "a3f6f68fcc368e5e3025ca25805eabda9d8a456f",
+      "dispatch": "VQSORT_ONLY_STATIC + HWY_COMPILE_ONLY_STATIC, march=native"
+    }
+  },
+  "source_sha256": "2bb49599e3bec7fb561c6118b20b5e0fadee85148684fea2920caaf59179eb2e",
+  "source_files_sha256": {
+    "bench.cpp": "2bb49599e3bec7fb561c6118b20b5e0fadee85148684fea2920caaf59179eb2e",
+    "vq_bridge.cpp": "db2857389c50bd0b283d117f31dc04be4633115521c1643263b039935d0c563b",
+    "ips_bridge.cpp": "867f881e43e2b7a184e1f7592ad0b553e4d2629346904a26faf3bd5de76d5bb5",
+    "power_bridge.cpp": "a38bfbd85722141e4594dec0ba43061a6e1ccd5c54179a7b2404a4ca317b8bbb",
+    "profile_predict.hpp": "2354e6fd4a00ad9d4bda9bbd898b2cc5df0d8f21783d31c30a6524eddd5dda9e",
+    "include\\supersort\\cells_u32.hpp": "fd6da71674d77c3f26a7828318a73963409b749add43063d3f9e656905b6483e",
+    "include\\supersort\\combined_u32.hpp": "292b790ffc8b81286af69192de6518bbdb856398e7de13f8ba8341ac4f4d99e6",
+    "include\\supersort\\cycle_partition_u32.hpp": "f468c11ef36cf5a2abf1d228353191820e7bf1ad600e19b22188224798f2742d",
+    "include\\supersort\\dictionary_u32.hpp": "bd31a10ef64c934e99999919bf694e9b368cf34994de3793a6e63202ba56e3c8",
+    "include\\supersort\\exchange_partition_u32.hpp": "ec79b78a5a96eae812371c164b15b0c6fe078a502047dd5134312081df43d723",
+    "include\\supersort\\four_split_u32.hpp": "091935e2042b9b3b7b271f5550dca5163966e2ebcda7fc0dc67bb25373d5ce1e",
+    "include\\supersort\\frontier_midpoint.hpp": "f8425947730c3178de8e997f64c90de9a4f74ba6da27ed5c8e606c004b621d87",
+    "include\\supersort\\frontier_radix24.hpp": "8120ae7804e4687c6bab81fd950c41ca3332d36e6a616c70e549478b50aa10ab",
+    "include\\supersort\\frontier_radix8.hpp": "0715171642586ff06fa9df258ebb08f2e96c47a6257a201056fecba458f4687b",
+    "include\\supersort\\frontier_suffix16.hpp": "b8f4ca11a842bc3fd34a605d4870b23f69e90002a11ed28b40da78cc49fc6014",
+    "include\\supersort\\merge_u32.hpp": "b031ec0dab8ab043579de36fcb75cf17b1eff9fa6b7a971b000afa491a797462",
+    "include\\supersort\\natural_merge_u32.hpp": "20e51323e2f7cf8faa22bcb3cb8d73a798875097ce4e611f9835ac12de37069f",
+    "include\\supersort\\partition_pair_u32.hpp": "14e35d6b514e307e8f22383887b55137362bd143c545f354ff009f099a92e671",
+    "include\\supersort\\position_bitmap_u32.hpp": "ed55e8d0a3e8964e71f23366d9552a73940a0b5815a0876a378b0a32a3b406cf",
+    "include\\supersort\\predictive_u32.hpp": "929141124854bede90cf29e81522bfdcd86c55e6b3b465ad84cf97607f1c7985",
+    "include\\supersort\\prefix_packed_u32.hpp": "64bff735ce1ddaff194d6c958627ab84f48ba30109d8c056cedbd02abcf1af48",
+    "include\\supersort\\scatter_nt.hpp": "2babc23cd68d9662268ed3554ca146a459291656c1b4ac9c7154d37fcb5afd0e",
+    "include\\supersort\\stream_merge_u32.hpp": "9342d60bef6a7e39f00b5d3019de0c70a94a2d6e5cf9803a2de85810515f04d3",
+    "include\\supersort\\tree_merge_u32.hpp": "48d912d33d55eb06d6b589b4444d8e1c55f05646a51048284aa8842c9cda0972",
+    "include\\supersort\\windows_compact_u32.hpp": "8d47b048861f2d36a5eef2b79827960fd75b02763c12b55d0581c653a6f01769",
+    "include\\supersort\\windows_e047_u32.hpp": "61678778a51e4030f665585f445d0aa535ebf9bcc64faff29fb449b9216efb14",
+    "include\\supersort\\windows_forward_u32.hpp": "d573680f682d22188880483e7ea0519f655a9bd37f27048b282b4e2b2e5d27fc",
+    "include\\supersort\\windows_shadow_u32.hpp": "40cad04a7d1795beed6df5a749289e57015d44442f1a2217f3afad3f95b70d77",
+    "include\\supersort\\windows_split_u32.hpp": "82a3735b49519eea52193133fb606222fd9cdd2d8c772162f8874059eac4f4d0",
+    "include\\supersort\\windows_u32.hpp": "6bdd9c72690b2d492b4f37467b41463eb0580ef4af3142bf616d6f8c151a14a2"
+  },
+  "vq_bridge_sha256": "db2857389c50bd0b283d117f31dc04be4633115521c1643263b039935d0c563b",
+  "header_sha256": {
+    "include\\supersort\\cells_u32.hpp": "fd6da71674d77c3f26a7828318a73963409b749add43063d3f9e656905b6483e",
+    "include\\supersort\\combined_u32.hpp": "292b790ffc8b81286af69192de6518bbdb856398e7de13f8ba8341ac4f4d99e6",
+    "include\\supersort\\cycle_partition_u32.hpp": "f468c11ef36cf5a2abf1d228353191820e7bf1ad600e19b22188224798f2742d",
+    "include\\supersort\\dictionary_u32.hpp": "bd31a10ef64c934e99999919bf694e9b368cf34994de3793a6e63202ba56e3c8",
+    "include\\supersort\\exchange_partition_u32.hpp": "ec79b78a5a96eae812371c164b15b0c6fe078a502047dd5134312081df43d723",
+    "include\\supersort\\four_split_u32.hpp": "091935e2042b9b3b7b271f5550dca5163966e2ebcda7fc0dc67bb25373d5ce1e",
+    "include\\supersort\\frontier_midpoint.hpp": "f8425947730c3178de8e997f64c90de9a4f74ba6da27ed5c8e606c004b621d87",
+    "include\\supersort\\frontier_radix24.hpp": "8120ae7804e4687c6bab81fd950c41ca3332d36e6a616c70e549478b50aa10ab",
+    "include\\supersort\\frontier_radix8.hpp": "0715171642586ff06fa9df258ebb08f2e96c47a6257a201056fecba458f4687b",
+    "include\\supersort\\frontier_suffix16.hpp": "b8f4ca11a842bc3fd34a605d4870b23f69e90002a11ed28b40da78cc49fc6014",
+    "include\\supersort\\merge_u32.hpp": "b031ec0dab8ab043579de36fcb75cf17b1eff9fa6b7a971b000afa491a797462",
+    "include\\supersort\\natural_merge_u32.hpp": "20e51323e2f7cf8faa22bcb3cb8d73a798875097ce4e611f9835ac12de37069f",
+    "include\\supersort\\partition_pair_u32.hpp": "14e35d6b514e307e8f22383887b55137362bd143c545f354ff009f099a92e671",
+    "include\\supersort\\position_bitmap_u32.hpp": "ed55e8d0a3e8964e71f23366d9552a73940a0b5815a0876a378b0a32a3b406cf",
+    "include\\supersort\\predictive_u32.hpp": "929141124854bede90cf29e81522bfdcd86c55e6b3b465ad84cf97607f1c7985",
+    "include\\supersort\\prefix_packed_u32.hpp": "64bff735ce1ddaff194d6c958627ab84f48ba30109d8c056cedbd02abcf1af48",
+    "include\\supersort\\scatter_nt.hpp": "2babc23cd68d9662268ed3554ca146a459291656c1b4ac9c7154d37fcb5afd0e",
+    "include\\supersort\\stream_merge_u32.hpp": "9342d60bef6a7e39f00b5d3019de0c70a94a2d6e5cf9803a2de85810515f04d3",
+    "include\\supersort\\tree_merge_u32.hpp": "48d912d33d55eb06d6b589b4444d8e1c55f05646a51048284aa8842c9cda0972",
+    "include\\supersort\\windows_compact_u32.hpp": "8d47b048861f2d36a5eef2b79827960fd75b02763c12b55d0581c653a6f01769",
+    "include\\supersort\\windows_e047_u32.hpp": "61678778a51e4030f665585f445d0aa535ebf9bcc64faff29fb449b9216efb14",
+    "include\\supersort\\windows_forward_u32.hpp": "d573680f682d22188880483e7ea0519f655a9bd37f27048b282b4e2b2e5d27fc",
+    "include\\supersort\\windows_shadow_u32.hpp": "40cad04a7d1795beed6df5a749289e57015d44442f1a2217f3afad3f95b70d77",
+    "include\\supersort\\windows_split_u32.hpp": "82a3735b49519eea52193133fb606222fd9cdd2d8c772162f8874059eac4f4d0",
+    "include\\supersort\\windows_u32.hpp": "6bdd9c72690b2d492b4f37467b41463eb0580ef4af3142bf616d6f8c151a14a2"
+  },
+  "logical_cpu": null,
+  "timing": "single-thread; allocation included; input copy and correctness excluded; one warmup per case; shuffled algorithm order"
+}
