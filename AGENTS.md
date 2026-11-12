@@ -22,6 +22,9 @@ Instructions for any AI agent (Claude Code, Codex or others) working on this pro
 | `prototypes/humans/` | A few polished prototypes, each in its own folder with a README explaining how to use it. |
 | `SUMMARY.md` | Final summary for humans, written when the project closes. |
 | `project.yaml` | Update `results` only with measured results. Only humans change `status`. |
+| `lab/` | Git-ignored local workspace for research material, experiments and scratch files. |
+
+`lab/` is local and is not published or backed up by Git. Keep meaningful notes, methods, results and failures in the tracked project record as well; do not assume another agent has your local files. Never commit secrets or personal data when promoting material.
 
 ## Agent toolkit
 
