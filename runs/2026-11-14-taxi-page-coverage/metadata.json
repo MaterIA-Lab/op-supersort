@@ -1,0 +1,31 @@
+{
+  "source": {
+    "url": "https://raw.githubusercontent.com/mwaskom/seaborn-data/71e2436a092d714350de0fc409ca8a8714e7e78f/taxis.csv",
+    "blob": "ded045b462d361b8a0e5ddcdd6c3361cce4ddab4",
+    "sha256": "08d6d71784dbaa2651fee37fc03389754194c05d72d2d19cbc2c799dea6ac09d",
+    "bytes": 869349,
+    "rows": 6433,
+    "invalid_timestamp": 0,
+    "reverse_clock": 0,
+    "valid": 6433
+  },
+  "python": "3.14.0",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "row_bytes": 128,
+  "page_bytes": 4096,
+  "minimum_extent_bytes": 65536,
+  "weekly_passes_by_hour": {
+    "0": {
+      "aligned_gate": 0,
+      "best_offset_gate": 0,
+      "aligned_substantive_gate": 0,
+      "best_offset_substantive_gate": 0
+    },
+    "12": {
+      "aligned_gate": 1,
+      "best_offset_gate": 1,
+      "aligned_substantive_gate": 0,
+      "best_offset_substantive_gate": 0
+    }
+  }
+}

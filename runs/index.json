@@ -120,6 +120,72 @@
         "test overlapping batches from a source with independent arrival and event clocks"
       ],
       "cost": "not captured"
+    },
+    {
+      "id": "2026-11-14-record-permutation",
+      "path": "runs/2026-11-14-record-permutation/",
+      "title": "Record permutation by source band",
+      "date": "2026-11-14 15:37",
+      "verdict": "failed",
+      "summary": "Grouping reads by source band took about 23% longer on the primary batch. Preparing the groups and moving rows together took longer than reading ahead in the original layout.",
+      "model": "agent:gpt-6 (Codex)",
+      "idea": "3. Payload permutation for records",
+      "result": "0.814× across two primary seeds",
+      "baseline": "Fastest measured indirect sort with software prefetch",
+      "closes": [
+        "histogram grouping within destination windows"
+      ],
+      "cost": "not captured"
+    },
+    {
+      "id": "2026-11-14-page-remap",
+      "path": "runs/2026-11-14-page-remap/",
+      "title": "Windows page remapping and first read",
+      "date": "2026-11-14 15:45",
+      "verdict": "failed",
+      "summary": "For 64 KiB blocks, Windows remapping and a first read took 2.21–2.54× the time of streaming copy and a first read. The first access to the new virtual addresses dominated even when larger blocks made the remap calls fast.",
+      "model": "agent:gpt-6 (Codex)",
+      "idea": "1. Virtual memory as a data-movement engine",
+      "result": "0.394–0.453× across two primary seeds",
+      "baseline": "AVX2 streaming copy plus first sweep into a reused output",
+      "closes": [
+        "Windows placeholder remapping for the measured contract"
+      ],
+      "cost": "not captured"
+    },
+    {
+      "id": "2026-11-14-four-row-ranks",
+      "path": "runs/2026-11-14-four-row-ranks/",
+      "title": "Stable rank inversion for four-record groups",
+      "date": "2026-11-14 15:57",
+      "verdict": "failed",
+      "summary": "Computing ranks and inverting them in AVX2 registers took 5–37% longer than the fastest direct SIMD reference on the primary batches. The extra work still cost time in the cache-resident control.",
+      "model": "agent:gpt-6 (Codex)",
+      "idea": "5. Exact rank computation without data movement",
+      "result": "0.731–0.952× across two primary seeds",
+      "baseline": "Best of the direct AVX2 compare-exchange network and shuffle lookup",
+      "closes": [
+        "four-record AVX2 shift-based rank inversion"
+      ],
+      "cost": "not captured"
+    },
+    {
+      "id": "2026-11-14-taxi-page-coverage",
+      "path": "runs/2026-11-14-taxi-page-coverage/",
+      "title": "Page reuse in completed taxi-trip batches",
+      "date": "2026-11-14 16:11",
+      "verdict": "diagnostic",
+      "summary": "Only one of twelve weekly pairs overlapped in pickup time. Four rows of that pair fell inside the overlap, and choosing the output offset did not increase its page reuse.",
+      "model": "agent:gpt-6 (Codex)",
+      "idea": "1. Virtual memory as a data-movement engine",
+      "result": "1/12 weekly pairs overlapped and 0/12 put at least 5% of rows in the overlap",
+      "closes": [
+        "small seaborn taxi sample for overlapping merge timing"
+      ],
+      "opens": [
+        "dense completed-trip replay with substantial overlap"
+      ],
+      "cost": "not captured"
     }
   ]
 }
