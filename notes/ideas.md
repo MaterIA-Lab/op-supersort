@@ -30,6 +30,26 @@ The [preregistered kill test](../runs/2026-11-12-page-remapped-merge/README.md) 
 
 **Disjoint timing.** The archive-derived pairs cleared 1.3× against fresh output in all eight cases and 1.5× in seven. Against a resident destination, only the two pairs with nearly complete page alignment cleared those thresholds. This confirms the contiguous-assembly benefit for these batch sizes, with actual overlapping arrivals still open. [Results and raw samples](../runs/2026-11-12-gharchive-disjoint-merge/summary.md)
 
+### 1a. Assemble a read-only result from already ordered runs on Windows
+
+_Author: agent:gpt-6._
+
+For a result with non-overlapping runs, map page-aligned stretches of immutable backing storage into consecutive virtual addresses and copy the boundary fragments. Reusing whole stretches would avoid a physical read and write of each reused row. The fixed costs are splitting the output reservation, mapping the views, faulting in the new virtual addresses, and releasing the views. The first test isolates those costs with no overlap and every boundary aligned.
+
+Closest work: [Schuhknecht, Dittrich and Sharma (2016)](https://www.vldb.org/pvldb/vol9/p768-schuhknecht.pdf) already benchmark physical copies against OS page rewiring and use rewiring to concatenate radix partitions on Linux. The recent [Virtual-Memory Powersort](https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.ESA.2026.14) uses logical pages during merging and copies them into position at the end. The open question for this test is the cost of returning a contiguous read-only view on Windows, including the first consumer sweep. This platform measurement cannot establish a novel sorting mechanism.
+
+Preregistered primitive test: [OP-002](../runs/2026-11-14-page-remap/README.md). Closed on this Windows path. Reading each page once erased the apparent mapping gain even with 2 MiB extents.
+
+### 1b. Select the output offset from the merge plan
+
+_Author: agent:gpt-6._
+
+For a returned read-only view that guarantees record alignment, use the sorted merge plan to choose the base pointer's offset within a page. Each sufficiently long single-source slice nominates one of 32 output offsets for 128-byte rows on 4 KiB pages. Summing the eligible bytes per offset identifies the one layout that avoids the most copying. A displaced starting pointer changes the boundary layout and would need an explicit allocation and output contract.
+
+Closest work: the [existing SuperSort page-remapped merge](../runs/2026-11-12-page-remapped-merge-candidate/README.md) and [RUMA radix-partition assembly](https://www.vldb.org/pvldb/vol9/p768-schuhknecht.pdf) reuse whole pages and copy partial page boundaries. This diagnostic asks what is gained in overlapping runs by moving the entire output's alignment once, without adding padding between rows. A gain in eligible bytes is insufficient to establish novelty or speed.
+
+[Trip-time coverage test](../runs/2026-11-14-taxi-page-coverage/README.md). One of twelve weekly pairs overlapped. Four rows were in the overlap and selecting an offset gave the same coverage as the aligned output. Keep the offset idea unconfirmed until a substantially overlapping workload is screened.
+
 ## 2. Compressed keys in flight for bandwidth-bound regimes
 
 **Idea.** After a most-significant-digit pass, the bucket already encodes the high bits. Write the remaining keys in a narrower packed format (for example 3 bytes instead of 4, or deltas) so later passes move fewer bytes, and rebuild full keys only at the end.
@@ -52,6 +72,16 @@ The [blocked permutation probe](../runs/2026-11-12-blocked-permutation/README.md
 
 **Result.** Closed the tile-and-sort design after it missed the threshold in all eight cases. Its end-to-end speedup was 0.542–0.648× against the fastest measured reference. Gather with software prefetch won every paired repetition, making it a useful control for any future permutation experiments under this contract. [Probe results](../runs/2026-11-12-blocked-permutation/summary.md)
 
+### 3a. Group permutation requests by source within a destination window
+
+_Author: agent:gpt-6._
+
+Keep a window of final output positions resident in cache. Count its requests by source band and group them using one 32-bit word per request: an offset in the source band and a slot in the current destination window. Walk the source bands one at a time and write each row directly to its final slot. This preserves one payload movement per row. Grouping narrows the address range of concurrent source reads and could reduce repeated page translations enough to pay for two passes over the indices and nonsequential stores within the window.
+
+Closest work: [Inoue and Taura (2015)](https://www.vldb.org/pvldb/vol8/p1274-inoue.pdf) bound random access in row sorting via per-merge run IDs and sequential cursors, moving rows at merge stages. This candidate keeps one final materialization and groups requests within a finished permutation. The underlying two-sided locality strategy also appears in [cache and TLB blocking for sparse matrix-vector multiplication](https://jeewhanchoi.github.io/publication/pdf/spmv_book.pdf), so cache blocking by itself is established prior art. The question here is whether the packed, per-window schedule pays for itself on a one-use sort permutation. No novelty claim has been established.
+
+Preregistered budget and end-to-end kill test: [OP-001](../runs/2026-11-14-record-permutation/README.md). Closed after the test. The grouped version took 22.8–22.9% longer than the fastest measured reference on the primary workload.
+
 ## 4. Batches of small sorts across SIMD lanes
 
 **Idea.** Many workloads sort many independent small arrays (groups, windows, per-key lists). Sort them together, with each SIMD lane or vector handling a different array, instead of calling a sorter once per array.
@@ -65,6 +95,16 @@ The [blocked permutation probe](../runs/2026-11-12-blocked-permutation/README.md
 **Why it could matter.** Each key is written once; there is no recursive partitioning and no mispredicted branch.
 **Known nearby.** Rank and counting sorts, merge-path ranking, LearnedSort (Kristo et al., 2020), which predicts positions approximately.
 **Kill test.** Rank sort of a block that fits in L1 or L2 against the best in-cache network sort at the same size.
+
+### 5a. Invert four stable ranks with AVX2 shifts and ORs
+
+_Author: agent:gpt-6._
+
+Consider independent groups of four packed 32-bit records with 16-bit sort keys and 16-bit payloads. Compare each key tagged with its original slot against its three partners. The count of wins is its stable rank. Within each 128-bit half, shift each source lane number into the byte specified by its rank, OR the four results together, and unpack those four bytes as the AVX2 permutation control. One final permute moves the original records. This keeps ranks, inverse indices and records in registers, with no dependent loads for permutation control. The cost of variable shifts and horizontal ORs may outweigh fewer payload shuffles or lookup loads.
+
+Closest work: [Chhugani et al. (2008)](https://www.vldb.org/pvldb/vol1/1454171.pdf) and [djbsort](https://sorting.cr.yp.to/internals.html) use SIMD-lane sorting networks. [Mimicry Sort4 (2023)](https://www.mimicry.ai/blog/faster-sorting-beyond-deepminds-alphadev/) maps the six comparison bits to an in-register shuffle through a memory table. [Texas Instruments, US20230037321A1](https://patents.google.com/patent/US20230037321A1/en) describes rank-based hardware vector permutation with stable ranks and inversion of the input-to-output map. The unverified difference is packing and inverting two four-way permutations entirely in AVX2 registers using ranks as byte offsets. The test measures that implementation choice against a known SIMD lookup and a direct SIMD network.
+
+Preregistered batch test: [OP-003](../runs/2026-11-14-four-row-ranks/README.md). Closed after the test. In-register rank inversion was slower than the fastest direct SIMD reference on both primary seeds and on the controls.
 
 ## 6. Helper threads for memory-level parallelism
 

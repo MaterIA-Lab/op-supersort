@@ -2,11 +2,11 @@
 
 A living summary of what has been tried and what was learned, written for people. The detailed, agent-oriented state is in [notes/agent-brief.md](notes/agent-brief.md). The final summary will go in [SUMMARY.md](SUMMARY.md) when the project closes.
 
-_Last updated: 2026-11-12._
+_Last updated: 2026-11-14._
 
 ## Where we are
 
-Two ideas have been tested since the goal was reset on 12 November 2026. The blocked record permutation was ruled out. Page remapping showed a gain in a specific synthetic workload. Practical relevance and novelty still need evidence under the [research goal](GOAL.md).
+Page remapping on Linux remains promising when sorted ranges line up with the output pages. Recent tests ruled out three specific Windows or AVX2 implementations. A small sample of real taxi trips produced almost disjoint batches, leaving the performance of remapping on substantially overlapping data open under the [research goal](GOAL.md).
 
 ## What works so far
 
@@ -23,22 +23,29 @@ The caveats matter:
 ## What does not work
 
 - **Reordering large records in cache-sized tiles.** Sorting the keys and then writing records in tiles took 54–85% longer overall than the fastest measured reference. The combined cost of planning and moving records erased the estimated gain. A gather that asks the CPU to fetch upcoming records early (software prefetch) won all 48 paired repetitions. [Measured results and raw data](runs/2026-11-12-blocked-permutation/summary.md)
+- **Grouping source reads without sorting the index inside each tile.** The cheaper grouping approach still took about 23% longer than the best measured read-ahead reference on 8.4 million 16-byte rows. [Windows record benchmark](runs/2026-11-14-record-permutation/README.md)
+- **Remapping on Windows with a reusable copy buffer available.** For blocks of 64 KiB, mapping and a first read took 95–112 ms. Streaming copy and a first read took 43–44 ms. First access through the mapped addresses also erased the advantage of sub-millisecond setup with 2 MiB blocks. [Windows remapping benchmark](runs/2026-11-14-page-remap/README.md)
+- **Computing ranks in registers for groups of four.** The rank method took 5–37% longer than the fastest direct AVX2 references on the primary batches. [Stable four-record benchmark](runs/2026-11-14-four-row-ranks/README.md)
 - **Patching the fastest existing sorter for random numbers** (prior research). Eighteen attempts to replace a single phase of vqsort for random 32-bit numbers all fell short. See [prior research](notes/prior-research.md).
 
 ## What comes next
 
-- For overlapping arrivals, use a source whose capture batches are formed independently of the event timestamp. Record which pages remain aligned after merging. [Archive timing and its scope](runs/2026-11-12-gharchive-disjoint-merge/summary.md)
-- Test other ideas from the [backlog](notes/ideas.md): compressed keys for large arrays, sorting many small arrays together, rank computation and helper threads.
+- Screen a denser source with distinct batch and event clocks. The 6,433-trip taxi sample had one overlapping weekly pair, with only four rows in the overlap. Selecting a different page offset did not improve page reuse for that pair. [Taxi batch diagnostic](runs/2026-11-14-taxi-page-coverage/README.md)
+- Measure the remaining early tests from the [backlog](notes/ideas.md), including compressed keys for bandwidth-limited arrays and helper threads. Any further small-batch work should be compared with a direct SIMD network.
 
 ## All experiments
 
 Generated from the run logs by `scripts/build_progress.py`. Newest first.
 
 <!-- RUNS:START -->
-8 runs: 2 promising, 1 failed, 3 diagnostic, 2 setup.
+12 runs: 2 promising, 4 failed, 4 diagnostic, 2 setup.
 
 | Date | Run | Verdict | Result | What we learned |
 |---|---|---|---|---|
+| 2026-11-14 16:11 | [Page reuse in completed taxi-trip batches](runs/2026-11-14-taxi-page-coverage/) | 🔎 diagnostic | 1/12 weekly pairs overlapped and 0/12 put at least 5% of rows in the overlap | Only one of twelve weekly pairs overlapped in pickup time. Four rows of that pair fell inside the overlap, and choosing the output offset did not increase its page reuse. |
+| 2026-11-14 15:57 | [Stable rank inversion for four-record groups](runs/2026-11-14-four-row-ranks/) | ❌ failed | 0.731–0.952× across two primary seeds | Computing ranks and inverting them in AVX2 registers took 5–37% longer than the fastest direct SIMD reference on the primary batches. The extra work still cost time in the cache-resident control. |
+| 2026-11-14 15:45 | [Windows page remapping and first read](runs/2026-11-14-page-remap/) | ❌ failed | 0.394–0.453× across two primary seeds | For 64 KiB blocks, Windows remapping and a first read took 2.21–2.54× the time of streaming copy and a first read. The first access to the new virtual addresses dominated even when larger blocks made the remap calls fast. |
+| 2026-11-14 15:37 | [Record permutation by source band](runs/2026-11-14-record-permutation/) | ❌ failed | 0.814× across two primary seeds | Grouping reads by source band took about 23% longer on the primary batch. Preparing the groups and moving rows together took longer than reading ahead in the original layout. |
 | 2026-11-12 18:34 | [Page remapping on GH Archive batch sizes](runs/2026-11-12-gharchive-disjoint-merge/) | 🟡 promising | 1.431–7.252× fresh (7/8 ≥1.5×); 2/8 resident ≥1.5× | On eight disjoint pairs with batch sizes and order derived from GH Archive, remapping beat every fresh-output reference. It beat the resident-buffer references in the two cases where almost all pages could be mapped. Real overlapping arrivals remain untested. |
 | 2026-11-12 18:25 | [GH Archive page coverage](runs/2026-11-12-gharchive-page-coverage/) | 🔎 diagnostic | 8/8 pairs passed 37.5% coverage; 0/8 had timestamp overlap | All eight registered archive pairs had disjoint event-time ranges. Between 48.25% and nearly 100% of the modeled bytes can be remapped, so these inputs measure assembly of preordered ranges and leave overlap untested. |
 | 2026-11-12 17:33 | [Page-remapped merge candidate](runs/2026-11-12-page-remapped-merge-candidate/) | 🟡 promising | 1.326–2.668× on edge-overlap runs (2/4 cases ≥1.3×, 0/4 ≥1.5× on both seeds) | Mapping aligned input pages into the output beat the best fresh-output merge of two sorted runs of 128-byte records by 1.33–1.36×, and by 2.67× when 75% of the output was mapped. It lost to a merge into an already-touched buffer (0.36–0.74×) and regressed on bursty and interleaved runs (0.82–0.86×). Synthetic data only. |
