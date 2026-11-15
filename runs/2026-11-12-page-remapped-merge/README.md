@@ -9,6 +9,15 @@ baseline: fastest fresh-output merge (estimate from calibration)
 opens: [page-remapped merge candidate]
 model: OpenAI GPT-6.1 Sol, Extra High
 cost: not captured
+speedup: 1.52–1.59
+estimate: true
+how: When two sorted runs are merged, long stretches of the output come from only one of them. Instead of copying those bytes, ask the operating system to map the same physical memory pages into the output, so no data moves. This pilot measured what a remap costs compared with a copy, and how many pages a merge could reuse.
+compared_with: Copying with memcpy into a new buffer; a plain two-finger merge and a galloping merge that copies stretches in bulk.
+faster_where: Remapping beats copying for blocks of 64 KiB and up; 4 KiB blocks lose. Estimated 1.52–1.59× when the runs overlap only at their edges, but at most 1.08× when the runs alternate in bursts.
+title_es: Piloto de mezcla con remapeo de páginas
+how_es: Al mezclar dos tramos ordenados, largas partes de la salida vienen de uno solo. En vez de copiar esos bytes, se pide al sistema operativo que mapee las mismas páginas de memoria física en la salida, sin mover datos. Este piloto midió cuánto cuesta remapear frente a copiar y cuántas páginas podría reutilizar una mezcla.
+compared_with_es: Copiar con memcpy a un buffer nuevo; una mezcla clásica de dos punteros y una mezcla con búsqueda galopante que copia tramos en bloque.
+faster_where_es: Remapear gana a copiar a partir de bloques de 64 KiB; con 4 KiB pierde. Estimación: 1,52–1,59× cuando los tramos solo se solapan en los extremos, pero como mucho 1,08× cuando se alternan a ráfagas.
 ---
 
 # Page-remapped merge pilot — 2026-11-12

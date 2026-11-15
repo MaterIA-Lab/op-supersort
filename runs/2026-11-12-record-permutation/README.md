@@ -9,6 +9,15 @@ baseline: fastest of vqsort + gather, x86-simd-sort + gather and pdqsort on rows
 opens: [blocked permutation probe]
 model: agent:gpt-6 (Codex)
 cost: not captured
+speedup: 1.29–1.40
+estimate: true
+how: Sorting wide records (64 or 128 bytes each) is usually done in two steps: sort small (key, position) pairs, then gather every record into its new place. The gather jumps all over memory. This pilot measured how much of the total time that gather takes, to see whether a smarter way of moving records could pay off.
+compared_with: vqsort plus gather, x86-simd-sort plus gather, and pdqsort sorting the whole rows.
+faster_where: The gather is 51–68% of the time. If moving records cost no more than a straight copy, sorting would be 1.29–1.40× faster. 5 of 8 cases reach 1.3× on both seeds: enough room to try a real candidate, with little margin.
+title_es: Margen en la permutación de registros
+how_es: Ordenar registros anchos (64 o 128 bytes cada uno) suele hacerse en dos pasos: ordenar pares pequeños (clave, posición) y después recoger cada registro en su nuevo sitio. Esa recogida salta por toda la memoria. Este piloto midió cuánto tiempo se lleva, para ver si una forma más lista de mover registros podría compensar.
+compared_with_es: vqsort más recogida, x86-simd-sort más recogida, y pdqsort ordenando las filas completas.
+faster_where_es: La recogida es el 51–68 % del tiempo. Si mover registros costara lo mismo que una copia secuencial, ordenar sería 1,29–1,40× más rápido. 5 de 8 casos llegan a 1,3× con ambas semillas: hay margen para probar un candidato real, aunque justo.
 ---
 
 # Record permutation pilot — 2026-11-12

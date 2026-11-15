@@ -9,6 +9,14 @@ baseline: fastest merge into a fresh output
 opens: [frequency of mappable pages in real sorted batches]
 model: OpenAI GPT-6.1 Sol, Extra High
 cost: not captured
+speedup: 1.326–2.668
+how: The real implementation: walk the merge, map every page-aligned stretch of at least 64 KiB into the output, and copy the leftovers. The caller sees an ordinary contiguous, read-only array.
+compared_with: The fastest merge into a fresh output (plain, galloping bulk copy, and a hybrid). Also, separately, a merge into an output buffer that already exists in memory.
+faster_where: 1.33–1.36× faster on runs that overlap at the edges, and 2.67× when 75% of the output can be mapped. Slower than writing into a buffer that is already in memory (0.36–0.74×), and slower on bursty or interleaved runs (0.82–0.86×). Synthetic data only.
+title_es: Candidato de mezcla con remapeo de páginas
+how_es: La implementación real: recorrer la mezcla, mapear en la salida cada tramo alineado a página de al menos 64 KiB y copiar el resto. Quien la usa ve un array normal, contiguo y de solo lectura.
+compared_with_es: La mezcla más rápida hacia una salida nueva (clásica, galopante con copia en bloque e híbrida). Y, aparte, una mezcla hacia un buffer de salida que ya está en memoria.
+faster_where_es: 1,33–1,36× más rápido con tramos que se solapan en los extremos, y 2,67× cuando se puede mapear el 75 % de la salida. Más lento que escribir en un buffer que ya está en memoria (0,36–0,74×) y con tramos a ráfagas o intercalados (0,82–0,86×). Solo datos sintéticos.
 ---
 
 # Page-remapped merge candidate — 2026-11-12

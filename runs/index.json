@@ -8,7 +8,10 @@
       "verdict": "setup",
       "summary": "The prior local runner still compiles and runs on Windows with GCC 16.1 and sorts 1,000 uint32 keys correctly. Not an evaluation of the goal.",
       "model": "not captured",
-      "cost": "not captured"
+      "cost": "not captured",
+      "how": "Checked that the benchmark runner from the earlier local research still builds with the current Windows compiler (GCC 16.1) and sorts correctly.",
+      "title_es": "Prueba de continuidad",
+      "how_es": "Comprobó que el banco de pruebas de la investigación local anterior sigue compilando con el compilador actual de Windows (GCC 16.1) y ordena correctamente."
     },
     {
       "id": "2026-11-12-repo-reset",
@@ -21,7 +24,10 @@
       "cost": "not captured",
       "opens": [
         "idea backlog in notes/ideas.md"
-      ]
+      ],
+      "how": "Reviewed whether the original goal (25% faster in 90% of a large matrix of cases) was reachable after 72 earlier experiments. It was judged very unlikely, so the goal became an open search for a genuinely new mechanism, and six starting ideas were written down.",
+      "title_es": "Revisión de viabilidad y reinicio",
+      "how_es": "Revisó si el objetivo original (un 25 % más rápido en el 90 % de una gran matriz de casos) era alcanzable tras 72 experimentos previos. Se consideró muy improbable, así que el objetivo pasó a ser una búsqueda abierta de un mecanismo realmente nuevo y se anotaron seis ideas de partida."
     },
     {
       "id": "2026-11-12-record-permutation",
@@ -37,7 +43,19 @@
         "blocked permutation probe"
       ],
       "model": "agent:gpt-6 (Codex)",
-      "cost": "not captured"
+      "cost": "not captured",
+      "speedup": [
+        1.29,
+        1.4
+      ],
+      "estimate": true,
+      "how": "Sorting wide records (64 or 128 bytes each) is usually done in two steps: sort small (key, position) pairs, then gather every record into its new place. The gather jumps all over memory. This pilot measured how much of the total time that gather takes, to see whether a smarter way of moving records could pay off.",
+      "compared_with": "vqsort plus gather, x86-simd-sort plus gather, and pdqsort sorting the whole rows.",
+      "faster_where": "The gather is 51–68% of the time. If moving records cost no more than a straight copy, sorting would be 1.29–1.40× faster. 5 of 8 cases reach 1.3× on both seeds: enough room to try a real candidate, with little margin.",
+      "title_es": "Margen en la permutación de registros",
+      "how_es": "Ordenar registros anchos (64 o 128 bytes cada uno) suele hacerse en dos pasos: ordenar pares pequeños (clave, posición) y después recoger cada registro en su nuevo sitio. Esa recogida salta por toda la memoria. Este piloto midió cuánto tiempo se lleva, para ver si una forma más lista de mover registros podría compensar.",
+      "compared_with_es": "vqsort más recogida, x86-simd-sort más recogida, y pdqsort ordenando las filas completas.",
+      "faster_where_es": "La recogida es el 51–68 % del tiempo. Si mover registros costara lo mismo que una copia secuencial, ordenar sería 1,29–1,40× más rápido. 5 de 8 casos llegan a 1,3× con ambas semillas: hay margen para probar un candidato real, aunque justo."
     },
     {
       "id": "2026-11-12-blocked-permutation",
@@ -56,7 +74,18 @@
         "gather with software prefetch as the control to beat"
       ],
       "model": "agent:gpt-6 (Codex)",
-      "cost": "not captured"
+      "cost": "not captured",
+      "speedup": [
+        0.542,
+        0.648
+      ],
+      "how": "After sorting, split the output into 256 KiB tiles that fit in the CPU’s L2 cache. Inside each tile, sort the requests by where each record comes from, so reads move forward through memory, then write every record straight to its final slot.",
+      "compared_with": "The fastest measured reference, including a plain gather with software prefetch (asking the CPU to load rows a little ahead of time).",
+      "faster_where": "Slower in every case: 0.54–0.65× (0 of 8 cases at 1.3×). Sorting the requests cost more than the better locality saved. The simple prefetching gather won all 48 paired runs.",
+      "title_es": "Permutación de registros por bloques",
+      "how_es": "Tras ordenar, dividir la salida en bloques de 256 KiB que caben en la caché L2 del procesador. Dentro de cada bloque, ordenar las peticiones según de dónde viene cada registro, para leer la memoria hacia delante, y escribir cada registro directamente en su sitio final.",
+      "compared_with_es": "La referencia más rápida medida, incluida una recogida simple con prefetch por software (pedir al procesador que cargue las filas un poco antes).",
+      "faster_where_es": "Más lento en todos los casos: 0,54–0,65× (0 de 8 casos llegan a 1,3×). Ordenar las peticiones costó más de lo que ahorró leer en orden. La recogida simple con prefetch ganó las 48 repeticiones emparejadas."
     },
     {
       "id": "2026-11-12-page-remapped-merge",
@@ -72,7 +101,19 @@
         "page-remapped merge candidate"
       ],
       "model": "OpenAI GPT-6.1 Sol, Extra High",
-      "cost": "not captured"
+      "cost": "not captured",
+      "speedup": [
+        1.52,
+        1.59
+      ],
+      "estimate": true,
+      "how": "When two sorted runs are merged, long stretches of the output come from only one of them. Instead of copying those bytes, ask the operating system to map the same physical memory pages into the output, so no data moves. This pilot measured what a remap costs compared with a copy, and how many pages a merge could reuse.",
+      "compared_with": "Copying with memcpy into a new buffer; a plain two-finger merge and a galloping merge that copies stretches in bulk.",
+      "faster_where": "Remapping beats copying for blocks of 64 KiB and up; 4 KiB blocks lose. Estimated 1.52–1.59× when the runs overlap only at their edges, but at most 1.08× when the runs alternate in bursts.",
+      "title_es": "Piloto de mezcla con remapeo de páginas",
+      "how_es": "Al mezclar dos tramos ordenados, largas partes de la salida vienen de uno solo. En vez de copiar esos bytes, se pide al sistema operativo que mapee las mismas páginas de memoria física en la salida, sin mover datos. Este piloto midió cuánto cuesta remapear frente a copiar y cuántas páginas podría reutilizar una mezcla.",
+      "compared_with_es": "Copiar con memcpy a un buffer nuevo; una mezcla clásica de dos punteros y una mezcla con búsqueda galopante que copia tramos en bloque.",
+      "faster_where_es": "Remapear gana a copiar a partir de bloques de 64 KiB; con 4 KiB pierde. Estimación: 1,52–1,59× cuando los tramos solo se solapan en los extremos, pero como mucho 1,08× cuando se alternan a ráfagas."
     },
     {
       "id": "2026-11-12-page-remapped-merge-candidate",
@@ -88,7 +129,18 @@
         "frequency of mappable pages in real sorted batches"
       ],
       "model": "OpenAI GPT-6.1 Sol, Extra High",
-      "cost": "not captured"
+      "cost": "not captured",
+      "speedup": [
+        1.326,
+        2.668
+      ],
+      "how": "The real implementation: walk the merge, map every page-aligned stretch of at least 64 KiB into the output, and copy the leftovers. The caller sees an ordinary contiguous, read-only array.",
+      "compared_with": "The fastest merge into a fresh output (plain, galloping bulk copy, and a hybrid). Also, separately, a merge into an output buffer that already exists in memory.",
+      "faster_where": "1.33–1.36× faster on runs that overlap at the edges, and 2.67× when 75% of the output can be mapped. Slower than writing into a buffer that is already in memory (0.36–0.74×), and slower on bursty or interleaved runs (0.82–0.86×). Synthetic data only.",
+      "title_es": "Candidato de mezcla con remapeo de páginas",
+      "how_es": "La implementación real: recorrer la mezcla, mapear en la salida cada tramo alineado a página de al menos 64 KiB y copiar el resto. Quien la usa ve un array normal, contiguo y de solo lectura.",
+      "compared_with_es": "La mezcla más rápida hacia una salida nueva (clásica, galopante con copia en bloque e híbrida). Y, aparte, una mezcla hacia un buffer de salida que ya está en memoria.",
+      "faster_where_es": "1,33–1,36× más rápido con tramos que se solapan en los extremos, y 2,67× cuando se puede mapear el 75 % de la salida. Más lento que escribir en un buffer que ya está en memoria (0,36–0,74×) y con tramos a ráfagas o intercalados (0,82–0,86×). Solo datos sintéticos."
     },
     {
       "id": "2026-11-12-gharchive-page-coverage",
@@ -103,7 +155,14 @@
       "opens": [
         "timing against two bulk copies on the archive batch sizes"
       ],
-      "cost": "not captured"
+      "cost": "not captured",
+      "how": "Does real data have long one-sided stretches? Took 8 pairs of consecutive hourly batches of public GitHub events (1.6 million events) and counted how many bytes a merge could remap instead of copy.",
+      "compared_with": "Nothing timed: this run measures the shape of real data.",
+      "faster_where": "48–100% of the bytes could be remapped. But the hours never overlapped in time, so this only tests gluing batches that are already in order, not a real interleaved merge.",
+      "title_es": "Cobertura de páginas en GH Archive",
+      "how_es": "¿Tienen los datos reales tramos largos de un solo lado? Se tomaron 8 pares de lotes horarios consecutivos de eventos públicos de GitHub (1,6 millones de eventos) y se contó cuántos bytes podría remapear una mezcla en vez de copiarlos.",
+      "compared_with_es": "Nada cronometrado: este run mide la forma de los datos reales.",
+      "faster_where_es": "Se podría remapear el 48–100 % de los bytes. Pero las horas nunca se solaparon en el tiempo, así que solo prueba unir lotes que ya vienen en orden, no una mezcla real intercalada."
     },
     {
       "id": "2026-11-12-gharchive-disjoint-merge",
@@ -119,7 +178,18 @@
       "opens": [
         "test overlapping batches from a source with independent arrival and event clocks"
       ],
-      "cost": "not captured"
+      "cost": "not captured",
+      "speedup": [
+        1.431,
+        7.252
+      ],
+      "how": "Timed the remapping approach on the 8 real batch sizes and orders from GH Archive (with synthetic keys and payloads), against every reasonable way of building a fresh output, including simply concatenating with two memcpy calls.",
+      "compared_with": "Fresh output: plain, galloping and hybrid merges and a two-copy concatenation. Separately: hybrid and two-copy into a buffer that already exists in memory.",
+      "faster_where": "1.43–1.66× faster when about half the pages can be mapped, and 6.7–7.3× when almost all can (7 of 8 cases at 1.5×). Against a buffer already in memory it only wins in the two nearly fully mapped pairs (1.66–1.74×); otherwise 0.38–0.49×. Only batches that do not overlap in time were tested.",
+      "title_es": "Remapeo de páginas con lotes de GH Archive",
+      "how_es": "Se cronometró el remapeo con los 8 tamaños y órdenes de lote reales de GH Archive (con claves y contenido sintéticos), frente a todas las formas razonables de construir una salida nueva, incluida concatenar con dos llamadas a memcpy.",
+      "compared_with_es": "Salida nueva: mezclas clásica, galopante e híbrida y concatenación con dos copias. Aparte: híbrida y dos copias hacia un buffer que ya está en memoria.",
+      "faster_where_es": "1,43–1,66× más rápido cuando se puede mapear cerca de la mitad de las páginas, y 6,7–7,3× cuando casi todas (7 de 8 casos llegan a 1,5×). Frente a un buffer que ya está en memoria solo gana en los dos pares casi totalmente mapeables (1,66–1,74×); en el resto, 0,38–0,49×. Solo se probaron lotes que no se solapan en el tiempo."
     },
     {
       "id": "2026-11-14-record-permutation",
@@ -135,7 +205,18 @@
       "closes": [
         "histogram grouping within destination windows"
       ],
-      "cost": "not captured"
+      "cost": "not captured",
+      "speedup": [
+        0.814,
+        0.814
+      ],
+      "how": "A cheaper version of the tile idea. Instead of sorting the requests in each output window, group them with a histogram by which part of the input they read from. Then read each input band in order and write the rows into the window.",
+      "compared_with": "The fastest indirect sort with software prefetch (vqsort or x86-simd-sort, with and without streaming stores) and ska_sort on whole rows.",
+      "faster_where": "About 23% slower on 8 million 16-byte records (0.81×), and slower in all 6 cells. Preparing the groups and moving rows took longer than just reading ahead in the original layout.",
+      "title_es": "Permutación de registros por bandas de origen",
+      "how_es": "Una versión más barata de la idea por bloques. En vez de ordenar las peticiones de cada ventana de salida, se agrupan con un histograma según la parte de la entrada de la que leen. Después se lee cada banda de entrada en orden y se escriben las filas en la ventana.",
+      "compared_with_es": "La ordenación indirecta más rápida con prefetch por software (vqsort o x86-simd-sort, con y sin escrituras en streaming) y ska_sort sobre filas completas.",
+      "faster_where_es": "Alrededor de un 23 % más lento con 8 millones de registros de 16 bytes (0,81×), y más lento en las 6 celdas. Preparar los grupos y mover las filas tardó más que simplemente leer por adelantado en el orden original."
     },
     {
       "id": "2026-11-14-page-remap",
@@ -151,7 +232,18 @@
       "closes": [
         "Windows placeholder remapping for the measured contract"
       ],
-      "cost": "not captured"
+      "cost": "not captured",
+      "speedup": [
+        0.394,
+        0.453
+      ],
+      "how": "The same remapping idea, ported to Windows APIs, for reassembling 256 MiB of sorted runs into one contiguous output.",
+      "compared_with": "An AVX2 streaming copy into a reused buffer, followed by the same first read.",
+      "faster_where": "2.2–2.5× slower with 64 KiB blocks (0.39–0.45×). Even with 2 MiB blocks, where remapping itself took under 1 ms, the first touch of the new addresses cost about 83 ms. Closes Windows remapping for this case; the Linux results stand.",
+      "title_es": "Remapeo de páginas en Windows",
+      "how_es": "La misma idea de remapeo, llevada a las APIs de Windows, para reunir 256 MiB de tramos ordenados en una sola salida contigua.",
+      "compared_with_es": "Una copia en streaming con AVX2 a un buffer reutilizado, seguida de la misma primera lectura.",
+      "faster_where_es": "2,2–2,5× más lento con bloques de 64 KiB (0,39–0,45×). Incluso con bloques de 2 MiB, donde el remapeo en sí tardó menos de 1 ms, el primer acceso a las nuevas direcciones costó unos 83 ms. Cierra el remapeo en Windows para este caso; los resultados en Linux se mantienen."
     },
     {
       "id": "2026-11-14-four-row-ranks",
@@ -167,7 +259,18 @@
       "closes": [
         "four-record AVX2 shift-based rank inversion"
       ],
-      "cost": "not captured"
+      "cost": "not captured",
+      "speedup": [
+        0.731,
+        0.952
+      ],
+      "how": "For millions of tiny groups of 4 records: compute each record’s final position (its rank) with a few vector comparisons, then turn the ranks into a shuffle, two groups at a time inside AVX2 registers. Every record is written exactly once, with no partitioning.",
+      "compared_with": "A direct AVX2 sorting network, a published shuffle-lookup method (Mimicry), and vqsort and x86-simd-sort called per group.",
+      "faster_where": "It beat the library calls, but was 5–37% slower than the direct AVX2 network (0.73–0.95×), even with the data in cache. Building the shuffle from the ranks takes a chain of steps that costs too much.",
+      "title_es": "Inversión de rangos en grupos de cuatro",
+      "how_es": "Para millones de grupos diminutos de 4 registros: calcular la posición final de cada registro (su rango) con unas pocas comparaciones vectoriales y convertir los rangos en una permutación, dos grupos a la vez dentro de registros AVX2. Cada registro se escribe una sola vez, sin particionar.",
+      "compared_with_es": "Una red de ordenación AVX2 directa, un método publicado de tabla de permutaciones (Mimicry), y vqsort y x86-simd-sort llamados por grupo.",
+      "faster_where_es": "Ganó a las llamadas a librería, pero fue un 5–37 % más lento que la red AVX2 directa (0,73–0,95×), incluso con los datos en caché. Construir la permutación a partir de los rangos exige una cadena de pasos que cuesta demasiado."
     },
     {
       "id": "2026-11-14-taxi-page-coverage",
@@ -185,7 +288,14 @@
       "opens": [
         "dense completed-trip replay with substantial overlap"
       ],
-      "cost": "not captured"
+      "cost": "not captured",
+      "how": "Looked for real data where batches do overlap in time: NYC taxi trips grouped by drop-off day and sorted by pickup time. Counted how many pages a merge could reuse, and whether shifting where the output starts helps.",
+      "compared_with": "Nothing timed: this run measures the shape of real data.",
+      "faster_where": "Only 1 of 12 weekly pairs overlapped, with just 4 rows inside the overlap (0.14%). The sample is too sparse; a denser real source is needed before timing a real overlapping merge.",
+      "title_es": "Reutilización de páginas en lotes de taxis",
+      "how_es": "Se buscaron datos reales donde los lotes sí se solapan en el tiempo: viajes de taxi de Nueva York agrupados por día de llegada y ordenados por hora de recogida. Se contó cuántas páginas podría reutilizar una mezcla y si ayuda desplazar el inicio de la salida.",
+      "compared_with_es": "Nada cronometrado: este run mide la forma de los datos reales.",
+      "faster_where_es": "Solo 1 de 12 pares semanales se solapó, con apenas 4 filas dentro del solape (0,14 %). La muestra es demasiado escasa; hace falta una fuente real más densa antes de cronometrar una mezcla con solape real."
     }
   ]
 }

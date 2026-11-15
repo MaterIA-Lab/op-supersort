@@ -8,6 +8,13 @@ idea: 1. Virtual memory as a data-movement engine
 result: 8/8 pairs passed 37.5% coverage; 0/8 had timestamp overlap
 opens: [timing against two bulk copies on the archive batch sizes]
 cost: not captured
+how: Does real data have long one-sided stretches? Took 8 pairs of consecutive hourly batches of public GitHub events (1.6 million events) and counted how many bytes a merge could remap instead of copy.
+compared_with: Nothing timed: this run measures the shape of real data.
+faster_where: 48–100% of the bytes could be remapped. But the hours never overlapped in time, so this only tests gluing batches that are already in order, not a real interleaved merge.
+title_es: Cobertura de páginas en GH Archive
+how_es: ¿Tienen los datos reales tramos largos de un solo lado? Se tomaron 8 pares de lotes horarios consecutivos de eventos públicos de GitHub (1,6 millones de eventos) y se contó cuántos bytes podría remapear una mezcla en vez de copiarlos.
+compared_with_es: Nada cronometrado: este run mide la forma de los datos reales.
+faster_where_es: Se podría remapear el 48–100 % de los bytes. Pero las horas nunca se solaparon en el tiempo, así que solo prueba unir lotes que ya vienen en orden, no una mezcla real intercalada.
 ---
 
 # GH Archive page coverage
