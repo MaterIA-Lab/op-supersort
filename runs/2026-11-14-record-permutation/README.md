@@ -9,6 +9,14 @@ result: 0.814× across two primary seeds
 baseline: Fastest measured indirect sort with software prefetch
 closes: [histogram grouping within destination windows]
 cost: not captured
+speedup: 0.814
+how: A cheaper version of the tile idea. Instead of sorting the requests in each output window, group them with a histogram by which part of the input they read from. Then read each input band in order and write the rows into the window.
+compared_with: The fastest indirect sort with software prefetch (vqsort or x86-simd-sort, with and without streaming stores) and ska_sort on whole rows.
+faster_where: About 23% slower on 8 million 16-byte records (0.81×), and slower in all 6 cells. Preparing the groups and moving rows took longer than just reading ahead in the original layout.
+title_es: Permutación de registros por bandas de origen
+how_es: Una versión más barata de la idea por bloques. En vez de ordenar las peticiones de cada ventana de salida, se agrupan con un histograma según la parte de la entrada de la que leen. Después se lee cada banda de entrada en orden y se escriben las filas en la ventana.
+compared_with_es: La ordenación indirecta más rápida con prefetch por software (vqsort o x86-simd-sort, con y sin escrituras en streaming) y ska_sort sobre filas completas.
+faster_where_es: Alrededor de un 23 % más lento con 8 millones de registros de 16 bytes (0,81×), y más lento en las 6 celdas. Preparar los grupos y mover las filas tardó más que simplemente leer por adelantado en el orden original.
 ---
 
 # Record permutation working-set test

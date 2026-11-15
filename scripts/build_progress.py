@@ -15,7 +15,16 @@ Every run README starts with a front matter block between two `---` lines:
     closes: [tile-and-sort permutation]   # optional, lines of work this run closes
     opens: [prefetch gather as control]   # optional, lines of work this run opens
     cost: not captured                     # optional
+    speedup: 0.542–0.648                   # optional, reference time ÷ candidate time
+    estimate: false                        # optional, true when speedup is estimated headroom
+    how: Plain-language explanation of how the idea was supposed to work.
+    compared_with: What it raced against, in plain words.
+    faster_where: Where it was faster, where it was not, and by how much.
     ---
+
+`how`, `compared_with` and `faster_where` are required for every verdict except `setup`.
+They feed the project page on the OpenPrototypes website. Spanish versions go in the same
+keys with an `_es` suffix (`title_es`, `how_es`, `compared_with_es`, `faster_where_es`).
 
 The script writes `runs/index.json` (machine-readable, read by the OpenPrototypes index)
 and refreshes the generated blocks between `<!-- RUNS:START -->` and `<!-- RUNS:END -->`
@@ -51,9 +60,13 @@ VERDICTS = {
     "setup": "⚙️ setup",
 }
 REQUIRED = ("title", "date", "verdict", "summary", "model")
-OPTIONAL = ("idea", "result", "baseline", "closes", "opens", "cost")
+# Plain-language explanation shown on the OpenPrototypes website (required unless verdict is setup).
+EXPLAIN = ("how", "compared_with", "faster_where")
+OPTIONAL = ("idea", "result", "baseline", "closes", "opens", "cost", "speedup", "estimate",
+            *EXPLAIN, "title_es", *(f"{k}_es" for k in EXPLAIN))
 LISTS = ("closes", "opens")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}( \d{2}:\d{2})?$")
+SPEEDUP_RE = re.compile(r"^(\d+(?:\.\d+)?)\s*(?:[–-]\s*(\d+(?:\.\d+)?))?\s*×?$")
 START = "<!-- RUNS:START -->"
 END = "<!-- RUNS:END -->"
 
@@ -134,6 +147,26 @@ def load_runs() -> tuple[list[dict], list[str]]:
             for key in set(data) - set(LISTS):
                 if isinstance(data[key], list):
                     errs.append(f"runs/{rid}/README.md: '{key}' must be a single value")
+            if data.get("verdict") and data["verdict"] != "setup":
+                for key in EXPLAIN:
+                    if not data.get(key):
+                        errs.append(f"runs/{rid}/README.md: missing '{key}' "
+                                    "(plain-language explanation for the website, see runs/README.md)")
+            if "speedup" in data and not isinstance(data["speedup"], list):
+                m = SPEEDUP_RE.match(str(data["speedup"]))
+                if not m:
+                    errs.append(f"runs/{rid}/README.md: speedup must look like 1.33 or 0.54–0.65 "
+                                "(time of the best reference ÷ time of the candidate)")
+                else:
+                    lo, hi = float(m[1]), float(m[2] or m[1])
+                    if lo > hi:
+                        errs.append(f"runs/{rid}/README.md: speedup range must go from low to high")
+                    data["speedup"] = [lo, hi]
+            if "estimate" in data:
+                flag = str(data["estimate"]).lower()
+                if flag not in ("true", "false"):
+                    errs.append(f"runs/{rid}/README.md: estimate must be true or false")
+                data["estimate"] = flag == "true"
             if not errs:
                 runs.append({"id": rid, "path": f"runs/{rid}/", **data})
         errors.extend(errs)

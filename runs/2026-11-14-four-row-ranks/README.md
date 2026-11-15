@@ -9,6 +9,14 @@ result: 0.731–0.952× across two primary seeds
 baseline: Best of the direct AVX2 compare-exchange network and shuffle lookup
 closes: [four-record AVX2 shift-based rank inversion]
 cost: not captured
+speedup: 0.731–0.952
+how: For millions of tiny groups of 4 records: compute each record’s final position (its rank) with a few vector comparisons, then turn the ranks into a shuffle, two groups at a time inside AVX2 registers. Every record is written exactly once, with no partitioning.
+compared_with: A direct AVX2 sorting network, a published shuffle-lookup method (Mimicry), and vqsort and x86-simd-sort called per group.
+faster_where: It beat the library calls, but was 5–37% slower than the direct AVX2 network (0.73–0.95×), even with the data in cache. Building the shuffle from the ranks takes a chain of steps that costs too much.
+title_es: Inversión de rangos en grupos de cuatro
+how_es: Para millones de grupos diminutos de 4 registros: calcular la posición final de cada registro (su rango) con unas pocas comparaciones vectoriales y convertir los rangos en una permutación, dos grupos a la vez dentro de registros AVX2. Cada registro se escribe una sola vez, sin particionar.
+compared_with_es: Una red de ordenación AVX2 directa, un método publicado de tabla de permutaciones (Mimicry), y vqsort y x86-simd-sort llamados por grupo.
+faster_where_es: Ganó a las llamadas a librería, pero fue un 5–37 % más lento que la red AVX2 directa (0,73–0,95×), incluso con los datos en caché. Construir la permutación a partir de los rangos exige una cadena de pasos que cuesta demasiado.
 ---
 
 # Stable rank inversion for four-record groups

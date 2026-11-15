@@ -10,6 +10,14 @@ closes: [tile-and-sort payload permutation]
 opens: [gather with software prefetch as the control to beat]
 model: agent:gpt-6 (Codex)
 cost: not captured
+speedup: 0.542–0.648
+how: After sorting, split the output into 256 KiB tiles that fit in the CPU’s L2 cache. Inside each tile, sort the requests by where each record comes from, so reads move forward through memory, then write every record straight to its final slot.
+compared_with: The fastest measured reference, including a plain gather with software prefetch (asking the CPU to load rows a little ahead of time).
+faster_where: Slower in every case: 0.54–0.65× (0 of 8 cases at 1.3×). Sorting the requests cost more than the better locality saved. The simple prefetching gather won all 48 paired runs.
+title_es: Permutación de registros por bloques
+how_es: Tras ordenar, dividir la salida en bloques de 256 KiB que caben en la caché L2 del procesador. Dentro de cada bloque, ordenar las peticiones según de dónde viene cada registro, para leer la memoria hacia delante, y escribir cada registro directamente en su sitio final.
+compared_with_es: La referencia más rápida medida, incluida una recogida simple con prefetch por software (pedir al procesador que cargue las filas un poco antes).
+faster_where_es: Más lento en todos los casos: 0,54–0,65× (0 de 8 casos llegan a 1,3×). Ordenar las peticiones costó más de lo que ahorró leer en orden. La recogida simple con prefetch ganó las 48 repeticiones emparejadas.
 ---
 
 # Blocked record permutation probe — 2026-11-12

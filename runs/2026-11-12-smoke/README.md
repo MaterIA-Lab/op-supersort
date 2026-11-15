@@ -5,6 +5,9 @@ verdict: setup
 summary: The prior local runner still compiles and runs on Windows with GCC 16.1 and sorts 1,000 uint32 keys correctly. Not an evaluation of the goal.
 model: not captured
 cost: not captured
+how: Checked that the benchmark runner from the earlier local research still builds with the current Windows compiler (GCC 16.1) and sorts correctly.
+title_es: Prueba de continuidad
+how_es: Comprobó que el banco de pruebas de la investigación local anterior sigue compilando con el compilador actual de Windows (GCC 16.1) y ordena correctamente.
 ---
 
 # Continuity smoke test — 2026-11-12

@@ -9,6 +9,14 @@ result: 0.394–0.453× across two primary seeds
 baseline: AVX2 streaming copy plus first sweep into a reused output
 closes: [Windows placeholder remapping for the measured contract]
 cost: not captured
+speedup: 0.394–0.453
+how: The same remapping idea, ported to Windows APIs, for reassembling 256 MiB of sorted runs into one contiguous output.
+compared_with: An AVX2 streaming copy into a reused buffer, followed by the same first read.
+faster_where: 2.2–2.5× slower with 64 KiB blocks (0.39–0.45×). Even with 2 MiB blocks, where remapping itself took under 1 ms, the first touch of the new addresses cost about 83 ms. Closes Windows remapping for this case; the Linux results stand.
+title_es: Remapeo de páginas en Windows
+how_es: La misma idea de remapeo, llevada a las APIs de Windows, para reunir 256 MiB de tramos ordenados en una sola salida contigua.
+compared_with_es: Una copia en streaming con AVX2 a un buffer reutilizado, seguida de la misma primera lectura.
+faster_where_es: 2,2–2,5× más lento con bloques de 64 KiB (0,39–0,45×). Incluso con bloques de 2 MiB, donde el remapeo en sí tardó menos de 1 ms, el primer acceso a las nuevas direcciones costó unos 83 ms. Cierra el remapeo en Windows para este caso; los resultados en Linux se mantienen.
 ---
 
 # Windows page remapping

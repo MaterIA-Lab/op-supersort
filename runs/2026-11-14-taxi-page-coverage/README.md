@@ -9,6 +9,13 @@ result: 1/12 weekly pairs overlapped and 0/12 put at least 5% of rows in the ove
 closes: [small seaborn taxi sample for overlapping merge timing]
 opens: [dense completed-trip replay with substantial overlap]
 cost: not captured
+how: Looked for real data where batches do overlap in time: NYC taxi trips grouped by drop-off day and sorted by pickup time. Counted how many pages a merge could reuse, and whether shifting where the output starts helps.
+compared_with: Nothing timed: this run measures the shape of real data.
+faster_where: Only 1 of 12 weekly pairs overlapped, with just 4 rows inside the overlap (0.14%). The sample is too sparse; a denser real source is needed before timing a real overlapping merge.
+title_es: Reutilización de páginas en lotes de taxis
+how_es: Se buscaron datos reales donde los lotes sí se solapan en el tiempo: viajes de taxi de Nueva York agrupados por día de llegada y ordenados por hora de recogida. Se contó cuántas páginas podría reutilizar una mezcla y si ayuda desplazar el inicio de la salida.
+compared_with_es: Nada cronometrado: este run mide la forma de los datos reales.
+faster_where_es: Solo 1 de 12 pares semanales se solapó, con apenas 4 filas dentro del solape (0,14 %). La muestra es demasiado escasa; hace falta una fuente real más densa antes de cronometrar una mezcla con solape real.
 ---
 
 # Taxi-trip batches and page reuse

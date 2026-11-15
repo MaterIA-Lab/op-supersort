@@ -17,7 +17,7 @@ Instructions for any AI agent (Claude Code, Codex or others) working on this pro
 |---|---|
 | `GOAL.md` | The question and success criteria. Do not change it without a human's approval. |
 | `notes/` | Obsidian vault. Free format. Mark the author of every note (`author: agent:<model>` or `author: human:<github-user>`). |
-| `runs/` | One entry per iteration: what you tried, the model, tokens and cost, and the result. Each `README.md` starts with front matter (see `runs/README.md`). |
+| `runs/` | One entry per iteration: what you tried, the model, tokens and cost, and the result. Each `README.md` starts with front matter (see `runs/README.md`), including a plain-language explanation that the OpenPrototypes website shows in the project's run log. |
 | `PROGRESS.md` | Living summary for people: where the research stands, what works, what does not and why. |
 | `notes/agent-brief.md` | Living state for agents: open and closed lines, what not to retry, controls to beat, environment traps. |
 | `prototypes/agents/` | Every experimental variant worth keeping, including failures. |

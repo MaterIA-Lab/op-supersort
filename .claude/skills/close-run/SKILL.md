@@ -17,6 +17,8 @@ Open `runs/<YYYY-MM-DD>-<name>/README.md` and make sure it starts with the block
 - `result` and `baseline`: the headline number and what it is compared with. Never put a number you did not measure.
 - `closes` / `opens`: lines of work this run ends or starts.
 - `model` and `cost`: the real model identifier and settings if known, tokens and money if known, otherwise `not captured`. Never guess.
+- `speedup` (and `estimate: true` for headroom estimates): the headline ratio, best reference time ÷ candidate time. Omit it when nothing comparable was timed.
+- **Website explanation** (required unless the verdict is `setup`): `how`, `compared_with` and `faster_where`, plus the Spanish `title_es`, `how_es`, `compared_with_es` and `faster_where_es`. These appear on the public project page when someone clicks the run, so write them for a curious non-expert: how the idea was supposed to work, what it raced against, and where it was faster or slower and by how much, with the conditions next to each number. Keep the caveats; never round a loss into a win.
 
 ## 2. Update the human view: PROGRESS.md
 

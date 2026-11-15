@@ -61,3 +61,24 @@ jobs:
       - name: Merge
         if: steps.diff.outputs.ahead != '0'
         run: gh pr merge "$PR" --merge --match-head-commit "$GITHUB_SHA"
+
+      # The website reads runs/index.json when it is built, and refreshes it in the browser.
+      # A rebuild keeps the server-rendered run log current. A merge done with the workflow
+      # token does not trigger other workflows, so the request is made here.
+      # Optional: needs a SITE_DEPLOY_HOOK secret (a Vercel deploy hook URL) on the repository
+      # or the organization. Without it this step does nothing.
+      - name: Ask the website to rebuild
+        if: steps.diff.outputs.ahead != '0'
+        env:
+          HOOK: ${{ secrets.SITE_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "SITE_DEPLOY_HOOK is not set. The website still refreshes the run log in the browser."
+            exit 0
+          fi
+          if git diff --quiet "origin/${BASE}" "$GITHUB_SHA" -- runs/index.json; then
+            echo "Run ledger unchanged."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK" > /dev/null
+          echo "Website rebuild requested."
