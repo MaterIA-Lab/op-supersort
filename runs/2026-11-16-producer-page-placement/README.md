@@ -47,4 +47,4 @@ In the disjoint controls, the shifted layout reused more than 99.99% of bytes an
 
 All 200 timed calls, 40 warm-ups and 105 small checks matched the original separate batches and an independent stable merge byte for byte. The generator correction and full rerun are documented in the protocol. The result closes this Windows mapping path for this fresh-output contract. The same producer contract remains unmeasured on Linux, where earlier experiments started with already prepared inputs.
 
-[Source and exact build commands](../../prototypes/agents/producer-page-placement/README.md)
+[Exact Windows source and build commands at the recorded revision](https://github.com/MaterIA-Lab/op-supersort/tree/b5338a11c2d3af010b2bf4479f7a12396441b64c/prototypes/agents/producer-page-placement)

@@ -71,7 +71,7 @@ The [run index and analysis commands](../runs/README.md#check-the-published-meas
 ## Run ledger
 
 <!-- RUNS:START -->
-16 runs: 2 promising, 6 failed, 6 diagnostic, 2 setup.
+17 runs: 2 promising, 6 failed, 6 diagnostic, 3 setup.
 
 | Run | Date | Verdict | Idea | Result | Baseline | Closes | Opens | Model |
 |---|---|---|---|---|---|---|---|---|
@@ -91,6 +91,7 @@ The [run index and analysis commands](../runs/README.md#check-the-published-meas
 | [2026-11-15-smt-gather-helper](../runs/2026-11-15-smt-gather-helper/) | 2026-11-15 15:26 | failed | 6. Helper threads for memory-level parallelism | 0.564–0.629× against the fastest split gather | fastest of seven split gathers on the same two hardware threads | 128-byte random gather with a bounded prefetch helper | — | Codex (exact model and reasoning settings not captured) |
 | [2026-11-16-flight-overlap](../runs/2026-11-16-flight-overlap/) | 2026-11-16 13:02 | diagnostic | 1. Virtual memory as a data-movement engine | 0 eligible pages in 36 heavily interleaved pairs | Existing page-aligned inputs and output | whole-page reuse for the measured interleaved airport pairs | independent starting offsets for near-disjoint runs prepared together | Codex (exact model and reasoning settings not captured) |
 | [2026-11-16-producer-page-placement](../runs/2026-11-16-producer-page-placement/) | 2026-11-16 13:34 | failed | 1. Virtual memory as a data-movement engine | 0.412–0.543× against the fastest direct method | Fastest of split bulk merge and fused cached or streaming writers | producer-side page placement with this Windows mapping path | — | Codex (exact model and reasoning settings not captured) |
+| [2026-11-16-linux-producer-placement](../runs/2026-11-16-linux-producer-placement/) | 2026-11-16 14:55 | setup | — | — | — | — | — | Codex (exact model and reasoning settings not captured) |
 
 Summaries, oldest first:
 
@@ -110,4 +111,5 @@ Summaries, oldest first:
 - **2026-11-15-smt-gather-helper** (failed): The best helper took 180–182 ms on two threads of one core. Giving each thread half the output took 102–114 ms for the same 256 MiB permutation.
 - **2026-11-16-flight-overlap** (diagnostic): The 36 monthly airport pairs had more than 99% of rows in the shared time interval. Even the longest single-source stretch was shorter than one page. Selecting each input's alignment nearly doubled median reusable coverage for lightly overlapping weekly batches.
 - **2026-11-16-producer-page-placement** (failed): With 2% overlap, independent placement doubled reusable coverage from 49% to about 98%. The Windows implementation took 1.84–2.43 times as long as the best direct reference when producing both batches and the merged result.
+- **2026-11-16-linux-producer-placement** (setup): Register a Linux comparison with fresh seeds, including writing all outputs and the first consumer read.
 <!-- RUNS:END -->

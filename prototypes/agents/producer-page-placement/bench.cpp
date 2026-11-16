@@ -1,5 +1,9 @@
 #include "placement.hpp"
+#ifdef __linux__
+#include "linux_views.hpp"
+#else
 #include "windows_views.hpp"
+#endif
 
 #include <algorithm>
 #include <array>
@@ -63,10 +67,13 @@ void copy_merge(std::byte* output, const Runs& inputs, Edges edges) {
     });
 }
 
-enum class Method { split, fused_cached, fused_stream, fixed, shifted };
+enum class Method { split, fused_cached, fused_stream, fixed, shifted, shifted_populated };
 
 constexpr std::array methods{
     Method::split, Method::fused_cached, Method::fused_stream, Method::fixed, Method::shifted,
+#ifdef __linux__
+    Method::shifted_populated,
+#endif
 };
 
 const char* label(Method method) {
@@ -76,6 +83,7 @@ const char* label(Method method) {
         case Method::fused_stream: return "fused_stream";
         case Method::fixed: return "fixed_remap";
         case Method::shifted: return "shifted_remap";
+        case Method::shifted_populated: return "shifted_populated";
     }
     throw std::logic_error("unexpected method");
 }
@@ -178,8 +186,8 @@ Timing measure(const MappingApi& api, Method method, const Runs& input, const Ex
     const auto bytes = (a.size + b.size) * row_bytes;
     const auto rounded_bytes = page_ceil(a.size + b.size) * row_bytes;
     const auto edges = outer_slices(input);
-    if (method == Method::fixed || method == Method::shifted) {
-        const auto plan = plan_edges(edges, method == Method::shifted);
+    if (method == Method::fixed || method == Method::shifted || method == Method::shifted_populated) {
+        const auto plan = plan_edges(edges, method != Method::fixed);
         const auto first_bytes = page_ceil(a.size + plan.phase[0]) * row_bytes;
         const auto input_bytes = first_bytes + page_ceil(b.size + plan.phase[1]) * row_bytes;
         mapped = (plan.mapped.prefix.size + plan.mapped.suffix.size) * row_bytes;
@@ -190,7 +198,11 @@ Timing measure(const MappingApi& api, Method method, const Runs& input, const Ex
         copy_rows(batches[1], b);
         prepared = Clock::now();
 
+#ifdef __linux__
+        views.emplace(api, method == Method::shifted_populated);
+#else
         views.emplace(api);
+#endif
         views->map(section->handle(), rounded_bytes,
                    fragments_for(plan, {0, first_bytes}, input_bytes, rounded_bytes));
         result = views->data();
@@ -342,6 +354,12 @@ int main(int argc, char** argv) {
             throw std::invalid_argument("usage: bench --smoke|--bench");
         }
         const bool smoke = std::string_view(argv[1]) == "--smoke";
+#ifdef __linux__
+        const auto cpu = pin_linux_thread();
+        std::cerr << "BENCH_LOGICAL_CPU=" << cpu << '\n';
+        if (sysconf(_SC_PAGESIZE) != page_bytes) throw std::runtime_error("expected 4 KiB pages");
+        const MappingApi api;
+#else
         if (!SetThreadAffinityMask(GetCurrentThread(), DWORD_PTR{1} << 8)) {
             windows_error("SetThreadAffinityMask");
         }
@@ -351,6 +369,7 @@ int main(int argc, char** argv) {
         const auto kernel = GetModuleHandleW(L"KernelBase.dll");
         if (!kernel) windows_error("GetModuleHandleW");
         const MappingApi api(kernel);
+#endif
         if (smoke) test_edge_cases(api);
         const std::vector<Word> eviction(eviction_bytes / sizeof(Word), 1);
         std::cout << "layout,left_rows,right_rows,seed,round,method,batches_ns,assembly_ns,"
@@ -364,6 +383,12 @@ int main(int argc, char** argv) {
                     const std::size_t half = std::size_t{1} << (19 + size);
                     run_case(api, layout, half + 13, half - 1, 4'316'079, 5, eviction);
                     run_case(api, layout, half + 19, half + 4, 99'237'281, 5, eviction);
+#ifdef __linux__
+                    if (std::string_view(layout) == "edge_2pct") {
+                        run_case(api, layout, half + 7, half + 11, 1'907'348'639, 5, eviction);
+                        run_case(api, layout, half + 27, half - 4, 185'028'962, 5, eviction);
+                    }
+#endif
                 }
             }
         }

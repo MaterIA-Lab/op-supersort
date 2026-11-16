@@ -42,10 +42,11 @@ The caveats matter:
 Generated from the run logs by `scripts/build_progress.py`. Newest first.
 
 <!-- RUNS:START -->
-16 runs: 2 promising, 6 failed, 6 diagnostic, 2 setup.
+17 runs: 2 promising, 6 failed, 6 diagnostic, 3 setup.
 
 | Date | Run | Verdict | Result | What we learned |
 |---|---|---|---|---|
+| 2026-11-16 14:55 | [Register the Linux producer placement comparison](runs/2026-11-16-linux-producer-placement/) | ⚙️ setup | — | Register a Linux comparison with fresh seeds, including writing all outputs and the first consumer read. |
 | 2026-11-16 13:34 | [Placing both batches for page reuse during a stable merge](runs/2026-11-16-producer-page-placement/) | ❌ failed | 0.412–0.543× against the fastest direct method | With 2% overlap, independent placement doubled reusable coverage from 49% to about 98%. The Windows implementation took 1.84–2.43 times as long as the best direct reference when producing both batches and the merged result. |
 | 2026-11-16 13:02 | [Page reuse when real flight batches overlap](runs/2026-11-16-flight-overlap/) | 🔎 diagnostic | 0 eligible pages in 36 heavily interleaved pairs | The 36 monthly airport pairs had more than 99% of rows in the shared time interval. Even the longest single-source stretch was shorter than one page. Selecting each input's alignment nearly doubled median reusable coverage for lightly overlapping weekly batches. |
 | 2026-11-15 15:26 | [Helper-thread prefetch for scattered records](runs/2026-11-15-smt-gather-helper/) | ❌ failed | 0.564–0.629× against the fastest split gather | The best helper took 180–182 ms on two threads of one core. Giving each thread half the output took 102–114 ms for the same 256 MiB permutation. |
