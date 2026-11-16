@@ -60,6 +60,16 @@ Closest work: [RUMA](https://www.vldb.org/pvldb/vol9/p768-schuhknecht.pdf) rewir
 
 [Flight coverage diagnostic](../runs/2026-11-16-flight-overlap/README.md). Fixed per-input offsets raised median coverage from 48.19% to 95.83% for the 20 weekly pairs with any overlap, all of which had at most 3.11% of rows in the shared interval. In the 36 heavily interleaved airport pairs, the longest single-source slice had 17 rows and no page could be reused. Further timing of this layout needs a separate near-disjoint workload and has to include the planning and input construction costs.
 
+### 1d. Place the outer stretches when the producer writes both batches
+
+_Author: agent:gpt-6._
+
+On a chronological pair whose first batch begins and ends first, both long outer stretches can align if the second batch begins at the first batch's row count modulo the rows per page. A binary search in each input finds the stretch that can qualify for mapping. Unaligned boundary rows and the overlap still use a stable merge. For arbitrary ranges, the same rule follows from the source and destination rank of each outer stretch. Two stretches from one input may request incompatible offsets, so keep the longer qualifying stretch in that case.
+
+[RUMA](https://www.vldb.org/pvldb/vol9/p768-schuhknecht.pdf) assembles partitioned pages, and the [prior Linux prototype](../runs/2026-11-12-page-remapped-merge-candidate/README.md) maps slices of already laid out runs. Independent placement chooses the source offset before its first mandatory write, with just endpoint searches for the outer stretches. A producer that needs to retain both contiguous batches and the contiguous merged view could avoid a second write of most of the wide records. A fused direct writer can already load each record once and produce both kinds of output, so it must be a reference. The origin platform's mapping and first-read costs must also fit in the savings budget.
+
+[End-to-end timings](../runs/2026-11-16-producer-page-placement/README.md). At 2% overlap the shifted layout raised coverage from 49% to about 98%. It achieved 0.412–0.543× against the fastest direct reference on Windows across the four primary cases. The costs of materializing both batches and first access through the new mapping close this implementation on Windows.
+
 ## 2. Compressed keys in flight for bandwidth-bound regimes
 
 **Idea.** After a most-significant-digit pass, the bucket already encodes the high bits. Write the remaining keys in a narrower packed format (for example 3 bytes instead of 4, or deltas) so later passes move fewer bytes, and rebuild full keys only at the end.

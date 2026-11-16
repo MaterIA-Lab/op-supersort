@@ -1,0 +1,18 @@
+measured_start_utc=2026-11-16T13:32:26.2232543Z
+measured_end_utc=2026-11-16T13:34:24.2412601Z
+base_revision=3a202700294b78b422c446f2964161f7d3782525
+cpu=AMD Ryzen 7 5800X
+logical_cpu=8
+threads=1
+os=Windows 11 build 26200
+page_bytes=4096
+cache_eviction_bytes=100663296
+compiler=GCC 16.1.0 (MinGW-w64 UCRT POSIX SEH, Brecht Sanders r2)
+flags=-O3 -march=native -DNDEBUG -std=c++20 -D_WIN32_WINNT=0x0A00 -Wall -Wextra -Wpedantic
+copy_references=Windows UCRT memcpy and AVX2 cached and non-temporal stores
+mapping_reference=VirtualAlloc2 placeholders and pagefile-backed MapViewOfFile3 views with fixed offsets
+memory_bound=raw input and verification each hold one output's worth of rows. Direct methods reserve two more output-sized blocks in one allocation. Mapping allocates backing for the two padded batches and the output fragments filled by copying, and aliases the remaining output pages.
+process_memory=peak working set and system page-fault counts not sampled
+bench_cpp_sha256=bce6da1e6984090df05fd4540731a612d14866dd57bc28c5f6f21d44ff8fbed4
+placement_hpp_sha256=cc8dad384752a49f0718676bb10fb1a201a792af8995ef02eb4d20785976fa64
+windows_views_hpp_sha256=d645b3849359972350318116bffe24f5182268dec5196ba48b747c0d9d6c5ae4
