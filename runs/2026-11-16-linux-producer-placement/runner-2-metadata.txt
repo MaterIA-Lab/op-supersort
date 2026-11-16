@@ -1,0 +1,23 @@
+replica=2
+benchmark_commit=3a398c1b741ae88308f8edafb999d87d5aa29e38
+Linux 7.0.0-1014-aws
+Architecture:                            x86_64
+CPU(s):                                  4
+Model name:                              Intel(R) Xeon(R) 6975P-C
+Thread(s) per core:                      2
+Hypervisor vendor:                       KVM
+L2 cache:                                4 MiB (2 instances)
+L3 cache:                                480 MiB (1 instance)
+MemTotal:       16078420 kB
+thp_enabled=always [madvise] never
+thp_shmem_enabled=always within_size advise [never] deny force
+4096
+ldd (Ubuntu GLIBC 2.39-0ubuntu8.9) 2.39
+g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+b6ce8c8f78167bf24bad0739deb187d998ebad254c962cc21c9768afb5dbc8f1  prototypes/agents/producer-page-placement/bench.cpp
+cc8dad384752a49f0718676bb10fb1a201a792af8995ef02eb4d20785976fa64  prototypes/agents/producer-page-placement/placement.hpp
+6de0277919d6747537fa827c30287c391e2e98b59e9d50bb72212231ac369c3b  prototypes/agents/producer-page-placement/linux_views.hpp
+2026-11-16T15:14:08+00:00
+BENCH_LOGICAL_CPU=3
+BENCH_INPUT_CACHE=clflushopt
+2026-11-16T15:15:40+00:00
