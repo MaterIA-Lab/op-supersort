@@ -133,6 +133,21 @@ void evict_cache(const std::vector<Word>& buffer) {
     for (std::size_t i = 0; i < buffer.size(); i += 64 / sizeof(Word)) (void)lines[i];
 }
 
+#ifdef __linux__
+void flush_input_lines(const Runs& input) {
+    for (const auto& run : input) {
+        for (std::size_t byte = 0; byte < run.size * row_bytes; byte += 64) {
+#ifdef __CLFLUSHOPT__
+            _mm_clflushopt(const_cast<std::byte*>(run.data + byte));
+#else
+            _mm_clflush(run.data + byte);
+#endif
+        }
+    }
+    _mm_mfence();
+}
+#endif
+
 Word first_read(const std::byte* data, std::size_t bytes) {
     Word sum = 0;
     for (std::size_t i = 0; i < bytes; i += 64) {
@@ -336,6 +351,9 @@ void run_case(const MappingApi& api, std::string_view layout, std::size_t left, 
         std::shuffle(order.begin(), order.end(), random);
         for (const auto method : order) {
             evict_cache(eviction);
+#ifdef __linux__
+            flush_input_lines(input);
+#endif
             const auto t = measure(api, method, input, expected);
             std::cout << layout << ',' << left << ',' << right << ',' << seed << ',' << round
                       << ',' << label(method) << ',' << t.batches << ',' << t.assemble << ','
@@ -357,6 +375,14 @@ int main(int argc, char** argv) {
 #ifdef __linux__
         const auto cpu = pin_linux_thread();
         std::cerr << "BENCH_LOGICAL_CPU=" << cpu << '\n';
+        if (sysconf(_SC_LEVEL1_DCACHE_LINESIZE) != 64) {
+            throw std::runtime_error("expected 64-byte cache lines");
+        }
+#ifdef __CLFLUSHOPT__
+        std::cerr << "BENCH_INPUT_CACHE=clflushopt" << '\n';
+#else
+        std::cerr << "BENCH_INPUT_CACHE=clflush" << '\n';
+#endif
         if (sysconf(_SC_PAGESIZE) != page_bytes) throw std::runtime_error("expected 4 KiB pages");
         const MappingApi api;
 #else

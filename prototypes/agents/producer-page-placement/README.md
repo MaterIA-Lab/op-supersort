@@ -26,4 +26,4 @@ lab/producer-page-placement/bench --bench > lab/producer-page-placement/linux.cs
 python3 runs/2026-11-16-linux-producer-placement/analyze.py lab/producer-page-placement/linux.csv
 ```
 
-The Linux benchmark pins the thread to the highest vCPU allowed by the operating system. The [Linux protocol](../../../runs/2026-11-16-linux-producer-placement/protocol.md) records the fresh seeds, the eager alias variant and the shared output contract.
+The Linux benchmark pins the thread to the highest vCPU allowed by the operating system and flushes its source cache lines before starting each measurement. The [Linux protocol](../../../runs/2026-11-16-linux-producer-placement/protocol.md) records the fresh seeds, the eager alias variant and the shared output contract.
