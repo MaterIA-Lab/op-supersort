@@ -70,6 +70,14 @@ On a chronological pair whose first batch begins and ends first, both long outer
 
 [End-to-end timings](../runs/2026-11-16-producer-page-placement/README.md). At 2% overlap the shifted layout raised coverage from 49% to about 98%. It achieved 0.412–0.543× against the fastest direct reference on Windows across the four primary cases. The costs of materializing both batches and first access through the new mapping close this implementation on Windows.
 
+### 1e. Measure the producer contract with native Linux mappings
+
+_Author: agent:gpt-6._
+
+Use the same outer-slice placement from 1d with a Linux memory-backed file and address aliases. In an earlier Linux merge experiment, the caller already had prepared inputs. This experiment includes producing both batches and the final view, and races against a direct writer that fills the outputs in one traversal. Also try populating the page tables while installing the read-only aliases, with that time inside the same end-to-end interval. The two variants isolate whether delaying alias setup into the first scan helps on this host.
+
+[RUMA](https://www.vldb.org/pvldb/vol9/p768-schuhknecht.pdf) is the closest prior work on mapping-based assembly. Linux [`mmap`](https://man7.org/linux/man-pages/man2/mmap.2.html) already exposes eager population. This run tests a specific platform and output contract for the existing producer placement mechanism. Its preregistered comparisons and stopping rule are in the [Linux protocol](../runs/2026-11-16-linux-producer-placement/protocol.md).
+
 ## 2. Compressed keys in flight for bandwidth-bound regimes
 
 **Idea.** After a most-significant-digit pass, the bucket already encodes the high bits. Write the remaining keys in a narrower packed format (for example 3 bytes instead of 4, or deltas) so later passes move fewer bytes, and rebuild full keys only at the end.

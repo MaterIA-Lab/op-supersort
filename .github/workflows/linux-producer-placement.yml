@@ -1,0 +1,74 @@
+name: Linux producer placement experiment
+
+on:
+  push:
+    branches:
+      - agent/linux-producer-placement-2026-11-16
+      - agent/linux-producer-placement-2026-11-16-r*
+    paths:
+      - .github/workflows/linux-producer-placement.yml
+      - prototypes/agents/producer-page-placement/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  measure:
+    name: Measure runner ${{ matrix.replica }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        replica: [1, 2]
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Build and verify Linux backend
+        run: |
+          grep -qw avx2 /proc/cpuinfo
+          mkdir -p lab/producer-page-placement
+          g++ -O3 -march=native -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic \
+            prototypes/agents/producer-page-placement/bench.cpp -o lab/producer-page-placement/bench
+          lab/producer-page-placement/bench --smoke > lab/producer-page-placement/smoke.csv
+          test "$(wc -l < lab/producer-page-placement/smoke.csv)" -eq 19
+
+      - name: Measure and check all outputs
+        run: |
+          directory=lab/producer-page-placement
+          {
+            printf 'replica=%s\n' '${{ matrix.replica }}'
+            printf 'benchmark_commit=%s\n' "$GITHUB_SHA"
+            uname -sr
+            lscpu | grep -E '^(CPU\(s\)|Architecture|Model name|Thread\(s\) per core|L[123] cache|Hypervisor vendor):'
+            grep '^MemTotal:' /proc/meminfo
+            for setting in enabled shmem_enabled; do
+              path="/sys/kernel/mm/transparent_hugepage/$setting"
+              if [ -r "$path" ]; then
+                printf 'thp_%s=%s\n' "$setting" "$(cat "$path")"
+              else
+                printf 'thp_%s=unavailable\n' "$setting"
+              fi
+            done
+            getconf PAGE_SIZE
+            ldd --version | sed -n '1p'
+            g++ --version | sed -n '1p'
+            sha256sum prototypes/agents/producer-page-placement/{bench.cpp,placement.hpp,linux_views.hpp}
+            date --utc --iso-8601=seconds
+          } > "$directory/meta.txt"
+          "$directory/bench" --bench > "$directory/linux.csv" 2>> "$directory/meta.txt"
+          date --utc --iso-8601=seconds >> "$directory/meta.txt"
+          python3 runs/2026-11-16-linux-producer-placement/analyze.py "$directory/linux.csv"
+
+      - name: Emit raw samples and environment
+        run: |
+          echo SUPERSORT_META_BEGIN
+          cat lab/producer-page-placement/meta.txt
+          echo SUPERSORT_META_END
+          echo SUPERSORT_CSV_BEGIN
+          cat lab/producer-page-placement/linux.csv
+          echo SUPERSORT_CSV_END

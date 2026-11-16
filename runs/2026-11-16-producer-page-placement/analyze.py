@@ -9,7 +9,6 @@ from statistics import median
 
 REFERENCES = ("split_bulk", "fused_cached", "fused_stream")
 MAPPINGS = ("fixed_remap", "shifted_remap")
-METHODS = set(REFERENCES + MAPPINGS)
 PHASES = ("batches_ns", "assembly_ns", "read_ns", "total_ns", "teardown_ns")
 ROW_BYTES = 128
 
@@ -23,7 +22,7 @@ def registered_cases():
     }
 
 
-def load(path):
+def load(path, expected_cases=None, mapping_methods=MAPPINGS):
     cases = defaultdict(lambda: defaultdict(dict))
     with path.open(encoding="utf-8-sig", newline="") as handle:
         for row in csv.DictReader(handle):
@@ -46,18 +45,22 @@ def load(path):
                 raise ValueError(f"invalid overlap count for {case}, {method}")
             rounds[round_number] = record
 
-    if cases.keys() != registered_cases():
+    if expected_cases is None:
+        expected_cases = registered_cases()
+    if cases.keys() != expected_cases:
         raise ValueError("the input does not match the registered workload")
+    expected_methods = set(REFERENCES + mapping_methods)
     for case, methods in cases.items():
-        if methods.keys() != METHODS:
+        if methods.keys() != expected_methods:
             raise ValueError(f"missing method in {case}")
         for method, rounds in methods.items():
             if rounds.keys() != set(range(6)):
                 raise ValueError(f"incomplete rounds for {case}, {method}")
             if len({record["mapped_bytes"] for record in rounds.values()}) != 1:
                 raise ValueError(f"inconsistent mapping for {case}, {method}")
-        if methods["fixed_remap"][0]["mapped_bytes"] > methods["shifted_remap"][0]["mapped_bytes"]:
-            raise ValueError(f"adjusted placement reduced coverage in {case}")
+        for method in mapping_methods[1:]:
+            if methods["fixed_remap"][0]["mapped_bytes"] > methods[method][0]["mapped_bytes"]:
+                raise ValueError(f"adjusted placement reduced coverage in {case}, {method}")
         overlap_counts = {
             record["overlap_rows"] for rounds in methods.values() for record in rounds.values()
         }
