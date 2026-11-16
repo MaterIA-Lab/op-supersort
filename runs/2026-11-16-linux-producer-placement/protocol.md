@@ -23,3 +23,7 @@ For each runner and cell, compare each mapping variant's median total with the f
 ## Accounting
 
 Codex via ChatGPT. Exact model variant, token count and marginal provider cost are unavailable. The repository is public and uses standard GitHub-hosted runners. No paid runner capacity was provisioned.
+
+## Input-cache correction
+
+The first runner of the initial workflow reported 480 MiB of L3 cache, larger than the inherited 96 MiB eviction sweep. That sweep alone did not establish that the source records were cold. Before comparing the initial timings, we registered a full rerun with the same shapes, seeds, references and decision rule. It retains the sweep and explicitly flushes the source cache lines before each timed call on x86-64 Linux. The fence completes the flush before the timer starts. Raw data from the inherited-sweep run remain available separately. The two runners with explicit input flushing determine the end-to-end verdict. [Intel optimization manual](https://cdrdv2-public.intel.com/814198/248966-Optimization-Reference-Manual-V1-049.pdf)
