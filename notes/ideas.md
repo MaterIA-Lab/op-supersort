@@ -50,12 +50,26 @@ Closest work: the [existing SuperSort page-remapped merge](../runs/2026-11-12-pa
 
 [Trip-time coverage test](../runs/2026-11-14-taxi-page-coverage/README.md). One of twelve weekly pairs overlapped. Four rows were in the overlap and selecting an offset gave the same coverage as the aligned output. Keep the offset idea unconfirmed until a substantially overlapping workload is screened.
 
+### 1c. Choose the alignment of each input run before writing it
+
+_Author: agent:gpt-6._
+
+With a page-aligned result, a long slice can be reused only if the starting ranks of that slice in its input and in the merged order agree modulo the number of rows per page. If a producer knows the order of both runs before writing their payloads to mapped storage, it could choose a different starting offset for each input. This might preserve two long slices that require different relative alignments. The best fixed offset for each input can be computed independently by accumulating eligible whole-page bytes for each of the 32 possible offsets. This does not guarantee that a producer can choose the offsets cheaply. The first test is an optimistic coverage calculation under free advance knowledge, with no prototype timing.
+
+Closest work: [RUMA](https://www.vldb.org/pvldb/vol9/p768-schuhknecht.pdf) rewires already partitioned pages and handles page boundaries, and [Merge Path](https://arxiv.org/abs/1406.2628) identifies portions of the two input runs at chosen output ranks. Our [prior taxi probe](../runs/2026-11-14-taxi-page-coverage/README.md) can move the output pointer by one fixed offset. The narrower question is what would be gained by instead choosing a distinct, fixed placement for each input before it is materialized. The diagnostic measures eligibility and leaves mechanism novelty open.
+
+[Flight coverage diagnostic](../runs/2026-11-16-flight-overlap/README.md). Fixed per-input offsets raised median coverage from 48.19% to 95.83% for the 20 weekly pairs with any overlap, all of which had at most 3.11% of rows in the shared interval. In the 36 heavily interleaved airport pairs, the longest single-source slice had 17 rows and no page could be reused. Further timing of this layout needs a separate near-disjoint workload and has to include the planning and input construction costs.
+
 ## 2. Compressed keys in flight for bandwidth-bound regimes
 
 **Idea.** After a most-significant-digit pass, the bucket already encodes the high bits. Write the remaining keys in a narrower packed format (for example 3 bytes instead of 4, or deltas) so later passes move fewer bytes, and rebuild full keys only at the end.
 **Why it could matter.** In multithreaded runs on large arrays, cores wait for memory. Trading cheap arithmetic for bandwidth may pay off there, even though it did not inside cache (prior E052 packed only in-cache leaves).
 **Known nearby.** Key compression in database sorting, prefix truncation, radix sort with key reduction.
 **Kill test.** Measure multithreaded streaming bandwidth (STREAM-like) against the packing and unpacking throughput per core. Proceed only if packing is clearly faster than the memory traffic it saves.
+
+**2026-11-15 bandwidth screen (author: agent:codex).** Wassenberg and Sanders already approach peak per-pass memory bandwidth with software write combining. Lemire and Boytsov already show SIMD packing of integers into fixed-width blocks. FractalSort uses compressed radix histograms for wide keys in hardware. The limited question here is whether folding the known prefix into bucket metadata and moving 24 bits per key can pay for CPU conversion across multiple DRAM transfers. Prefix truncation and SIMD packing are established techniques. A measured margin would justify testing a distinct pass-elimination or cache-residency mechanism. [Wassenberg and Sanders](https://arxiv.org/abs/1008.2849) · [Lemire and Boytsov](https://arxiv.org/abs/1209.2137) · [FractalSort](https://doi.org/10.1109/TC.2026.3653702) · [Preregistered screen](../runs/2026-11-15-compressed-key-bandwidth/protocol.md)
+
+**Result.** With eight workers, three-byte transfers plus conversion estimated 1.086–1.178× with two intervening transfers. Zero of four primary cases reached 1.30×. Equivalent passes with equal effective bandwidth give only 1.231× in the logical traffic model. Close width reduction alone for this pipeline. [Results](../runs/2026-11-15-compressed-key-bandwidth/README.md)
 
 ## 3. Payload permutation for records
 
@@ -112,6 +126,10 @@ Preregistered batch test: [OP-003](../runs/2026-11-14-four-row-ranks/README.md).
 **Why it could matter.** It could hide memory latency that out-of-order execution cannot hide on irregular scatters.
 **Known nearby.** Helper-thread prefetching in the architecture literature.
 **Kill test.** Measure a scatter-bound pass with and without a helper on the SMT sibling, using the same total thread count as the reference.
+
+**2026-11-15 gather screen (author: agent:codex).** Collins et al. already use SMT threads to execute future loads, and Ainsworth and Jones establish in-thread software prefetch for indirect memory references. A finished record permutation exposes every future source address through a sequential index stream. Instead of generating a separate address trace, a helper can read that stream directly with a bounded lead while the worker writes the destination sequentially. The open practical question is whether that helps enough to give up a second writer or the worker's own prefetches. This tests helper prefetch as an established mechanism and would need a separate algorithmic contribution to qualify as a finding. [Collins et al.](https://cseweb.ucsd.edu/~tullsen/isca2001.pdf) · [Ainsworth and Jones](https://doi.org/10.17863/CAM.38025) · [Preregistered screen](../runs/2026-11-15-smt-gather-helper/protocol.md)
+
+**Result.** On 256 MiB of uniformly permuted 128-byte rows, the fastest cached helper achieved 0.564× and 0.629× of the best equal-affinity split gather. The helper beat one writer by 1.16–1.46× on the same runs. Two dedicated writers retained the lead with cached stores and on two physical cores. This closes bounded helper lookahead for this materialization workload. [Results](../runs/2026-11-15-smt-gather-helper/README.md)
 
 ## Rejected or out of scope
 
