@@ -408,12 +408,29 @@
     {
       "id": "2026-11-16-linux-producer-placement",
       "path": "runs/2026-11-16-linux-producer-placement/",
-      "title": "Register the Linux producer placement comparison",
-      "date": "2026-11-16 14:55",
-      "verdict": "setup",
-      "summary": "Register a Linux comparison with fresh seeds, including writing all outputs and the first consumer read.",
+      "title": "Producing two batches and their merged view on Linux",
+      "date": "2026-11-16 15:15",
+      "verdict": "failed",
+      "summary": "Adjusted page placement was 1.231–1.280× as fast as the best direct writer across eight fresh edge-overlap cases on two Linux runners. Every case missed the 1.30× target, and building the two batches took 80–84% of the remapping time.",
       "model": "Codex (exact model and reasoning settings not captured)",
-      "cost": "not captured"
+      "cost": "not captured",
+      "idea": "1. Virtual memory as a data-movement engine",
+      "result": "1.231–1.280× on the eight holdout cases, with 0/8 meeting the 77% time limit",
+      "baseline": "Fastest of split bulk merge and fused cached or streaming writes",
+      "speedup": [
+        1.231,
+        1.28
+      ],
+      "closes": [
+        "fresh producer placement using the tested Linux mappings"
+      ],
+      "how": "Choose where each new batch starts so the output can reuse both ends as whole memory pages. Copy the small overlap and expose both batches and the fused result for reading.",
+      "compared_with": "The fastest direct writer producing the same three readable outputs on one thread, including a first pass over the combined output.",
+      "faster_where": "With 2% overlap at 128 and 256 MiB, shifting the batches reused about 98% of the bytes. Both shifted versions beat the direct writer in all eight fresh cases, with speedups of 1.231–1.280×. Every case fell short of the 1.30× target.",
+      "title_es": "Producción de dos lotes y su salida fusionada en Linux",
+      "how_es": "Se elige dónde empieza cada lote nuevo para reutilizar ambos extremos por páginas de memoria. Se copia la zona de solapamiento y se exponen los dos lotes y la salida fusionada para lectura.",
+      "compared_with_es": "La escritura directa más rápida que generaba las mismas tres salidas con un hilo, incluida la primera lectura de la salida fusionada.",
+      "faster_where_es": "Con un 2 % de solapamiento y tamaños de 128 y 256 MiB, ajustar la posición de los lotes permitió reutilizar cerca del 98 % de los bytes. Las dos variantes ganaron en los ocho casos nuevos, con una aceleración de 1,231× a 1,280×. Los ocho casos quedaron por debajo del objetivo de 1,30×."
     }
   ]
 }

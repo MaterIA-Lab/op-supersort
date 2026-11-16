@@ -67,4 +67,7 @@ python -X utf8 runs/2026-11-12-gharchive-page-coverage/probe.py --report runs/20
 python -X utf8 runs/2026-11-12-gharchive-disjoint-merge/analyze.py runs/2026-11-12-gharchive-disjoint-merge/disjoint.csv
 python -X utf8 runs/2026-11-15-compressed-key-bandwidth/analyze.py runs/2026-11-15-compressed-key-bandwidth/raw.csv
 python -X utf8 runs/2026-11-15-smt-gather-helper/analyze.py runs/2026-11-15-smt-gather-helper/raw.csv
+python -X utf8 runs/2026-11-16-linux-producer-placement/analyze.py \
+  runs/2026-11-16-linux-producer-placement/runner-1.csv \
+  runs/2026-11-16-linux-producer-placement/runner-2.csv
 ```

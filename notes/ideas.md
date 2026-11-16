@@ -78,6 +78,8 @@ Use the same outer-slice placement from 1d with a Linux memory-backed file and a
 
 [RUMA](https://www.vldb.org/pvldb/vol9/p768-schuhknecht.pdf) is the closest prior work on mapping-based assembly. Linux [`mmap`](https://man7.org/linux/man-pages/man2/mmap.2.html) already exposes eager population. This run tests a specific platform and output contract for the existing producer placement mechanism. Its preregistered comparisons and stopping rule are in the [Linux protocol](../runs/2026-11-16-linux-producer-placement/protocol.md).
 
+**Result.** The adjusted Linux variants gave 1.231–1.280× on the eight fresh holdout cases and cleared the 77% threshold in zero. Constructing the shareable batches took 80–84% of the measured time. This closes the tested producer path that creates both batches by copying from the original buffers. [Measured result](../runs/2026-11-16-linux-producer-placement/README.md)
+
 ## 2. Compressed keys in flight for bandwidth-bound regimes
 
 **Idea.** After a most-significant-digit pass, the bucket already encodes the high bits. Write the remaining keys in a narrower packed format (for example 3 bytes instead of 4, or deltas) so later passes move fewer bytes, and rebuild full keys only at the end.

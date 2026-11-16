@@ -45,6 +45,6 @@ Choosing the offsets made output assembly substantially cheaper than fixed remap
 
 In the disjoint controls, the shifted layout reused more than 99.99% of bytes and took 2.24–2.64 times as long as the direct reference. The fully interleaved controls reused zero pages and took 2.76–2.84 times as long. Teardown after bytewise verification adds further time in the raw samples. Time variability limits conclusions about which direct method is generally fastest, especially in the controls.
 
-All 200 timed calls, 40 warm-ups and 105 small checks matched the original separate batches and an independent stable merge byte for byte. The generator correction and full rerun are documented in the protocol. The result closes this Windows mapping path for this fresh-output contract. The same producer contract remains unmeasured on Linux, where earlier experiments started with already prepared inputs.
+All 200 timed calls, 40 warm-ups and 105 small checks matched the original separate batches and an independent stable merge byte for byte. The generator correction and full rerun are documented in the protocol. The result closes this Windows mapping path for this fresh-output contract. The follow-up measured the same contract on two Linux virtual machines. [Linux producer benchmark](../2026-11-16-linux-producer-placement/README.md)
 
 [Exact Windows source and build commands at the recorded revision](https://github.com/MaterIA-Lab/op-supersort/tree/b5338a11c2d3af010b2bf4479f7a12396441b64c/prototypes/agents/producer-page-placement)
