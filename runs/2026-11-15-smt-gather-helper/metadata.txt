@@ -1,0 +1,15 @@
+CPU: AMD Ryzen 7 5800X, 8 physical cores, 16 logical processors, AVX2, 32 MiB shared L3
+OS: Windows 11 x64, build 26200 (10.0.26200.0)
+Compiler: MinGW-W64 UCRT POSIX GCC 16.1.0 (Brecht Sanders r2)
+Command: g++ -std=c++20 -O3 -mavx2 -DNDEBUG -Wall -Wextra -Werror prototypes/agents/smt-gather-helper/bench.cpp -o lab/smt-gather-helper/bench.exe
+Base tree: aa16344a32c50690217068b984a09b72866ef6a5
+Placement: SMT mask 0x1 and 0x2; separate physical cores mask 0x1 and 0x4; queried and checked with Windows APIs
+Data allocations: two 256 MiB row arrays (64-byte aligned), 16 MiB order and 128 MiB eviction buffer at the large size, 656 MiB excluding thread and runtime overhead
+Source SHA-256: b2bbf7785d2fd039243ba051a2212b546b3a1bc1d35cdfde783600a63f1be667
+Reference header: prototypes/agents/record-permutation/blocked.hpp at the base tree
+Reference header SHA-256: a3da369caa7f5aaaba82e0b7014984ad5a008d4697665c337a9bdddc407dbed6
+Executable SHA-256: ed6fd5e722e42e92efe8d9046c3d9f1f6a0431822805b4cdbfbe817f292bca6e
+Raw CSV SHA-256 as captured (CRLF): 4bb063adf397849260d2984b3f2c6739b3dc8121704d88ab10a5190b114e98b8
+Raw CSV SHA-256 in Git (LF): db55bc062465f3aee00fa122d103f2369f98b06bbfcba037f59d8b009fc0bde2
+Checks: 52 smoke outputs, 78 warm-up outputs and 546 measured outputs, all verified byte for byte
+Timing: steady_clock wall time including both worker barriers and store fences; see protocol.md for exclusions

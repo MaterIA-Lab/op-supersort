@@ -1,0 +1,14 @@
+CPU: AMD Ryzen 7 5800X, 8 physical cores, 16 logical processors, AVX2, 32 MiB shared L3
+OS: Windows 11 x64, build 26200 (10.0.26200.0)
+Compiler: MinGW-W64 UCRT POSIX GCC 16.1.0 (Brecht Sanders r2)
+Command: g++ -std=c++20 -O3 -mavx2 -DNDEBUG -Wall -Wextra -Werror prototypes/agents/compressed-key-bandwidth/bench.cpp -o lab/compressed-key-bandwidth/bench.exe
+Base tree: aa16344a32c50690217068b984a09b72866ef6a5
+External source dependencies: none; Windows topology and affinity APIs; linked C runtime memcpy
+Pinned worker masks, one per physical core: 0x1 0x4 0x10 0x40 0x100 0x400 0x1000 0x4000
+Data allocations: 64-byte alignment, 14 bytes per key across both sources and both destinations, plus 128 MiB eviction buffer; 1,024 MiB at the largest case excluding thread and runtime overhead
+Source SHA-256: b3b900e9e200f5ca461aa660bc68f541adc0cac8c51875fb5af0168f538be3d2
+Executable SHA-256: 0a53f529c7ca6cfa77d706bcdf6459b8c3c2d896e44f8110e9607e98a42c6882
+Raw CSV SHA-256 as captured (CRLF): 54fe312d13e7a49c1e09ede8a331dd998f644c5c409ef095f32d812a05c60e91
+Raw CSV SHA-256 in Git (LF): d49f86fc7b411ed22643138a4c94a00597090fca05ed902dbf7e31b0d35cce94
+Checks: 8 boundary conversions, 60 warm-up outputs and 420 measured outputs verified byte for byte
+Timing: steady_clock wall time including worker barriers and store fences; see protocol.md for exclusions

@@ -2,11 +2,11 @@
 
 A living summary of what has been tried and what was learned, written for people. The detailed, agent-oriented state is in [notes/agent-brief.md](notes/agent-brief.md). The final summary will go in [SUMMARY.md](SUMMARY.md) when the project closes.
 
-_Last updated: 2026-11-14._
+_Last updated: 2026-11-16._
 
 ## Where we are
 
-Page remapping on Linux remains promising when sorted ranges line up with the output pages. Recent tests ruled out three specific Windows or AVX2 implementations. A small sample of real taxi trips produced almost disjoint batches, leaving the performance of remapping on substantially overlapping data open under the [research goal](GOAL.md).
+Page remapping on Linux remains promising for sorted ranges with long stretches that line up with the output pages. In a new diagnostic of 32,735 real flight records, all 36 airport pairs with heavy overlap had zero reusable pages. The measured speed gains for overlapping ranges still come from synthetic workloads. [Research goal](GOAL.md) · [Flight coverage diagnostic](runs/2026-11-16-flight-overlap/README.md)
 
 ## What works so far
 
@@ -22,6 +22,9 @@ The caveats matter:
 
 ## What does not work
 
+- **Reusing whole pages when records from both sources alternate frequently.** More than 99% of the rows in each monthly airport pair fell within the common time range. The longest stretch from one input was 17 rows. It takes 32 rows to fill one page at 128 bytes per row. [Flight coverage diagnostic](runs/2026-11-16-flight-overlap/README.md)
+- **Compressing four-byte keys to three bytes between passes.** With eight workers and two intermediate memory transfers, the estimated gain after compression and reconstruction was 1.09–1.18×. The screen used sequential copying and missed the 1.30× gate in all four cases. [Bandwidth screen](runs/2026-11-15-compressed-key-bandwidth/README.md)
+- **Dedicating one of two hardware threads to prefetch records.** On two permutations of 256 MiB, the best helper took 180–182 ms. Splitting the copy across the same two threads took 102–114 ms. [Helper-thread benchmark](runs/2026-11-15-smt-gather-helper/README.md)
 - **Reordering large records in cache-sized tiles.** Sorting the keys and then writing records in tiles took 54–85% longer overall than the fastest measured reference. The combined cost of planning and moving records erased the estimated gain. A gather that asks the CPU to fetch upcoming records early (software prefetch) won all 48 paired repetitions. [Measured results and raw data](runs/2026-11-12-blocked-permutation/summary.md)
 - **Grouping source reads without sorting the index inside each tile.** The cheaper grouping approach still took about 23% longer than the best measured read-ahead reference on 8.4 million 16-byte rows. [Windows record benchmark](runs/2026-11-14-record-permutation/README.md)
 - **Remapping on Windows with a reusable copy buffer available.** For blocks of 64 KiB, mapping and a first read took 95–112 ms. Streaming copy and a first read took 43–44 ms. First access through the mapped addresses also erased the advantage of sub-millisecond setup with 2 MiB blocks. [Windows remapping benchmark](runs/2026-11-14-page-remap/README.md)
@@ -30,18 +33,21 @@ The caveats matter:
 
 ## What comes next
 
-- Screen a denser source with distinct batch and event clocks. The 6,433-trip taxi sample had one overlapping weekly pair, with only four rows in the overlap. Selecting a different page offset did not improve page reuse for that pair. [Taxi batch diagnostic](runs/2026-11-14-taxi-page-coverage/README.md)
-- Measure the remaining early tests from the [backlog](notes/ideas.md), including compressed keys for bandwidth-limited arrays and helper threads. Any further small-batch work should be compared with a direct SIMD network.
+- Investigate whether the producer of two nearly disjoint batches can write each input at a useful starting offset. In the 20 weekly flight pairs with some shared times, the median fraction of data eligible for page reuse rose from 48.19% to 95.83% in the model. A timing test needs larger inputs and has to charge the work to determine those offsets. [Flight coverage diagnostic](runs/2026-11-16-flight-overlap/README.md)
+- Test other mechanisms that can remove a full memory pass or move a working set into cache. Any further small-batch work should be compared with a direct SIMD network. [Idea backlog](notes/ideas.md)
 
 ## All experiments
 
 Generated from the run logs by `scripts/build_progress.py`. Newest first.
 
 <!-- RUNS:START -->
-12 runs: 2 promising, 4 failed, 4 diagnostic, 2 setup.
+15 runs: 2 promising, 5 failed, 6 diagnostic, 2 setup.
 
 | Date | Run | Verdict | Result | What we learned |
 |---|---|---|---|---|
+| 2026-11-16 13:02 | [Page reuse when real flight batches overlap](runs/2026-11-16-flight-overlap/) | 🔎 diagnostic | 0 eligible pages in 36 heavily interleaved pairs | The 36 monthly airport pairs had more than 99% of rows in the shared time interval. Even the longest single-source stretch was shorter than one page. Selecting each input's alignment nearly doubled median reusable coverage for lightly overlapping weekly batches. |
+| 2026-11-15 15:26 | [Helper-thread prefetch for scattered records](runs/2026-11-15-smt-gather-helper/) | ❌ failed | 0.564–0.629× against the fastest split gather | The best helper took 180–182 ms on two threads of one core. Giving each thread half the output took 102–114 ms for the same 256 MiB permutation. |
+| 2026-11-15 15:16 | [Bandwidth screen for three-byte sorting keys](runs/2026-11-15-compressed-key-bandwidth/) | 🔎 diagnostic | 1.086–1.178× estimated across four primary cases | With eight workers, a transfer-only estimate including conversion reached 1.086–1.178×. All four primary cases missed the 1.30× gate before any sorting work was charged. |
 | 2026-11-14 16:11 | [Page reuse in completed taxi-trip batches](runs/2026-11-14-taxi-page-coverage/) | 🔎 diagnostic | 1/12 weekly pairs overlapped and 0/12 put at least 5% of rows in the overlap | Only one of twelve weekly pairs overlapped in pickup time. Four rows of that pair fell inside the overlap, and choosing the output offset did not increase its page reuse. |
 | 2026-11-14 15:57 | [Stable rank inversion for four-record groups](runs/2026-11-14-four-row-ranks/) | ❌ failed | 0.731–0.952× across two primary seeds | Computing ranks and inverting them in AVX2 registers took 5–37% longer than the fastest direct SIMD reference on the primary batches. The extra work still cost time in the cache-resident control. |
 | 2026-11-14 15:45 | [Windows page remapping and first read](runs/2026-11-14-page-remap/) | ❌ failed | 0.394–0.453× across two primary seeds | For 64 KiB blocks, Windows remapping and a first read took 2.21–2.54× the time of streaming copy and a first read. The first access to the new virtual addresses dominated even when larger blocks made the remap calls fast. |

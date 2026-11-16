@@ -1,0 +1,46 @@
+{
+  "source": {
+    "url": "https://raw.githubusercontent.com/openintrostat/openintro/b37b235dd702363d5ad87af68dff9533cc148160/data/nycflights.rda",
+    "blob": "7ae458bb4baa4b32523ac495f6e96431413cb323",
+    "bytes": 471845,
+    "sha256": "a986e1421d7270abfdc74fdadf1e276d87fbfd179f3390fc8a8b8f519d1437b0",
+    "rows": 32735,
+    "retained": 32735,
+    "excluded": 0,
+    "schedule_field_checks": 32735,
+    "schedule_field_matches": 1627,
+    "actual_field_matches": 32735
+  },
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.14.0",
+  "record_bytes": 128,
+  "page_bytes": 4096,
+  "minimum_extent": 65536,
+  "geometry_verification": "stable reference order and all 32 offsets checked per case",
+  "regimes": {
+    "adjacent_7d": {
+      "cases": 36,
+      "positive_overlap": 20,
+      "substantial_overlap": 0,
+      "fixed_gate": [],
+      "best_output_gate": [],
+      "best_inputs_gate": []
+    },
+    "adjacent_1d": {
+      "cases": 36,
+      "positive_overlap": 20,
+      "substantial_overlap": 5,
+      "fixed_gate": [],
+      "best_output_gate": [],
+      "best_inputs_gate": []
+    },
+    "parallel_month": {
+      "cases": 36,
+      "positive_overlap": 36,
+      "substantial_overlap": 36,
+      "fixed_gate": [],
+      "best_output_gate": [],
+      "best_inputs_gate": []
+    }
+  }
+}

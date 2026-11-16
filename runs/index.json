@@ -296,6 +296,87 @@
       "how_es": "Se buscaron datos reales donde los lotes sí se solapan en el tiempo: viajes de taxi de Nueva York agrupados por día de llegada y ordenados por hora de recogida. Se contó cuántas páginas podría reutilizar una mezcla y si ayuda desplazar el inicio de la salida.",
       "compared_with_es": "Nada cronometrado: este run mide la forma de los datos reales.",
       "faster_where_es": "Solo 1 de 12 pares semanales se solapó, con apenas 4 filas dentro del solape (0,14 %). La muestra es demasiado escasa; hace falta una fuente real más densa antes de cronometrar una mezcla con solape real."
+    },
+    {
+      "id": "2026-11-15-compressed-key-bandwidth",
+      "path": "runs/2026-11-15-compressed-key-bandwidth/",
+      "title": "Bandwidth screen for three-byte sorting keys",
+      "date": "2026-11-15 15:16",
+      "verdict": "diagnostic",
+      "summary": "With eight workers, a transfer-only estimate including conversion reached 1.086–1.178×. All four primary cases missed the 1.30× gate before any sorting work was charged.",
+      "model": "Codex (exact model and reasoning settings not captured)",
+      "cost": "not captured",
+      "idea": "2. Compressed keys in flight for bandwidth-bound regimes",
+      "result": "1.086–1.178× estimated across four primary cases",
+      "baseline": "fastest of memcpy and AVX2 streaming copy at full width",
+      "speedup": [
+        1.086,
+        1.178
+      ],
+      "estimate": true,
+      "closes": [
+        "24-bit width savings alone with up to two intervening memory transfers"
+      ],
+      "how": "A bucket can remember the first byte of every key it contains. Store the other three bytes between passes and rebuild the full keys at the end.",
+      "compared_with": "Measured sequential copies of four-byte and three-byte keys on the same cores. Used measured encoding and decoding times in the estimate.",
+      "faster_where": "With eight cores, moving already packed keys was 1.166–1.331× as fast. Including both conversions and two intervening transfers brought the estimate to 1.086–1.178×. The experiment timed memory movement and conversion.",
+      "title_es": "Prueba de ancho de banda con claves de tres bytes",
+      "how_es": "Una cubeta puede recordar el primer byte de todas sus claves. Entre pasadas se guardan los otros tres bytes y al final se reconstruyen las claves completas.",
+      "compared_with_es": "Se midieron copias secuenciales de claves de cuatro y tres bytes en los mismos núcleos. La estimación incluye los tiempos medidos de compresión y reconstrucción.",
+      "faster_where_es": "Con ocho núcleos, copiar claves ya comprimidas fue entre 1,166 y 1,331 veces más rápido. Al sumar ambas conversiones y dos transferencias intermedias, la estimación quedó entre 1,086× y 1,178×. Se midieron transferencias y conversiones."
+    },
+    {
+      "id": "2026-11-15-smt-gather-helper",
+      "path": "runs/2026-11-15-smt-gather-helper/",
+      "title": "Helper-thread prefetch for scattered records",
+      "date": "2026-11-15 15:26",
+      "verdict": "failed",
+      "summary": "The best helper took 180–182 ms on two threads of one core. Giving each thread half the output took 102–114 ms for the same 256 MiB permutation.",
+      "model": "Codex (exact model and reasoning settings not captured)",
+      "cost": "not captured",
+      "idea": "6. Helper threads for memory-level parallelism",
+      "result": "0.564–0.629× against the fastest split gather",
+      "baseline": "fastest of seven split gathers on the same two hardware threads",
+      "speedup": [
+        0.564,
+        0.629
+      ],
+      "closes": [
+        "128-byte random gather with a bounded prefetch helper"
+      ],
+      "how": "One thread copies all the records. A second thread looks ahead in the destination order and asks the CPU to bring the next records into cache.",
+      "compared_with": "Seven methods using the same two hardware threads to copy one half each, including in-thread prefetch and stores that bypass cache.",
+      "faster_where": "On the two 256 MiB permutations with threads sharing one core, the best helper took 59–77% longer than the fastest split. It did beat the single-worker control by 1.16–1.46×. The benchmark measures copying in the supplied order.",
+      "title_es": "Hilo auxiliar para precargar registros dispersos",
+      "how_es": "Un hilo copia todos los registros. El segundo lee por adelantado el orden de salida y solicita al procesador que cargue los próximos registros en caché.",
+      "compared_with_es": "Se probaron siete formas de copiar una mitad con cada hilo en los mismos dos hilos de hardware, con precarga en el propio hilo y opciones de escritura directa a memoria.",
+      "faster_where_es": "Para las dos permutaciones de 256 MiB con hilos que comparten núcleo, la mejor variante con precarga auxiliar tardó un 59–77 % más que la copia repartida. Frente a un único hilo copiando, fue entre 1,16× y 1,46× más rápida. La prueba mide la copia en un orden dado."
+    },
+    {
+      "id": "2026-11-16-flight-overlap",
+      "path": "runs/2026-11-16-flight-overlap/",
+      "title": "Page reuse when real flight batches overlap",
+      "date": "2026-11-16 13:02",
+      "verdict": "diagnostic",
+      "summary": "The 36 monthly airport pairs had more than 99% of rows in the shared time interval. Even the longest single-source stretch was shorter than one page. Selecting each input's alignment nearly doubled median reusable coverage for lightly overlapping weekly batches.",
+      "model": "Codex (exact model and reasoning settings not captured)",
+      "cost": "not captured",
+      "idea": "1. Virtual memory as a data-movement engine",
+      "result": "0 eligible pages in 36 heavily interleaved pairs",
+      "baseline": "Existing page-aligned inputs and output",
+      "closes": [
+        "whole-page reuse for the measured interleaved airport pairs"
+      ],
+      "opens": [
+        "independent starting offsets for near-disjoint runs prepared together"
+      ],
+      "how": "A page of input can remain in place when all its rows are still together and fit a page in the merged order. We counted such pages in batches reconstructed from the departure times of 32,735 flights.",
+      "compared_with": "We compared the existing page alignment with moving the start of the output and with placing each input at its own starting offset before writing it.",
+      "faster_where": "All 36 heavily overlapping airport pairs had zero eligible pages. For the 20 weekly pairs with any overlap, choosing both input offsets raised median reusable coverage from 48.19% to 95.83%. This measures coverage under advance knowledge of both runs.",
+      "title_es": "Reutilización de páginas al mezclar vuelos con horarios solapados",
+      "how_es": "Una página de entrada puede quedarse en su sitio si todas sus filas siguen juntas y encajan en una página del resultado. Contamos esas páginas en lotes reconstruidos con los horarios de 32.735 vuelos.",
+      "compared_with_es": "Comparamos la alineación habitual con desplazar el comienzo de la salida y con elegir dónde empieza cada entrada antes de escribirla.",
+      "faster_where_es": "Ninguno de los 36 pares de aeropuertos con fuerte solapamiento tenía páginas reutilizables. En los 20 pares semanales con algún solapamiento, elegir dónde empezar ambas entradas elevó la mediana de cobertura del 48,19 % al 95,83 %. El cálculo supone conocer de antemano el orden de ambos lotes."
     }
   ]
 }
