@@ -377,6 +377,33 @@
       "how_es": "Una página de entrada puede quedarse en su sitio si todas sus filas siguen juntas y encajan en una página del resultado. Contamos esas páginas en lotes reconstruidos con los horarios de 32.735 vuelos.",
       "compared_with_es": "Comparamos la alineación habitual con desplazar el comienzo de la salida y con elegir dónde empieza cada entrada antes de escribirla.",
       "faster_where_es": "Ninguno de los 36 pares de aeropuertos con fuerte solapamiento tenía páginas reutilizables. En los 20 pares semanales con algún solapamiento, elegir dónde empezar ambas entradas elevó la mediana de cobertura del 48,19 % al 95,83 %. El cálculo supone conocer de antemano el orden de ambos lotes."
+    },
+    {
+      "id": "2026-11-16-producer-page-placement",
+      "path": "runs/2026-11-16-producer-page-placement/",
+      "title": "Placing both batches for page reuse during a stable merge",
+      "date": "2026-11-16 13:34",
+      "verdict": "failed",
+      "summary": "With 2% overlap, independent placement doubled reusable coverage from 49% to about 98%. The Windows implementation took 1.84–2.43 times as long as the best direct reference when producing both batches and the merged result.",
+      "model": "Codex (exact model and reasoning settings not captured)",
+      "cost": "not captured",
+      "idea": "1. Virtual memory as a data-movement engine",
+      "result": "0.412–0.543× against the fastest direct method",
+      "baseline": "Fastest of split bulk merge and fused cached or streaming writers",
+      "speedup": [
+        0.412,
+        0.543
+      ],
+      "closes": [
+        "producer-side page placement with this Windows mapping path"
+      ],
+      "how": "Two searches find the ends that stay together when merging. The producer chooses where the batches start so the program can reuse both ends as whole pages and copy the middle.",
+      "compared_with": "Compared with fixed alignment and with the fastest direct method that produced both separate batches and a contiguous merged output.",
+      "faster_where": "At 128 and 256 MiB with 2% overlap, the new placement reused about 98% of the bytes and sped up fixed remapping by 1.10–1.36×. It took 1.84–2.43 times as long as the best direct writer. Batch construction and first read dominated.",
+      "title_es": "Alineación de los lotes para reutilizar páginas en una mezcla estable",
+      "how_es": "Dos búsquedas encuentran los extremos que siguen juntos en la salida. Se elige dónde empieza cada lote para reutilizar ambos extremos por páginas y copiar el centro.",
+      "compared_with_es": "Se comparó con la alineación fija y con la forma directa más rápida de producir los dos lotes y una salida fusionada contigua.",
+      "faster_where_es": "Con 128 y 256 MiB y un 2 % de solapamiento, se reutilizó cerca del 98 % de los bytes. La aceleración frente al remapeo fijo fue de 1,10× a 1,36×. El método tardó entre 1,84 y 2,43 veces lo que tardó la mejor escritura directa. La preparación y la primera lectura concentraron el coste."
     }
   ]
 }
