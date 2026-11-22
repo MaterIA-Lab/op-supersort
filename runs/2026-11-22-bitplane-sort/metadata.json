@@ -1,0 +1,71 @@
+{
+  "started_utc": "2026-11-22T22:09:20.828505+00:00",
+  "finished_utc": "2026-11-22T22:09:22.604514+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "AMD64 Family 25 Model 33 Stepping 0, AuthenticAMD",
+  "compiler": "g++ (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r2) 16.1.0",
+  "flags": "-O3 -march=znver3 -mavx2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic",
+  "logical_cpu": 8,
+  "threads": 1,
+  "references": {
+    "highway": "a3f6f68fcc368e5e3025ca25805eabda9d8a456f",
+    "x86-simd-sort": "6e059b14975df2e3c74260ec905167a1be5a34ca"
+  },
+  "source_sha256": {
+    "prototypes/agents/bitplane-sort/bench.cpp": "c05ab86e274dd7f01b1c510b0b449afa4619325865afc0f05595858165500675",
+    "prototypes/agents/bitplane-sort/run.py": "7e00830d6e0e749dee63cdbebe6bee8b79c052e4b78253635c210a1195b31d0c",
+    "runs/2026-11-22-bitplane-sort/protocol.md": "80f885bdc27bb2712f1c57ac37001f2c70bb293f94a08203908ffe69aadb4327"
+  },
+  "binary_sha256": "5445d12a01fad3edf0fcfe5510ae1f587161b704a8cbba66e776a165ad006aad",
+  "binary_arguments": [
+    [
+      "65536",
+      "uniform",
+      "104729",
+      "7",
+      "8"
+    ],
+    [
+      "65536",
+      "uniform",
+      "130363",
+      "7",
+      "8"
+    ],
+    [
+      "128",
+      "uniform",
+      "104729",
+      "7",
+      "8"
+    ],
+    [
+      "128",
+      "uniform",
+      "130363",
+      "7",
+      "8"
+    ],
+    [
+      "65536",
+      "eight",
+      "104729",
+      "7",
+      "8"
+    ],
+    [
+      "65536",
+      "eight",
+      "130363",
+      "7",
+      "8"
+    ]
+  ],
+  "large_cache_state": "CLFLUSH on input and output lines, followed by MFENCE before timing",
+  "small_cache_state": "no explicit flush; buffers resident after generation and verification",
+  "timing": "batch call only; per-group stack work and all encoding/materialization included",
+  "external_compute_spend": 0,
+  "tokens": "not captured",
+  "subscription_cost": "not captured",
+  "model": "GPT-6 (Codex), exact deployment variant and reasoning settings unavailable"
+}

@@ -1,0 +1,253 @@
+{
+  "verified_calls": 240,
+  "warmup_calls": 30,
+  "measured_calls": 210,
+  "cells": [
+    {
+      "groups": 65536,
+      "distribution": "uniform",
+      "seed": 104729,
+      "best_reference": "avx2_network16",
+      "reference_ns_per_group": 36.6180419921875,
+      "candidate_ns_per_group": 225.2777099609375,
+      "speedup": 0.16254622793589726,
+      "candidate_time_ratio": 6.152096008000667,
+      "passes_77_percent_gate": false,
+      "paired_wins": 0,
+      "all_median_ns_per_group": {
+        "avx2_network16": 36.6180419921875,
+        "bitplane_membership": 225.2777099609375,
+        "stable_counting256": 119.58770751953125,
+        "vqsort32": 52.54974365234375,
+        "x86_simd_sort32": 48.39630126953125
+      },
+      "all_sample_ranges_ns_per_group": {
+        "avx2_network16": [
+          35.23101806640625,
+          38.51776123046875
+        ],
+        "bitplane_membership": [
+          222.625732421875,
+          227.67791748046875
+        ],
+        "stable_counting256": [
+          118.72406005859375,
+          140.58074951171875
+        ],
+        "vqsort32": [
+          51.3519287109375,
+          53.631591796875
+        ],
+        "x86_simd_sort32": [
+          47.56622314453125,
+          56.32476806640625
+        ]
+      }
+    },
+    {
+      "groups": 65536,
+      "distribution": "uniform",
+      "seed": 130363,
+      "best_reference": "avx2_network16",
+      "reference_ns_per_group": 39.44244384765625,
+      "candidate_ns_per_group": 225.1434326171875,
+      "speedup": 0.17518807184005422,
+      "candidate_time_ratio": 5.708151185732524,
+      "passes_77_percent_gate": false,
+      "paired_wins": 0,
+      "all_median_ns_per_group": {
+        "avx2_network16": 39.44244384765625,
+        "bitplane_membership": 225.1434326171875,
+        "stable_counting256": 133.75396728515625,
+        "vqsort32": 52.47802734375,
+        "x86_simd_sort32": 52.5421142578125
+      },
+      "all_sample_ranges_ns_per_group": {
+        "avx2_network16": [
+          36.8621826171875,
+          45.84808349609375
+        ],
+        "bitplane_membership": [
+          224.01885986328125,
+          232.012939453125
+        ],
+        "stable_counting256": [
+          128.95660400390625,
+          147.85614013671875
+        ],
+        "vqsort32": [
+          51.82647705078125,
+          54.12750244140625
+        ],
+        "x86_simd_sort32": [
+          48.01788330078125,
+          58.57391357421875
+        ]
+      }
+    },
+    {
+      "groups": 128,
+      "distribution": "uniform",
+      "seed": 104729,
+      "best_reference": "avx2_network16",
+      "reference_ns_per_group": 47.65625,
+      "candidate_ns_per_group": 169.53125,
+      "speedup": 0.28110599078341014,
+      "candidate_time_ratio": 3.557377049180328,
+      "passes_77_percent_gate": false,
+      "paired_wins": 0,
+      "all_median_ns_per_group": {
+        "avx2_network16": 47.65625,
+        "bitplane_membership": 169.53125,
+        "stable_counting256": 198.4375,
+        "vqsort32": 70.3125,
+        "x86_simd_sort32": 67.1875
+      },
+      "all_sample_ranges_ns_per_group": {
+        "avx2_network16": [
+          46.875,
+          49.21875
+        ],
+        "bitplane_membership": [
+          155.46875,
+          232.8125
+        ],
+        "stable_counting256": [
+          188.28125,
+          203.125
+        ],
+        "vqsort32": [
+          67.96875,
+          71.09375
+        ],
+        "x86_simd_sort32": [
+          64.84375,
+          68.75
+        ]
+      }
+    },
+    {
+      "groups": 128,
+      "distribution": "uniform",
+      "seed": 130363,
+      "best_reference": "avx2_network16",
+      "reference_ns_per_group": 54.6875,
+      "candidate_ns_per_group": 132.8125,
+      "speedup": 0.4117647058823529,
+      "candidate_time_ratio": 2.4285714285714284,
+      "passes_77_percent_gate": false,
+      "paired_wins": 0,
+      "all_median_ns_per_group": {
+        "avx2_network16": 54.6875,
+        "bitplane_membership": 132.8125,
+        "stable_counting256": 169.53125,
+        "vqsort32": 68.75,
+        "x86_simd_sort32": 67.1875
+      },
+      "all_sample_ranges_ns_per_group": {
+        "avx2_network16": [
+          52.34375,
+          57.8125
+        ],
+        "bitplane_membership": [
+          128.125,
+          203.90625
+        ],
+        "stable_counting256": [
+          162.5,
+          172.65625
+        ],
+        "vqsort32": [
+          67.1875,
+          210.15625
+        ],
+        "x86_simd_sort32": [
+          65.625,
+          68.75
+        ]
+      }
+    },
+    {
+      "groups": 65536,
+      "distribution": "eight",
+      "seed": 104729,
+      "best_reference": "avx2_network16",
+      "reference_ns_per_group": 36.19842529296875,
+      "candidate_ns_per_group": 78.314208984375,
+      "speedup": 0.4622204037097654,
+      "candidate_time_ratio": 2.1634700501622897,
+      "passes_77_percent_gate": false,
+      "paired_wins": 0,
+      "all_median_ns_per_group": {
+        "avx2_network16": 36.19842529296875,
+        "bitplane_membership": 78.314208984375,
+        "stable_counting256": 131.95343017578125,
+        "vqsort32": 51.904296875,
+        "x86_simd_sort32": 48.565673828125
+      },
+      "all_sample_ranges_ns_per_group": {
+        "avx2_network16": [
+          35.79864501953125,
+          39.39361572265625
+        ],
+        "bitplane_membership": [
+          77.00653076171875,
+          84.07135009765625
+        ],
+        "stable_counting256": [
+          130.49468994140625,
+          144.63348388671875
+        ],
+        "vqsort32": [
+          51.49383544921875,
+          53.95660400390625
+        ],
+        "x86_simd_sort32": [
+          47.430419921875,
+          52.16522216796875
+        ]
+      }
+    },
+    {
+      "groups": 65536,
+      "distribution": "eight",
+      "seed": 130363,
+      "best_reference": "avx2_network16",
+      "reference_ns_per_group": 35.85968017578125,
+      "candidate_ns_per_group": 77.36663818359375,
+      "speedup": 0.46350314577046725,
+      "candidate_time_ratio": 2.157482660312327,
+      "passes_77_percent_gate": false,
+      "paired_wins": 0,
+      "all_median_ns_per_group": {
+        "avx2_network16": 35.85968017578125,
+        "bitplane_membership": 77.36663818359375,
+        "stable_counting256": 149.48577880859375,
+        "vqsort32": 52.056884765625,
+        "x86_simd_sort32": 47.5250244140625
+      },
+      "all_sample_ranges_ns_per_group": {
+        "avx2_network16": [
+          35.15777587890625,
+          38.9190673828125
+        ],
+        "bitplane_membership": [
+          76.79901123046875,
+          80.9417724609375
+        ],
+        "stable_counting256": [
+          149.0631103515625,
+          150.8056640625
+        ],
+        "vqsort32": [
+          51.24359130859375,
+          55.633544921875
+        ],
+        "x86_simd_sort32": [
+          47.2930908203125,
+          49.72991943359375
+        ]
+      }
+    }
+  ]
+}

@@ -151,6 +151,40 @@ Preregistered batch test: [OP-003](../runs/2026-11-14-four-row-ranks/README.md).
 
 **Result.** On 256 MiB of uniformly permuted 128-byte rows, the fastest cached helper achieved 0.564× and 0.629× of the best equal-affinity split gather. The helper beat one writer by 1.16–1.46× on the same runs. Two dedicated writers retained the lead with cached stores and on two physical cores. This closes bounded helper lookahead for this materialization workload. [Results](../runs/2026-11-15-smt-gather-helper/README.md)
 
+## 7. Bitplane membership sorting for short stable batches
+
+_Author: agent:gpt-6 (Codex), 2026-11-22._
+
+Transpose 32 ordinary uint8 keys into eight 32-bit membership planes with AVX2
+movemask. Traverse prefixes by intersecting scalar masks, emitting equal-key
+source slots in increasing position. Only the final output moves payloads.
+This could remove intermediate shuffle/compare-exchange work for short stable
+record sorts. Scalar traversal and branch entropy may erase that benefit.
+
+Closest known work: [bit-sliced index arithmetic and top-k selection (2001)](https://www.cs.umb.edu/~poneil/SIGBSTMH.pdf),
+[SIMD bitwise MSB radix sorting (2021)](https://www.ti.uni-bielefeld.de/downloads/publications/simdRadixSort.pdf),
+and [AVX2 networks (2021)](https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.SEA.2021.3).
+The unconfirmed implementation-level difference is keeping the entire local
+permutation in original-position masks after one vector bit transpose instead
+of partitioning keys or payloads at each radix level. Bitmap refinement itself
+is established prior art; no algorithmic novelty is claimed by this screen.
+This changes the mechanism from the failed numeric-rank inversion experiment.
+
+Cheap kill test: stable batches of 32 byte keys with uint32 payloads, ordinary
+input and output, all conversions included. Beat a direct batched AVX2 tag
+network, pinned SIMD libraries and stable counting sort at 77% of best time on
+both registered uniform-key seeds before trying held-out inputs.
+[Protocol](../runs/2026-11-22-bitplane-sort/protocol.md).
+
+**Result (2026-11-22, author: agent:gpt-6).** Closed the scalar prefix traversal
+after the first registered screen. Uniform byte-key batches took about 225
+ns/group versus 36.6-39.4 for the direct AVX2 16-bit tag network: 0.163-0.175x.
+The eight-key controls reached only 0.462-0.464x. All 240 timed calls verified.
+The strongest reference also moves payloads only at the end, so avoiding
+intermediate payload movement alone does not create an advantage here.
+No novelty or held-out performance claim is established.
+[Measured result and raw samples](../runs/2026-11-22-bitplane-sort/README.md).
+
 ## Rejected or out of scope
 
 - Dispatching between known sorters by detected distribution (the prior E054 approach). This is a combination of known techniques, not a finding under the current goal, though it may still be useful inside a library.
