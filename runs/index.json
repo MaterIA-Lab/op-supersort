@@ -431,6 +431,33 @@
       "how_es": "Se elige dónde empieza cada lote nuevo para reutilizar ambos extremos por páginas de memoria. Se copia la zona de solapamiento y se exponen los dos lotes y la salida fusionada para lectura.",
       "compared_with_es": "La escritura directa más rápida que generaba las mismas tres salidas con un hilo, incluida la primera lectura de la salida fusionada.",
       "faster_where_es": "Con un 2 % de solapamiento y tamaños de 128 y 256 MiB, ajustar la posición de los lotes permitió reutilizar cerca del 98 % de los bytes. Las dos variantes ganaron en los ocho casos nuevos, con una aceleración de 1,231× a 1,280×. Los ocho casos quedaron por debajo del objetivo de 1,30×."
+    },
+    {
+      "id": "2026-11-22-bitplane-sort",
+      "path": "runs/2026-11-22-bitplane-sort/",
+      "title": "Stable sorting through bitplane membership masks",
+      "date": "2026-11-22 22:09",
+      "verdict": "failed",
+      "summary": "Keeping the sort in bit masks took 5.71-6.15 times the direct AVX2 network's time on random byte keys. All 240 timed calls were correct, but neither primary seed approached the speed target.",
+      "model": "GPT-6 (Codex; exact deployment variant and reasoning settings unavailable)",
+      "cost": "not captured",
+      "idea": "7. Bitplane membership sorting for short stable batches",
+      "result": "0.163-0.175x across two primary seeds",
+      "baseline": "direct batched AVX2 network on 16-bit key and source-position tags",
+      "speedup": [
+        0.163,
+        0.175
+      ],
+      "closes": [
+        "scalar prefix traversal of 32-row bitplane membership masks"
+      ],
+      "how": "Turn each bit position of 32 keys into a mask of original row positions. Refine those masks into key order and copy each row to the output once, keeping equal keys in their original order.",
+      "compared_with": "A direct AVX2 sorting network, pinned Highway and x86-simd-sort libraries, and stable counting sort. Every method includes conversion and output writes, uses one thread and receives ordinary byte keys with four-byte payloads.",
+      "faster_where": "On the registered random-key batches the candidate took about 225 ns per group and the best reference 37-39 ns. With eight possible keys it still took 77-78 ns versus 36 ns. No registered case beat the direct network.",
+      "title_es": "Ordenacion estable mediante mascaras de bits",
+      "how_es": "Se representa cada bit de 32 claves con una mascara de posiciones originales. Se refinan las mascaras hasta obtener el orden y se copia cada registro una sola vez, conservando el orden entre claves iguales.",
+      "compared_with_es": "Una red AVX2 directa, las bibliotecas Highway y x86-simd-sort y una ordenacion estable por conteo. Todos incluyen conversion y escritura de la salida, usan un hilo y reciben claves de un byte con datos asociados de cuatro bytes.",
+      "faster_where_es": "En los lotes aleatorios registrados el candidato tardo unos 225 ns por grupo frente a 37-39 ns de la mejor referencia. Con ocho claves posibles siguio tardando 77-78 ns frente a 36 ns. Ningun caso supero a la red directa."
     }
   ]
 }
