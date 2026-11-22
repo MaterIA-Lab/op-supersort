@@ -185,6 +185,52 @@ intermediate payload movement alone does not create an advantage here.
 No novelty or held-out performance claim is established.
 [Measured result and raw samples](../runs/2026-11-22-bitplane-sort/README.md).
 
+## 8. Sparse saved-row cuts for interleaved in-place permutation
+
+_Author: agent:gpt-6 (Codex), 2026-11-22._
+
+After sorting `(key, source_index)` tags, apply the resulting gather permutation
+inside the original record array. Save the original records at up to 64
+regularly spaced positions. Each saved position starts a walker; a walker stops
+when its next source is any saved position, using the saved original row to
+close that segment. Interleave the independent segments on one hardware thread,
+issuing their record prefetches before their copies. Mark processed destinations
+in the private index tags. Finish cycles containing no saved position with the
+ordinary cycle leader. No preliminary traversal is needed to discover segments.
+
+The proposed gain has two parts: expose independent memory requests even within
+one long permutation cycle, and avoid the full-size gather destination plus
+copy-back pass. Fixed row checkpoints cost at most 64 record copies and a cheap
+index-mask test. The risks are serial uncovered cycles, a long last segment,
+random tag traffic, writeback traffic and scheduling overhead.
+
+Closest work: [Fich, Munro and Poblete, Permuting in Place (1995)](https://doi.org/10.1137/S0097539792238649)
+establish cycle-leader permutation; [Gustavson, Karlsson and Kagstrom (2010)](https://webapps.cs.umu.se/uminf/reports/2010/005/part1.pdf)
+identify poor locality in cycle walks and schedule known matrix-transposition
+cycles; [IPS4o](https://arxiv.org/abs/2009.13569) moves blocks in place; and
+[Boost block_indirect_sort](https://www.boost.org/doc/libs/latest/libs/sort/doc/html/sort/parallel.html)
+uses indirect blocks. Cycle walking, prefetching and multiple independent loads
+are established techniques. The hypothesis to audit is the use of sparse saved
+rows to split an arbitrary record permutation into safe independent streams
+without a cycle-discovery or inverse-permutation pass. Novelty is unconfirmed.
+
+This is different from the closed source-regrouping experiments: it preserves
+the caller's output address, never regroups descriptors into destination tiles,
+and never allocates a full second payload array inside the candidate.
+[Preregistered kill test](../runs/2026-11-22-checkpoint-cycles/protocol.md).
+
+**Result (2026-11-22, author: agent:gpt-6).** Closed the fixed 64-checkpoint
+version under the registered reusable-workspace contract. The full sort took
+52.286-53.004 ms versus 48.150-48.696 for the strongest measured reference,
+vqsort plus prefetched streaming gather and streaming copy-back: 0.908-0.931x.
+It beat ordinary cycle rotation by 2.38-2.47x but not the project's gate. All
+216 calls passed exact row verification; 46,410 supplied permutations and
+66 additional full-sort checks also passed. The candidate only requires tags
+and small saved-row state; the harness nevertheless supplied full payload
+scratch to every method, so no peak-memory improvement was measured. Do not
+relabel the current data with a memory cap or call the slower baseline a win
+against the fastest reference. [Results](../runs/2026-11-22-checkpoint-cycles/README.md).
+
 ## Rejected or out of scope
 
 - Dispatching between known sorters by detected distribution (the prior E054 approach). This is a combination of known techniques, not a finding under the current goal, though it may still be useful inside a library.

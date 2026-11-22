@@ -1,0 +1,1 @@
+Verified 46410 supplied permutations with all four movers; 66 complete sorts also passed

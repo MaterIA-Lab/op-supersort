@@ -16,6 +16,7 @@ Find a genuinely new, architecture-aware mechanism that sorts a practically rele
 
 | Line | Status | Evidence | Next step |
 |---|---|---|---|
+| Saved-row cycle cuts (idea 8) | Fixed 64-checkpoint version closed under reusable full-workspace contract | 0.908-0.931x primary end-to-end. 52.286-53.004 ms versus 48.150-48.696 for vqsort + prefetched NT gather + NT copy-back. Beats scalar cycles by 2.38-2.47x but fails best-reference gate. | Do not tune checkpoint count or relabel these inputs with a new memory limit. Preserve streaming gather/copy-back as control. [Run](../runs/2026-11-22-checkpoint-cycles/README.md) |
 | Bitplane membership sort (idea 7) | Tested scalar prefix traversal closed | 0.163-0.175x on two uniform-byte primary seeds; 0.462-0.464x with eight keys. Direct AVX2 network won every paired trial. | Do not tune this traversal. A different representation must beat tag sorting plus one payload materialization. [Screen](../runs/2026-11-22-bitplane-sort/README.md) |
 | Page-remapped merge of sorted runs (idea 1) | Promising with prepared inputs on Linux. Tested fresh producer paths closed. | Prepared synthetic edge overlaps reached 1.326–1.356× vs fresh output and 0.364–0.738× vs pre-touched output. Disjoint GH Archive pairs reached 1.431–7.252× vs fresh output. At about 98% reuse, the three-output producer reached 0.412–0.543× on Windows and 1.231–1.280× on Linux. | Look for a real pipeline that already produces batches in shareable storage. [Linux producer benchmark](../runs/2026-11-16-linux-producer-placement/README.md) |
 | Payload permutation for records (idea 3) | Source regrouping closed in tested forms | Earlier tile-and-sort probe 0.542–0.648×. Counting-based source grouping and 16-byte rows on Windows achieved about 0.814× on both seeds. | A different mechanism must beat gather with software prefetch, IPS⁴o on rows and the record-oriented SIMD merge of Inoue and Taura. |
@@ -26,6 +27,7 @@ Find a genuinely new, architecture-aware mechanism that sorts a practically rele
 
 ## Do not retry
 
+- **64 saved-row cuts plus interleaved scalar walkers under the registered scratch contract.** Ordinary cycles became 2.38-2.47x faster end to end, but total remained 7.4-10.1% slower than streaming gather/copy-back on both 128 MiB uniform32 seeds. 216 calls verified; no holdout claim. Lower auxiliary payload storage is an inferred property, not a measured process-memory win or permission to change the primary class. [Run](../runs/2026-11-22-checkpoint-cycles/README.md)
 - **Scalar traversal of prefix membership masks for 32-row stable sorts.** Ordinary uint8 keys plus uint32 payloads: 225.1-225.3 ns/group versus 36.6-39.4 for a direct AVX2 16-bit tag network. All 240 calls verified, zero of two primary cells passed. This changes the mechanism from numeric-rank inversion but still loses substantially. [Run](../runs/2026-11-22-bitplane-sort/README.md)
 - **Tile-and-sort payload permutation** (destination tiles of 256 KiB, descriptors sorted by source with vqsort). Materialization took 1.67–2.14× as long as a plain vqsort gather. [Run](../runs/2026-11-12-blocked-permutation/README.md)
 - **Counting-based source grouping inside each destination window.** A plan with 4,096-row source bands and 65,536-slot windows took 118.93–123.54 ms to materialize the 128 MiB primary output, compared with 71.66–72.39 ms for the best indirect reference. [Run](../runs/2026-11-14-record-permutation/README.md)
@@ -42,6 +44,7 @@ Find a genuinely new, architecture-aware mechanism that sorts a practically rele
 
 ## Controls and references to beat
 
+- **In-place 128-byte records with workspace available.** vqsort uint64 key/index tags, gather both row cache lines with 32-row prefetch and AVX2 NT stores, fence, then sequential AVX2 NT copy-back and fence. It beat cached gather/memcpy, x86-simd-sort tags with the same movement, direct pdqsort and the 64-checkpoint design on both large uniform32 cells. IPS4o remains unmeasured. [Medians and code](../runs/2026-11-22-checkpoint-cycles/README.md)
 - **Stable 32-row byte-key groups.** Batch a direct AVX2 bitonic network over uint16 `(key << 5) | slot` tags, then materialize keys and uint32 payloads once. It beat pinned libraries using uint32 tags and full-domain stable counting in all six cells. It already avoids intermediate payload movement. [Source and medians](../runs/2026-11-22-bitplane-sort/README.md)
 - **Records, out of place.** Argsort with vqsort or x86-simd-sort on packed `(key, index)` words, then gather with software prefetch 32 rows ahead (both cache lines for 128-byte rows). It won all 48 paired repetitions of the blocked probe. The paired median speedup over the fastest reference without prefetch was 1.051–1.235×. IPS⁴o and a record-oriented SIMD merge are still unmeasured. [Reference timings](../runs/2026-11-12-blocked-permutation/summary.md)
 - **Merging two sorted runs:** fastest of a scalar two-finger merge, a galloping bulk merge and a hybrid that bulk-copies the non-overlapping prefix and suffix. Also report the hybrid writing into a pre-touched destination, which is a different memory contract.
@@ -54,6 +57,7 @@ Find a genuinely new, architecture-aware mechanism that sorts a practically rele
 
 ## Contracts used so far
 
+- **Saved-row cycle screen:** stable in-place 128-byte rows, mutable caller array, N uint64 tags and N payload rows supplied as reusable workspace to all methods. Allocation excluded equally; complete tag extraction/sort/permutation/copy-back timed. Primary N=1,048,576 uniform32, seeds 48071/65827; eight-key large controls and N=8,192 resident controls. Fixed 64 checkpoint budget, arbitrary lengths supported. CPU 8, CLFLUSH/MFENCE on work and both scratch arrays for large cells. Five measured rounds after warm-up.
 - **32-row bitplane screen:** immutable SoA uint8 keys and uint32 payloads, separate reusable ordinary output, 65,536-group primary and eight-key controls, 128-group resident control. CPU 8; explicit CLFLUSH/MFENCE on input and output for large cells; seven measured rounds after warm-up, exact stable-output verification. Seeds 104729/130363 are development inputs for this candidate, not holdouts.
 - **Records:** 64- or 128-byte rows aligned to 64 bytes, `uint32_t` key, unique origin ID, immutable input, fresh contiguous output, 1,048,576 and 4,194,304 records, uniform32 and low12 keys, SplitMix64 seeds.
 - **Merge:** two ascending runs of 128-byte records with unique `uint64_t` timestamps, inputs in page-aligned read-only `memfd` views, read-only contiguous output. Timing ends after a first sequential scan of one word per cache line; teardown is reported separately.
@@ -79,7 +83,7 @@ The [run index and analysis commands](../runs/README.md#check-the-published-meas
 ## Run ledger
 
 <!-- RUNS:START -->
-18 runs: 2 promising, 8 failed, 6 diagnostic, 2 setup.
+19 runs: 2 promising, 9 failed, 6 diagnostic, 2 setup.
 
 | Run | Date | Verdict | Idea | Result | Baseline | Closes | Opens | Model |
 |---|---|---|---|---|---|---|---|---|
@@ -101,6 +105,7 @@ The [run index and analysis commands](../runs/README.md#check-the-published-meas
 | [2026-11-16-producer-page-placement](../runs/2026-11-16-producer-page-placement/) | 2026-11-16 13:34 | failed | 1. Virtual memory as a data-movement engine | 0.412–0.543× against the fastest direct method | Fastest of split bulk merge and fused cached or streaming writers | producer-side page placement with this Windows mapping path | — | Codex (exact model and reasoning settings not captured) |
 | [2026-11-16-linux-producer-placement](../runs/2026-11-16-linux-producer-placement/) | 2026-11-16 15:15 | failed | 1. Virtual memory as a data-movement engine | 1.231–1.280× on the eight holdout cases, with 0/8 meeting the 77% time limit | Fastest of split bulk merge and fused cached or streaming writes | fresh producer placement using the tested Linux mappings | — | Codex (exact model and reasoning settings not captured) |
 | [2026-11-22-bitplane-sort](../runs/2026-11-22-bitplane-sort/) | 2026-11-22 22:09 | failed | 7. Bitplane membership sorting for short stable batches | 0.163-0.175x across two primary seeds | direct batched AVX2 network on 16-bit key and source-position tags | scalar prefix traversal of 32-row bitplane membership masks | — | GPT-6 (Codex; exact deployment variant and reasoning settings unavailable) |
+| [2026-11-22-checkpoint-cycles](../runs/2026-11-22-checkpoint-cycles/) | 2026-11-22 22:26 | failed | 8. Sparse saved-row cuts for interleaved in-place permutation | 0.908-0.931x across two primary seeds | vqsort tags plus prefetched non-temporal gather and streaming copy-back | 64 saved-row cycle cuts under the registered reusable-workspace contract | — | GPT-6 (Codex; exact deployment variant and reasoning settings unavailable) |
 
 Summaries, oldest first:
 
@@ -122,4 +127,5 @@ Summaries, oldest first:
 - **2026-11-16-producer-page-placement** (failed): With 2% overlap, independent placement doubled reusable coverage from 49% to about 98%. The Windows implementation took 1.84–2.43 times as long as the best direct reference when producing both batches and the merged result.
 - **2026-11-16-linux-producer-placement** (failed): Adjusted page placement was 1.231–1.280× as fast as the best direct writer across eight fresh edge-overlap cases on two Linux runners. Every case missed the 1.30× target, and building the two batches took 80–84% of the remapping time.
 - **2026-11-22-bitplane-sort** (failed): Keeping the sort in bit masks took 5.71-6.15 times the direct AVX2 network's time on random byte keys. All 240 timed calls were correct, but neither primary seed approached the speed target.
+- **2026-11-22-checkpoint-cycles** (failed): Interleaved paths reduced the full sort from 126-129 ms with ordinary cycles to 52-53 ms, but streaming gather plus copy-back still won at 48-49 ms. Both primary inputs missed the speed target.
 <!-- RUNS:END -->
