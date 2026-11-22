@@ -458,6 +458,33 @@
       "how_es": "Se representa cada bit de 32 claves con una mascara de posiciones originales. Se refinan las mascaras hasta obtener el orden y se copia cada registro una sola vez, conservando el orden entre claves iguales.",
       "compared_with_es": "Una red AVX2 directa, las bibliotecas Highway y x86-simd-sort y una ordenacion estable por conteo. Todos incluyen conversion y escritura de la salida, usan un hilo y reciben claves de un byte con datos asociados de cuatro bytes.",
       "faster_where_es": "En los lotes aleatorios registrados el candidato tardo unos 225 ns por grupo frente a 37-39 ns de la mejor referencia. Con ocho claves posibles siguio tardando 77-78 ns frente a 36 ns. Ningun caso supero a la red directa."
+    },
+    {
+      "id": "2026-11-22-checkpoint-cycles",
+      "path": "runs/2026-11-22-checkpoint-cycles/",
+      "title": "Sparse saved-row cuts for in-place record permutation",
+      "date": "2026-11-22 22:26",
+      "verdict": "failed",
+      "summary": "Interleaved paths reduced the full sort from 126-129 ms with ordinary cycles to 52-53 ms, but streaming gather plus copy-back still won at 48-49 ms. Both primary inputs missed the speed target.",
+      "model": "GPT-6 (Codex; exact deployment variant and reasoning settings unavailable)",
+      "cost": "not captured",
+      "idea": "8. Sparse saved-row cuts for interleaved in-place permutation",
+      "result": "0.908-0.931x across two primary seeds",
+      "baseline": "vqsort tags plus prefetched non-temporal gather and streaming copy-back",
+      "speedup": [
+        0.908,
+        0.931
+      ],
+      "closes": [
+        "64 saved-row cycle cuts under the registered reusable-workspace contract"
+      ],
+      "how": "Save a few original rows so long chains of record moves can be split into independent paths. Interleave the paths on one thread, reading ahead in memory, and finish the untouched cycles afterward.",
+      "compared_with": "Compact SIMD key sorting followed by ordinary cycles or gather-and-copy-back, plus direct pdqsort on records. Every method returns the result at the original address and may use the same reusable workspace.",
+      "faster_where": "For 128 MiB of 128-byte records with random keys, the candidate took 52.3-53.0 ms versus 48.1-48.7 ms for the best reference, a 7-10% regression. It was 2.38-2.47x faster than ordinary cycles. Neither primary seed passed the gate.",
+      "title_es": "Cortes con registros guardados para permutar datos en su mismo espacio",
+      "how_es": "Se guardan unos pocos registros originales para dividir cadenas largas de movimientos en tramos independientes. Se intercalan esos tramos con un hilo, adelantando lecturas de memoria, y se terminan aparte los ciclos restantes.",
+      "compared_with_es": "Ordenacion SIMD de claves compactas seguida de ciclos o de copia a un buffer y vuelta, ademas de pdqsort directo sobre registros. Todos devuelven la salida en la direccion original y pueden usar el mismo espacio auxiliar reutilizable.",
+      "faster_where_es": "Con 128 MiB de registros de 128 bytes y claves aleatorias, el candidato tardo 52,3-53,0 ms frente a 48,1-48,7 ms de la mejor referencia, un 7-10 % mas. Supero los ciclos ordinarios por 2,38-2,47x. Ninguna semilla principal paso el criterio."
     }
   ]
 }

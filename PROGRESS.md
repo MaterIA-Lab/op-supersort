@@ -6,10 +6,11 @@ _Last updated: 2026-11-22._
 
 ## Where we are
 
-No relevant finding has been confirmed. A new short-batch method that keeps row
-positions in bit masks failed its first screen: it took 5.71-6.15 times the
-direct SIMD network's time on random byte keys. All outputs were correct.
-[Bit-mask sorting screen](runs/2026-11-22-bitplane-sort/README.md)
+No relevant finding has been confirmed. Saving a few original rows allowed
+interleaved in-place moves to cut a 128 MiB sort from 126-129 ms with ordinary
+cycles to 52-53 ms. A stronger reference using streaming writes and a copy back
+still took 48-49 ms, so the new version failed its speed target.
+[In-place permutation screen](runs/2026-11-22-checkpoint-cycles/README.md)
 
 Page remapping on Linux remains promising when sorted batches already have shareable pages. In a fuller test on two Linux machines, producing both batches and their merged view by adjusting page placement sped up the operation by 1.23–1.28× at 128 and 256 MiB with 2% overlap. The eight fresh cases fell below the 1.30× research target. [Research goal](GOAL.md) · [Linux producer benchmark](runs/2026-11-16-linux-producer-placement/README.md)
 
@@ -27,6 +28,7 @@ The caveats matter:
 
 ## What does not work
 
+- **Splitting permutation cycles with 64 saved rows.** The full 128 MiB sort took 7-10% longer than the fastest reference, which sorted compact keys, gathered records with streaming writes and copied them back. Interleaving beat ordinary cycles by 2.38-2.47x but did not pass the registered gate. The candidate needs much less payload scratch; this run allowed a full reusable buffer for every method. [Measured screen](runs/2026-11-22-checkpoint-cycles/README.md)
 - **Sorting 32-row groups by refining bit masks.** Building key-bit masks and traversing their prefixes took about 225 ns per group, compared with 37-39 ns for a direct AVX2 network. Even with eight possible keys it took more than twice the network's time. The network also postpones moving associated data until the final output. [Measured screen](runs/2026-11-22-bitplane-sort/README.md)
 - **Producing both batches with new Linux mappings.** The shifted layout reused about 98% of the fused output. Building the two batches took 80–84% of the total time. Setting up pages early saved time in the first read, with at most a 2.2 ms reduction in the total. Every fresh case missed the speed target. [Linux producer benchmark](runs/2026-11-16-linux-producer-placement/README.md)
 - **Shifting each input's starting position in a Windows producer.** With 2% overlap, choosing offsets doubled the fraction of bytes eligible for reuse. Producing both batches and the merged view still took 1.84–2.43 times as long as copying directly, including the first read. [Producer benchmark](runs/2026-11-16-producer-page-placement/README.md)
@@ -41,6 +43,7 @@ The caveats matter:
 
 ## What comes next
 
+- For in-place record sorting, retain streaming gather plus copy-back as a control. A design that moves fewer bytes must also demonstrate lower total time; compare any future positive candidate with IPS4o and a record-oriented SIMD merge. [Latest screen](runs/2026-11-22-checkpoint-cycles/README.md)
 - For page remapping, look for an actual workflow that already writes its sorted batches into shareable pages. The airport traces provide realistic overlapping layouts to screen for such a workflow. [Flight coverage diagnostic](runs/2026-11-16-flight-overlap/README.md)
 - Test other mechanisms that can remove a full memory pass or move a working set into cache. The tested bit-mask traversal is closed; a new small-batch design needs a cheaper way to produce the permutation than scalar traversal and must beat a direct SIMD tag network. [Idea backlog](notes/ideas.md)
 
@@ -49,10 +52,11 @@ The caveats matter:
 Generated from the run logs by `scripts/build_progress.py`. Newest first.
 
 <!-- RUNS:START -->
-18 runs: 2 promising, 8 failed, 6 diagnostic, 2 setup.
+19 runs: 2 promising, 9 failed, 6 diagnostic, 2 setup.
 
 | Date | Run | Verdict | Result | What we learned |
 |---|---|---|---|---|
+| 2026-11-22 22:26 | [Sparse saved-row cuts for in-place record permutation](runs/2026-11-22-checkpoint-cycles/) | ❌ failed | 0.908-0.931x across two primary seeds | Interleaved paths reduced the full sort from 126-129 ms with ordinary cycles to 52-53 ms, but streaming gather plus copy-back still won at 48-49 ms. Both primary inputs missed the speed target. |
 | 2026-11-22 22:09 | [Stable sorting through bitplane membership masks](runs/2026-11-22-bitplane-sort/) | ❌ failed | 0.163-0.175x across two primary seeds | Keeping the sort in bit masks took 5.71-6.15 times the direct AVX2 network's time on random byte keys. All 240 timed calls were correct, but neither primary seed approached the speed target. |
 | 2026-11-16 15:15 | [Producing two batches and their merged view on Linux](runs/2026-11-16-linux-producer-placement/) | ❌ failed | 1.231–1.280× on the eight holdout cases, with 0/8 meeting the 77% time limit | Adjusted page placement was 1.231–1.280× as fast as the best direct writer across eight fresh edge-overlap cases on two Linux runners. Every case missed the 1.30× target, and building the two batches took 80–84% of the remapping time. |
 | 2026-11-16 13:34 | [Placing both batches for page reuse during a stable merge](runs/2026-11-16-producer-page-placement/) | ❌ failed | 0.412–0.543× against the fastest direct method | With 2% overlap, independent placement doubled reusable coverage from 49% to about 98%. The Windows implementation took 1.84–2.43 times as long as the best direct reference when producing both batches and the merged result. |

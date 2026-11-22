@@ -1,0 +1,82 @@
+{
+  "started_utc": "2026-11-22T22:26:15.161884+00:00",
+  "finished_utc": "2026-11-22T22:26:33.576784+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "AMD64 Family 25 Model 33 Stepping 0, AuthenticAMD",
+  "compiler": "g++ (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r2) 16.1.0",
+  "flags": "-O3 -march=znver3 -mavx2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic",
+  "logical_cpu": 8,
+  "threads": 1,
+  "row_bytes": 128,
+  "checkpoint_budget": 64,
+  "references": {
+    "highway": {
+      "commit": "a3f6f68fcc368e5e3025ca25805eabda9d8a456f",
+      "working_tree_clean": true
+    },
+    "x86-simd-sort": {
+      "commit": "6e059b14975df2e3c74260ec905167a1be5a34ca",
+      "working_tree_clean": true
+    }
+  },
+  "pdqsort_header_sha256": "1916aff237fc7ecc638dec6397662334552a1b6f823fa65011a8dfe831237fc0",
+  "source_sha256": {
+    "prototypes/agents/checkpoint-cycles/bench.cpp": "3d468863fa0afceb7c108a01a50e6bad4beacddd326788f93698d64c5576acd2",
+    "prototypes/agents/checkpoint-cycles/permutation.hpp": "81717c7b96ed7e794b35c072bf4d318e3f9ed9cc50263159a54966b5ab3a412f",
+    "prototypes/agents/checkpoint-cycles/run.py": "6b6d8bafb3d54d6ec5a3b3df78132a9ad04f1226659cfe8a3e8feaafabdec14c",
+    "runs/2026-11-22-checkpoint-cycles/protocol.md": "1b2ce43a86f1218fffc2ba339539c3d733a97f64da77058b0dd34b98c56328fa"
+  },
+  "binary_sha256": "104f73f20e16d631bdd0c3a4d5d692956c45e8959497c47de9615f1ef014e775",
+  "binary_arguments": [
+    [
+      "1048576",
+      "uniform",
+      "48071",
+      "5",
+      "8"
+    ],
+    [
+      "1048576",
+      "uniform",
+      "65827",
+      "5",
+      "8"
+    ],
+    [
+      "8192",
+      "uniform",
+      "48071",
+      "5",
+      "8"
+    ],
+    [
+      "8192",
+      "uniform",
+      "65827",
+      "5",
+      "8"
+    ],
+    [
+      "1048576",
+      "eight",
+      "48071",
+      "5",
+      "8"
+    ],
+    [
+      "1048576",
+      "eight",
+      "65827",
+      "5",
+      "8"
+    ]
+  ],
+  "timing": "key/index extraction, sort and complete in-place materialization; all copy-back work included",
+  "workspace": "caller-owned reusable N uint64 tags and N rows, allocated and touched outside timing",
+  "large_cache_state": "CLFLUSH working rows, tags and payload scratch, then MFENCE before each call",
+  "small_cache_state": "no explicit flush; harness buffers resident",
+  "model": "GPT-6 (Codex); exact deployment variant and reasoning settings unavailable",
+  "tokens": "not captured",
+  "session_cost": "not captured",
+  "local_screen_external_compute_spend": 0
+}
