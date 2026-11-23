@@ -1,0 +1,102 @@
+{
+  "started_utc": "2026-11-23T01:11:21.877930+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "cpu_model": "AMD Ryzen 7 5800X 8-Core Processor",
+  "logical_cpu": 8,
+  "threads": 1,
+  "compiler": [
+    "rustc 1.96.0 (ac68faa20 2026-05-25)",
+    "binary: rustc",
+    "commit-hash: ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96",
+    "commit-date: 2026-05-25",
+    "host: x86_64-pc-windows-msvc",
+    "release: 1.96.0",
+    "LLVM version: 22.1.2"
+  ],
+  "flags": [
+    "--edition=2021",
+    "-C",
+    "opt-level=3",
+    "-C",
+    "target-cpu=znver3",
+    "-C",
+    "codegen-units=1"
+  ],
+  "row_bytes": 128,
+  "flights": {
+    "url": "https://raw.githubusercontent.com/openintrostat/openintro/b37b235dd702363d5ad87af68dff9533cc148160/data/nycflights.rda",
+    "blob": "7ae458bb4baa4b32523ac495f6e96431413cb323",
+    "bytes": 471845,
+    "sha256": "a986e1421d7270abfdc74fdadf1e276d87fbfd179f3390fc8a8b8f519d1437b0",
+    "rows": 32735,
+    "retained": 32735,
+    "excluded": 0,
+    "schedule_field_checks": 32735,
+    "schedule_field_matches": 1627,
+    "actual_field_matches": 32735
+  },
+  "replay_input_sha256": "897edda73c93d6457da063e32ec4653bcec7e67908fa76ed6d6fcad0f46c5807",
+  "replay_input_offset_minutes": 2880,
+  "delta_sort": {
+    "commit": "89322c7bfb8d5b28b179650d08249398cbe0a977",
+    "blob_sha1": "fcf9774fd5b3c6723f55aed0de873ee1c2b9c760"
+  },
+  "source_sha256": {
+    "prototypes/agents/flight-key-corrections/bench.rs": "63da36ceac76cb656bb4f9a77e2e3e50a4309e720b9b2620aee6b624b3048057",
+    "prototypes/agents/flight-key-corrections/run.py": "72ba490ec112a63e631a28ea3a2078082e16246edcb2332fd4a78dbda6fcc74b",
+    "runs/2026-11-16-flight-overlap/flight_sample.py": "99e784d9dd3f5f96b4a1a1eef26fe06fee6ba869ab0184ad557a243216fff424",
+    "prototypes/agents/key-correction-spans/sort.rs": "03f1939e05f8e317a50c78022a78c7d6bb2df06ab364287bc557e34d8fc2d246",
+    "prototypes/agents/key-correction-spans/bench.rs": "025a49835b3c2ec851c5ac335336cd0450ba0ae37b6615f6be8ab3e168f28711",
+    "runs/2026-11-23-flight-key-corrections/protocol.md": "9e5b0545fc1bf2a9826b82bca4ed44f262860a77efcdfc322ba34a8989bb6142"
+  },
+  "binary_sha256": "478630041725b6fa7a3d1c47505f7bb2df3d985e542a238251f445e049aa72e0",
+  "cache_state": {
+    "cold": "copy reset, CLFLUSH and MFENCE",
+    "resident": "copy reset only"
+  },
+  "timing": "complete apply-and-sort call including scratch allocation and deallocation",
+  "logical_writes": "unchanged rows written into the main array, excluding scratch and edited rows",
+  "model": "gpt-6.2-sol",
+  "reasoning_setting": "not captured",
+  "tokens": "not captured",
+  "session_cost": "not captured",
+  "external_compute_spend": 0,
+  "days": [
+    "2013-01-07",
+    "2013-01-08",
+    "2013-01-09",
+    "2013-01-10",
+    "2013-01-11",
+    "2013-01-12",
+    "2013-01-13",
+    "2013-04-01",
+    "2013-04-02",
+    "2013-04-03",
+    "2013-04-04",
+    "2013-04-05",
+    "2013-04-06",
+    "2013-04-07",
+    "2013-07-01",
+    "2013-07-02",
+    "2013-07-03",
+    "2013-07-04",
+    "2013-07-05",
+    "2013-07-06",
+    "2013-07-07",
+    "2013-10-07",
+    "2013-10-08",
+    "2013-10-09",
+    "2013-10-10",
+    "2013-10-11",
+    "2013-10-12",
+    "2013-10-13"
+  ],
+  "finished_utc": "2026-11-23T01:11:25.934080+00:00",
+  "csv_sha256": {
+    "jan.csv": "8d854f7599f7a0d4dddc3488ba460fb75e24b18c21d50d259b508f661f618cdf",
+    "apr.csv": "b3db13c5e928e710d5041a8840d677f09526b584924b48bfbaadcaf894605ecc",
+    "jul.csv": "378666f5f84deda316fa447b47575838d298f3c3d2e807380b3fbe5f5a989f3a",
+    "oct.csv": "fd2a6a94d3071dfb83544c9a062fb29a9b86f31ec37db1eb8b77c663655e56c9",
+    "geometry.csv": "3cafb5b44dfacfd01b6322dd22edf8455cbc1708dc6f7495f5ff7dcb7886882c"
+  }
+}

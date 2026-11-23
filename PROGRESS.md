@@ -9,10 +9,13 @@ _Last updated: 2026-11-23._
 Applying a batch of random key corrections to an already sorted array reached
 1.81–2.10× against the fastest measured reference on fresh synthetic inputs.
 All four held-out cases passed the 1.3× target and 1.5× reporting threshold at
-128 and 256 MiB. The result is promising. The tested class requires original
-positions and unapplied correction keys. Novelty and application data remain
-open. The owner received the result and the broad search is paused.
+128 and 256 MiB. The tested class requires original positions and unapplied
+correction keys. A replay using 32,735 flight schedules and actual departures
+placed most updates close to their original positions. The prototype took
+29-31% longer than the fastest reference in the median replay day. Novelty
+and validation with widespread corrections from an application remain open.
 [Key correction experiment](runs/2026-11-23-key-correction-spans/README.md)
+[Flight replay](runs/2026-11-23-flight-key-corrections/README.md)
 
 ## What works so far
 
@@ -37,6 +40,7 @@ The caveats matter:
 
 ## What does not work
 
+- **Direct span moves on the flight schedule replay.** With an approximately 4 MiB array and daily batches of 63-108 corrections, the prototype missed the 1.3× gate on all 28 days in both cache regimes. DeltaSort was the fastest reference in 50 of 56 comparisons. [Flight replay](runs/2026-11-23-flight-key-corrections/README.md)
 - **Direct span moves for local correction batches.** DeltaSort was faster on both controls where new keys were selected within 256 positions of their original location. The prototype took 1.89–2.40 ms versus 1.64–2.26 ms, paired by seed. [Control results](runs/2026-11-23-key-correction-spans/README.md#development-controls)
 - **Preparing new batches for page remapping in Linux.** Making two batches and a merged view by shifting page placement gave 1.23–1.28× at 128 and 256 MiB with 2% overlap. It fell below the 1.30× target on all eight fresh cases. [Linux producer benchmark](runs/2026-11-16-linux-producer-placement/README.md)
 - **Splitting permutation cycles with 64 saved rows.** The full 128 MiB sort took 7-10% longer than the fastest reference, which sorted compact keys, gathered records with streaming writes and copied them back. Interleaving beat ordinary cycles by 2.38-2.47x but did not pass the registered gate. The candidate needs much less payload scratch; this run allowed a full reusable buffer for every method. [Measured screen](runs/2026-11-22-checkpoint-cycles/README.md)
@@ -53,17 +57,18 @@ The caveats matter:
 
 ## What comes next
 
-- The broad search is paused pending the owner's decision. The strongest validation target for this line is a workflow that receives unapplied key corrections and sometimes moves records far from their old positions. [Workload and boundaries](runs/2026-11-23-key-correction-spans/README.md)
+- Test application data with unapplied corrections that relocate records far across the original order. The flight replay establishes the local-move boundary and adds interval-limited merges to the controls. Review the batch scheduling against prior work. [Workload and boundaries](runs/2026-11-23-key-correction-spans/README.md)
 
 ## All experiments
 
 Generated from the run logs by `scripts/build_progress.py`. Newest first.
 
 <!-- RUNS:START -->
-20 runs: 3 promising, 9 failed, 6 diagnostic, 2 setup.
+21 runs: 3 promising, 10 failed, 6 diagnostic, 2 setup.
 
 | Date | Run | Verdict | Result | What we learned |
 |---|---|---|---|---|
+| 2026-11-23 01:11 | [Flight departure time corrections](runs/2026-11-23-flight-key-corrections/) | ❌ failed | 0.761-0.775× median speedup, with 0/28 days passing in either cache regime | The direct-span prototype took 29-31% longer than the fastest reference in the median day of a 28-day replay. The sample contained 32,735 flights. DeltaSort was the fastest reference in 50 of 56 day and cache combinations. |
 | 2026-11-23 00:47 | [Direct span moves after key corrections](runs/2026-11-23-key-correction-spans/) | 🟡 promising | 1.810–2.102× across four registered holdout cells and 1.944–2.029× in the supplemental comparison | Applying a small batch of key corrections to a sorted array ran 1.81–2.10× as fast as the fastest measured reference on fresh 128 and 256 MiB cases. The prototype wrote about half as many unchanged rows. DeltaSort was faster when corrections stayed close to their original ranks. |
 | 2026-11-22 22:26 | [Sparse saved-row cuts for in-place record permutation](runs/2026-11-22-checkpoint-cycles/) | ❌ failed | 0.908-0.931x across two primary seeds | Interleaved paths reduced the full sort from 126-129 ms with ordinary cycles to 52-53 ms, but streaming gather plus copy-back still won at 48-49 ms. Both primary inputs missed the speed target. |
 | 2026-11-22 22:09 | [Stable sorting through bitplane membership masks](runs/2026-11-22-bitplane-sort/) | ❌ failed | 0.163-0.175x across two primary seeds | Keeping the sort in bit masks took 5.71-6.15 times the direct AVX2 network's time on random byte keys. All 240 timed calls were correct, but neither primary seed approached the speed target. |

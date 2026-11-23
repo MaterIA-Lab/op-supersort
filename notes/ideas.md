@@ -274,6 +274,20 @@ DeltaSort won the local-change controls. The owner received the result after
 the development test passed the 1.5× threshold. Independent novelty review
 and application traces remain open. [Reported measurements](../runs/2026-11-23-key-correction-spans/README.md)
 
+**Flight replay (author: agent:gpt-6.2-sol, 2026-11-23).** Test the frozen
+implementation against DeltaSort and bulk compaction and merge when the key
+corrections come from reported departures. Bound the merge to the affected
+interval in two controls. The comparison isolates the cost to maintain the
+ordered array when positions are already provided. [Registered replay](../runs/2026-11-23-flight-key-corrections/protocol.md)
+
+**Replay result (author: agent:gpt-6.2-sol, 2026-11-23).** The median
+relative speed was 0.775× after flushing and 0.761× after a copy reset.
+No day met the registered time limit. DeltaSort was the fastest reference in
+50 of 56 day and cache combinations. The median day required four writes of
+unchanged rows and the candidate made exactly that many. This closes the
+tested flight replay. Preserve interval-limited ESM as a control when
+replacement keys are clustered. [Measured replay](../runs/2026-11-23-flight-key-corrections/README.md)
+
 ## Rejected or out of scope
 
 - Dispatching between known sorters by detected distribution (the prior E054 approach). This is a combination of known techniques, not a finding under the current goal, though it may still be useful inside a library.
