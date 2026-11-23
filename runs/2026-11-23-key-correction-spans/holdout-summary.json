@@ -1,0 +1,197 @@
+{
+  "stage": "holdout",
+  "verified_calls": 160,
+  "measured_calls": 140,
+  "warmups": 20,
+  "cells": [
+    {
+      "rows": 1048576,
+      "edits": 1024,
+      "distribution": "uniform",
+      "seed": 1000003,
+      "primary": true,
+      "best_reference": "bulk_esm_right",
+      "candidate_ms": 13.5699,
+      "reference_ms": 27.532,
+      "speedup": 2.028902202669143,
+      "passes_77_percent_gate": true,
+      "paired_wins": 7,
+      "median_ms": {
+        "bulk_esm_left": 28.5229,
+        "bulk_esm_right": 27.532,
+        "delta_sort": 87.4179,
+        "direct_spans": 13.5699,
+        "full_sort": 64.6599
+      },
+      "sample_range_ms": {
+        "bulk_esm_left": [
+          26.3899,
+          31.1665
+        ],
+        "bulk_esm_right": [
+          26.362,
+          28.3929
+        ],
+        "delta_sort": [
+          85.2341,
+          91.3415
+        ],
+        "direct_spans": [
+          12.8201,
+          17.7593
+        ],
+        "full_sort": [
+          63.1191,
+          66.7813
+        ]
+      },
+      "unchanged_rows_written": {
+        "bulk_esm_left": 2094585,
+        "bulk_esm_right": 2093590,
+        "direct_spans": 1025253
+      }
+    },
+    {
+      "rows": 1048576,
+      "edits": 1024,
+      "distribution": "uniform",
+      "seed": 16777259,
+      "primary": true,
+      "best_reference": "bulk_esm_right",
+      "candidate_ms": 14.5116,
+      "reference_ms": 26.751,
+      "speedup": 1.84342181427272,
+      "passes_77_percent_gate": true,
+      "paired_wins": 7,
+      "median_ms": {
+        "bulk_esm_left": 27.3472,
+        "bulk_esm_right": 26.751,
+        "delta_sort": 284.7374,
+        "direct_spans": 14.5116,
+        "full_sort": 60.6203
+      },
+      "sample_range_ms": {
+        "bulk_esm_left": [
+          26.3164,
+          28.9197
+        ],
+        "bulk_esm_right": [
+          26.0082,
+          30.1721
+        ],
+        "delta_sort": [
+          280.2675,
+          298.3389
+        ],
+        "direct_spans": [
+          13.404,
+          15.9416
+        ],
+        "full_sort": [
+          60.1604,
+          62.2988
+        ]
+      },
+      "unchanged_rows_written": {
+        "bulk_esm_left": 2094679,
+        "bulk_esm_right": 2093594,
+        "direct_spans": 1042182
+      }
+    },
+    {
+      "rows": 2097152,
+      "edits": 2048,
+      "distribution": "uniform",
+      "seed": 1000003,
+      "primary": true,
+      "best_reference": "bulk_esm_left",
+      "candidate_ms": 29.6862,
+      "reference_ms": 62.3857,
+      "speedup": 2.1015050764328205,
+      "passes_77_percent_gate": true,
+      "paired_wins": 7,
+      "median_ms": {
+        "bulk_esm_left": 62.3857,
+        "bulk_esm_right": 65.5081,
+        "delta_sort": 969.1369,
+        "direct_spans": 29.6862,
+        "full_sort": 152.1362
+      },
+      "sample_range_ms": {
+        "bulk_esm_left": [
+          52.5493,
+          71.1509
+        ],
+        "bulk_esm_right": [
+          57.4371,
+          70.7126
+        ],
+        "delta_sort": [
+          866.9824,
+          1018.3726
+        ],
+        "direct_spans": [
+          27.3516,
+          36.8607
+        ],
+        "full_sort": [
+          130.4612,
+          181.8203
+        ]
+      },
+      "unchanged_rows_written": {
+        "bulk_esm_left": 4187811,
+        "bulk_esm_right": 4188617,
+        "direct_spans": 2063513
+      }
+    },
+    {
+      "rows": 2097152,
+      "edits": 2048,
+      "distribution": "uniform",
+      "seed": 16777259,
+      "primary": true,
+      "best_reference": "bulk_esm_left",
+      "candidate_ms": 33.5011,
+      "reference_ms": 60.6534,
+      "speedup": 1.8104898048123792,
+      "passes_77_percent_gate": true,
+      "paired_wins": 7,
+      "median_ms": {
+        "bulk_esm_left": 60.6534,
+        "bulk_esm_right": 61.5035,
+        "delta_sort": 190.2886,
+        "direct_spans": 33.5011,
+        "full_sort": 146.4356
+      },
+      "sample_range_ms": {
+        "bulk_esm_left": [
+          57.2574,
+          72.6748
+        ],
+        "bulk_esm_right": [
+          55.9877,
+          69.6161
+        ],
+        "delta_sort": [
+          163.0463,
+          199.6916
+        ],
+        "direct_spans": [
+          28.3068,
+          39.6459
+        ],
+        "full_sort": [
+          142.5825,
+          184.5146
+        ]
+      },
+      "unchanged_rows_written": {
+        "bulk_esm_left": 4188860,
+        "bulk_esm_right": 4188423,
+        "direct_spans": 2082261
+      }
+    }
+  ],
+  "primary_passed": true
+}

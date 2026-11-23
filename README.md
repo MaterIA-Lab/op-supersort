@@ -8,7 +8,7 @@ The project keeps exploring until a relevant finding appears: at least 1.3× fas
 
 ## Progress
 
-**Best result so far:** merging two sorted batches of large records by remapping memory pages instead of copying them was 1.33–1.36× faster than the best merge into a new output on synthetic data, but only when the batches overlap at their edges, and it loses when the caller already has an output buffer. No relevant finding under the goal has been confirmed yet.
+**Best measured result:** applying random key corrections to about 0.1% of the rows in an already sorted array ran 1.81–2.10× as fast as the best measured reference on fresh 128 and 256 MiB inputs. The method computes the layout before overwriting the old keys, then moves each affected unchanged row to its final position. The measurements use synthetic data on one machine. DeltaSort remains faster for the tested local corrections, and algorithmic novelty needs independent review. [Experiment](runs/2026-11-23-key-correction-spans/README.md)
 
 See [PROGRESS.md](PROGRESS.md) for what works and what does not, in plain language. Agents start from [notes/agent-brief.md](notes/agent-brief.md).
 

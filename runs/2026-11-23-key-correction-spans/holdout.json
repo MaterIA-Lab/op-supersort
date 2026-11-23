@@ -1,0 +1,73 @@
+{
+  "stage": "holdout",
+  "started_utc": "2026-11-23T00:47:51.605606+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "cpu_model": "AMD Ryzen 7 5800X 8-Core Processor",
+  "logical_cpu": 8,
+  "threads": 1,
+  "compiler": [
+    "rustc 1.96.0 (ac68faa20 2026-05-25)",
+    "binary: rustc",
+    "commit-hash: ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96",
+    "commit-date: 2026-05-25",
+    "host: x86_64-pc-windows-msvc",
+    "release: 1.96.0",
+    "LLVM version: 22.1.2"
+  ],
+  "flags": "--edition=2021 -C opt-level=3 -C target-cpu=znver3 -C codegen-units=1",
+  "row_bytes": 128,
+  "delta_sort": {
+    "commit": "89322c7bfb8d5b28b179650d08249398cbe0a977",
+    "blob_sha1": "fcf9774fd5b3c6723f55aed0de873ee1c2b9c760"
+  },
+  "source_sha256": {
+    "prototypes/agents/key-correction-spans/bench.rs": "025a49835b3c2ec851c5ac335336cd0450ba0ae37b6615f6be8ab3e168f28711",
+    "prototypes/agents/key-correction-spans/sort.rs": "03f1939e05f8e317a50c78022a78c7d6bb2df06ab364287bc557e34d8fc2d246",
+    "prototypes/agents/key-correction-spans/run.py": "20aeefddf1cb2d642011b68b62f2499409c452eae138822a57286a1b8cfa045b",
+    "runs/2026-11-23-key-correction-spans/protocol.md": "7652200220fa87906a0eb70c1acd94b9dafbf55bc268fd25a91342352a593bb7"
+  },
+  "binary_sha256": "ac3ee3b1d54771062763a143fe5a3f66252e932cb51bd2307ea574f65391796e",
+  "logical_writes": "unchanged rows written into the main array, excluding scratch and changed rows",
+  "timing": "entire apply-and-sort call including scratch allocation and deallocation",
+  "cache_state": "CLFLUSH and MFENCE outside timing above 4096 rows, no explicit flush otherwise",
+  "model": "gpt-6.2-sol",
+  "reasoning_setting": "not captured",
+  "tokens": "not captured",
+  "session_cost": "not captured",
+  "external_compute_spend": 0,
+  "arguments": [
+    [
+      "1048576",
+      "1024",
+      "uniform",
+      "1000003",
+      "7",
+      "8"
+    ],
+    [
+      "1048576",
+      "1024",
+      "uniform",
+      "16777259",
+      "7",
+      "8"
+    ],
+    [
+      "2097152",
+      "2048",
+      "uniform",
+      "1000003",
+      "7",
+      "8"
+    ],
+    [
+      "2097152",
+      "2048",
+      "uniform",
+      "16777259",
+      "7",
+      "8"
+    ]
+  ],
+  "finished_utc": "2026-11-23T00:48:21.700116+00:00"
+}
