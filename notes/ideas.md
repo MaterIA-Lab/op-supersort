@@ -288,6 +288,21 @@ unchanged rows and the candidate made exactly that many. This closes the
 tested flight replay. Preserve interval-limited ESM as a control when
 replacement keys are clustered. [Measured replay](../runs/2026-11-23-flight-key-corrections/README.md)
 
+**Rating list screen (author: agent:gpt-6.2-sol, 2026-11-23).** Test the same
+prototype on the intersection of two complete FIDE monthly standard rating
+lists. Corrected ratings can span many more ranks than departure-time changes.
+The low-cardinality integer keys also permit a counting reference. Publish
+aggregate results and keep player-level inputs local. [Protocol](../runs/2026-11-23-fide-rating-updates/protocol.md)
+
+**Rating list result (author: agent:gpt-6.2-sol, 2026-11-23).** The shared
+population was 464,388 with 29,726 edits. Median edited displacement was
+9,666 positions, and 99.78% of unchanged records had to move. The prototype
+wrote the exact minimum of 433,710 unchanged rows and took 23.010-23.517 ms.
+Rust's unstable sort took 27.109-28.920 ms and led all references. The
+1.178-1.230× result closed the registered monthly screen below its threshold.
+Keep the full sort in comparisons when real batches change many records.
+[Measured ranking update](../runs/2026-11-23-fide-rating-updates/README.md)
+
 ## Rejected or out of scope
 
 - Dispatching between known sorters by detected distribution (the prior E054 approach). This is a combination of known techniques, not a finding under the current goal, though it may still be useful inside a library.

@@ -539,6 +539,33 @@
       "how_es": "Se parte de 32.735 vuelos ordenados por hora de salida. Durante 28 días se sustituyen las horas previstas por las reales en lotes diarios. Se usa el mismo prototipo que mueve cada tramo afectado directamente a su posición final.",
       "compared_with_es": "DeltaSort original, la ordenación estable e inestable de Rust y cuatro variantes de compactación y fusión. Dos solo procesan el intervalo afectado por las correcciones. La medición incluye la reserva de memoria auxiliar en todos los métodos.",
       "faster_where_es": "El prototipo tardó un 29-31 % más que la mejor referencia en la mediana de los días, según el estado de la caché. Ningún día alcanzó el objetivo. En un día típico, el desplazamiento mediano fue de una posición."
+    },
+    {
+      "id": "2026-11-23-fide-rating-updates",
+      "path": "runs/2026-11-23-fide-rating-updates/",
+      "title": "Updating a chess ranking with monthly FIDE ratings",
+      "date": "2026-11-23 01:39",
+      "verdict": "failed",
+      "summary": "The frozen direct-span prototype reordered 464,388 FIDE rating records 1.18-1.23× as fast as Rust's unstable full sort, the fastest reference. All 252 calls were correct. Neither cache condition reached the 1.30× target.",
+      "model": "GPT-6.2 Sol (Codex, gpt-6.2-sol)",
+      "cost": "not captured",
+      "idea": "9. Move unchanged spans directly after a batch of key corrections",
+      "result": "1.178-1.230× against Rust's unstable full sort on the June to July 2024 transition",
+      "baseline": "minimum median across DeltaSort, four bulk compaction and merge variants, stable and unstable Rust full sorts, and counting with a prefetched gather",
+      "closes": [
+        "the 1.30× gate on the registered FIDE development pair"
+      ],
+      "speedup": [
+        1.178,
+        1.23
+      ],
+      "how": "Compare the FIDE standard chess rating lists for June and July 2024. Keep players rated in both months. Move stretches of unchanged records directly into their final positions before placing the records with new ratings.",
+      "compared_with": "DeltaSort, four ways to compact and merge, stable and unstable Rust sorting, and a reference that counts records by rating and gathers them into order. All methods pay for temporary allocations.",
+      "faster_where": "The prototype finished in 23-24 ms on 464,388 records with 29,726 rating changes. Rust's unstable sort took 27-29 ms and was the fastest reference. The measured gain of 1.18-1.23× fell below the 1.30× target in both cache conditions.",
+      "title_es": "Reordenación de la clasificación de ajedrez de la FIDE",
+      "how_es": "Se comparan las listas oficiales de junio y julio de 2024 y se conservan las fichas presentes en ambas. El prototipo calcula el nuevo orden, mueve cada tramo de fichas sin cambios hasta su posición final y coloca las que tienen una puntuación nueva.",
+      "compared_with_es": "DeltaSort, cuatro variantes de compactación y fusión, la ordenación estable e inestable de Rust y una variante por conteo de puntuaciones. Se incluye la reserva de memoria auxiliar de todos los métodos.",
+      "faster_where_es": "Al actualizar 29.726 puntuaciones entre 464.388 fichas, el prototipo tardó 23-24 ms y la mejor referencia, la ordenación inestable de Rust, 27-29 ms. La mejora de 1,18-1,23× quedó por debajo del objetivo de 1,30× en las dos condiciones de caché."
     }
   ]
 }

@@ -1,0 +1,120 @@
+{
+  "verified_calls": 252,
+  "measured_calls": 198,
+  "comparison": {
+    "flushed": {
+      "fastest_reference": "full_sort",
+      "speedup": 1.2297624261701159,
+      "passes": false,
+      "paired_wins_vs_reference": 11,
+      "times_ns": {
+        "direct_spans": {
+          "min": 20864300,
+          "median": 23516900,
+          "max": 30795200
+        },
+        "bulk_esm_left": {
+          "min": 41363900,
+          "median": 48080300,
+          "max": 61721700
+        },
+        "bulk_esm_right": {
+          "min": 39698500,
+          "median": 45496900,
+          "max": 62929500
+        },
+        "delta_sort": {
+          "min": 85961500,
+          "median": 94817300,
+          "max": 122617800
+        },
+        "full_sort": {
+          "min": 26560000,
+          "median": 28920200,
+          "max": 44222200
+        },
+        "drift_sort": {
+          "min": 82293700,
+          "median": 88747500,
+          "max": 112290000
+        },
+        "regional_esm_left": {
+          "min": 46549700,
+          "median": 50699600,
+          "max": 88722900
+        },
+        "regional_esm_right": {
+          "min": 42048000,
+          "median": 53581600,
+          "max": 90139800
+        },
+        "counting_gather": {
+          "min": 27869500,
+          "median": 33122600,
+          "max": 48366900
+        }
+      }
+    },
+    "copy_reset": {
+      "fastest_reference": "full_sort",
+      "speedup": 1.1781734580349073,
+      "passes": false,
+      "paired_wins_vs_reference": 10,
+      "times_ns": {
+        "direct_spans": {
+          "min": 21150200,
+          "median": 23009600,
+          "max": 28048100
+        },
+        "bulk_esm_left": {
+          "min": 40938500,
+          "median": 54859800,
+          "max": 68435100
+        },
+        "bulk_esm_right": {
+          "min": 38512300,
+          "median": 46799300,
+          "max": 52425500
+        },
+        "delta_sort": {
+          "min": 86537900,
+          "median": 91535100,
+          "max": 120908400
+        },
+        "full_sort": {
+          "min": 24524100,
+          "median": 27109300,
+          "max": 35088300
+        },
+        "drift_sort": {
+          "min": 77682600,
+          "median": 85494100,
+          "max": 120949500
+        },
+        "regional_esm_left": {
+          "min": 41173000,
+          "median": 50483800,
+          "max": 70841300
+        },
+        "regional_esm_right": {
+          "min": 39662100,
+          "median": 46212800,
+          "max": 54212500
+        },
+        "counting_gather": {
+          "min": 26541500,
+          "median": 31967000,
+          "max": 53128300
+        }
+      }
+    }
+  },
+  "unchanged_writes": {
+    "regional_esm_right": 869320,
+    "bulk_esm_left": 869320,
+    "regional_esm_left": 869320,
+    "direct_spans": 433710,
+    "bulk_esm_right": 869324
+  },
+  "affected_interval_rows": 464386
+}
