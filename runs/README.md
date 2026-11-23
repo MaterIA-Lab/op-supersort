@@ -72,6 +72,7 @@ python -X utf8 runs/2026-11-22-checkpoint-cycles/analyze.py runs/2026-11-22-chec
 python -X utf8 runs/2026-11-23-key-correction-spans/analyze.py holdout runs/2026-11-23-key-correction-spans/holdout.csv
 python -X utf8 runs/2026-11-23-key-correction-spans/analyze.py reference-audit runs/2026-11-23-key-correction-spans/reference-audit.csv
 python -X utf8 runs/2026-11-23-flight-key-corrections/analyze.py
+python -X utf8 runs/2026-11-23-fide-rating-updates/analyze.py
 python -X utf8 runs/2026-11-16-linux-producer-placement/analyze.py \
   runs/2026-11-16-linux-producer-placement/runner-1.csv \
   runs/2026-11-16-linux-producer-placement/runner-2.csv

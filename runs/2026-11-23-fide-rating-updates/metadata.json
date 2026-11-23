@@ -1,0 +1,51 @@
+{
+  "started_utc": "2026-11-23T01:39:54.155595+00:00",
+  "finished_utc": "2026-11-23T01:40:11.446455+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "AMD Ryzen 7 5800X 8-Core Processor",
+  "logical_cpu": 8,
+  "threads": 1,
+  "compiler": [
+    "rustc 1.96.0 (ac68faa20 2026-05-25)",
+    "binary: rustc",
+    "commit-hash: ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96",
+    "commit-date: 2026-05-25",
+    "host: x86_64-pc-windows-msvc",
+    "release: 1.96.0",
+    "LLVM version: 22.1.2"
+  ],
+  "flags": [
+    "--edition=2021",
+    "-C",
+    "opt-level=3",
+    "-C",
+    "target-cpu=znver3",
+    "-C",
+    "codegen-units=1"
+  ],
+  "row_bytes": 128,
+  "warmups": 3,
+  "measured_rounds_per_state": 11,
+  "delta_sort": {
+    "commit": "89322c7bfb8d5b28b179650d08249398cbe0a977",
+    "blob_sha1": "fcf9774fd5b3c6723f55aed0de873ee1c2b9c760"
+  },
+  "source_sha256": {
+    "runs/2026-11-23-fide-rating-updates/protocol.md": "8aa04291b46d9e123ec11ff662a2a373abf481b6288a00b8c78a02a7a05d4822",
+    "prototypes/agents/fide-rating-updates/bench.rs": "32146465ab4f58a3e010ce490216da5383c5c43a31370557cc59fa657b8bd49a",
+    "prototypes/agents/fide-rating-updates/prepare.py": "4fa8252077ae26a6ab327b185674c9de0077623c0faaf3c92636203321a3f0cb",
+    "prototypes/agents/fide-rating-updates/run.py": "9db5103a4d2325573c873c501fb820d3e13367b40afd5174cdc0fe13c34968b4",
+    "prototypes/agents/key-correction-spans/bench.rs": "025a49835b3c2ec851c5ac335336cd0450ba0ae37b6615f6be8ab3e168f28711",
+    "prototypes/agents/key-correction-spans/sort.rs": "03f1939e05f8e317a50c78022a78c7d6bb2df06ab364287bc557e34d8fc2d246"
+  },
+  "fixture_sha256": "68f63f44e15dff9492de73490c6bd722bffea70d93b08a8e6c229cc929bea7ca",
+  "geometry_sha256": "e7e74925fe48510638e2ed5433a64d221391223b7cd7c15024f32de8dfff2922",
+  "binary_sha256": "cb8efbada0cdbbc15b7569ed4f0fd94126e341e33fa9f740e422f436af25ea6a",
+  "raw_sha256": "6d718042d4f45719ca6094dbaf5d7571755cae4a6939db419d8ed8ef19ad0f36",
+  "timing": "complete apply-and-sort call including all temporary allocations and frees",
+  "model": "gpt-6.2-sol",
+  "reasoning_setting": "not captured",
+  "tokens": "not captured",
+  "session_cost": "not captured",
+  "external_compute_spend": 0
+}

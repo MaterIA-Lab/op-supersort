@@ -1,0 +1,64 @@
+{
+  "sources": [
+    {
+      "month": "JUN24",
+      "filesize": 10868770,
+      "zip_sha256": "635872c19a8465c824f6afd6c7fe2034affea26d40962c2d11b699f1b7288af3",
+      "rated_rows": 464401,
+      "unique_ids": 464401,
+      "repeated_ids": 0
+    },
+    {
+      "month": "JUL24",
+      "filesize": 10894809,
+      "zip_sha256": "38a024ab57b5ca80a8c42eab655dcc0072cf02efc11bae5f57543c84b63801e4",
+      "rated_rows": 468009,
+      "unique_ids": 468009,
+      "repeated_ids": 0
+    }
+  ],
+  "june_only_ids": 13,
+  "july_only_ids": 3621,
+  "ambiguous_shared_ids_excluded": 0,
+  "shared_rows": 464388,
+  "array_bytes_at_128_per_row": 59441664,
+  "fixture_sha256": "68f63f44e15dff9492de73490c6bd722bffea70d93b08a8e6c229cc929bea7ca",
+  "edits": 29726,
+  "rating_delta": {
+    "p1": -86,
+    "p25": -17,
+    "p50": -2,
+    "p75": 17,
+    "p95": 62,
+    "p99": 108,
+    "p100": 295
+  },
+  "absolute_rank_delta": {
+    "p1": 48,
+    "p25": 3668,
+    "p50": 9666,
+    "p75": 20240,
+    "p95": 48325,
+    "p99": 77205,
+    "p100": 201524
+  },
+  "edited_old_ranks": {
+    "p1": 9566,
+    "p25": 118371,
+    "p50": 230894,
+    "p75": 354337,
+    "p95": 452640,
+    "p99": 463503,
+    "p100": 464387
+  },
+  "edited_new_ranks": {
+    "p1": 5793,
+    "p25": 120747,
+    "p50": 233244,
+    "p75": 355649,
+    "p95": 452328,
+    "p99": 463494,
+    "p100": 464387
+  },
+  "minimum_unchanged_writes": 433710
+}
