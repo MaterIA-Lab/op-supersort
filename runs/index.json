@@ -512,6 +512,33 @@
       "how_es": "Se calcula dónde va cada clave corregida antes de escribir en el array. Se mueven los tramos afectados directamente a su posición final y se colocan los registros corregidos al terminar.",
       "compared_with_es": "Dos variantes que compactan y fusionan tramos, la implementación original de DeltaSort y la ordenación completa de Rust. La comprobación adicional incluye la ordenación adaptativa estable de Rust. Todos reciben el array original y las correcciones sin aplicar, y se mide la reserva de memoria auxiliar.",
       "faster_where_es": "En arrays de 128 y 256 MiB con claves nuevas aleatorias en cerca del 0,1 % de los registros, aceleró el proceso entre 1,81× y 2,10× con semillas nuevas. DeltaSort fue más rápido en los dos controles de correcciones locales, de hasta unas 256 posiciones."
+    },
+    {
+      "id": "2026-11-23-flight-key-corrections",
+      "path": "runs/2026-11-23-flight-key-corrections/",
+      "title": "Flight departure time corrections",
+      "date": "2026-11-23 01:11",
+      "verdict": "failed",
+      "summary": "The direct-span prototype took 29-31% longer than the fastest reference in the median day of a 28-day replay. The sample contained 32,735 flights. DeltaSort was the fastest reference in 50 of 56 day and cache combinations.",
+      "model": "GPT-6.2 Sol (Codex, gpt-6.2-sol)",
+      "cost": "not captured",
+      "idea": "9. Move unchanged spans directly after a batch of key corrections",
+      "result": "0.761-0.775× median speedup, with 0/28 days passing in either cache regime",
+      "baseline": "fastest median among DeltaSort, two full-array and two interval-limited extract-sort-merge variants, and two Rust full sorts",
+      "closes": [
+        "direct span moves for the tested 4 MiB flight replay"
+      ],
+      "speedup": [
+        0.761,
+        0.775
+      ],
+      "how": "Start with 32,735 flights ordered by departure time. For 28 days, replay the replacement of scheduled times with reported departure times in daily batches. Use the same prototype that moves each affected stretch directly to its final position.",
+      "compared_with": "Original DeltaSort, stable and unstable sorting in Rust, and four variants of compacting and merging. Two of the merge variants only process the range touched by the corrections. All methods include temporary memory allocation.",
+      "faster_where": "The prototype took 29-31% longer in the median day, measured with and without flushing the array from cache. No day reached the target in either regime. The median corrected record moved only one position across the daily medians.",
+      "title_es": "Corrección de horarios de salida de vuelos",
+      "how_es": "Se parte de 32.735 vuelos ordenados por hora de salida. Durante 28 días se sustituyen las horas previstas por las reales en lotes diarios. Se usa el mismo prototipo que mueve cada tramo afectado directamente a su posición final.",
+      "compared_with_es": "DeltaSort original, la ordenación estable e inestable de Rust y cuatro variantes de compactación y fusión. Dos solo procesan el intervalo afectado por las correcciones. La medición incluye la reserva de memoria auxiliar en todos los métodos.",
+      "faster_where_es": "El prototipo tardó un 29-31 % más que la mejor referencia en la mediana de los días, según el estado de la caché. Ningún día alcanzó el objetivo. En un día típico, el desplazamiento mediano fue de una posición."
     }
   ]
 }
