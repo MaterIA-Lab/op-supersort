@@ -1,0 +1,161 @@
+{
+  "archive_url": "https://database.lichess.org/standard/lichess_db_standard_rated_2015-01.pgn.zst",
+  "archive_bytes": 285559460,
+  "archive_sha256": "9061f9dc0ab0d8710886d1745b5ca83a27b61fe5e504f9dcd549218fa3598f57",
+  "started_utc": "2026-11-23T23:27:52.740496+00:00",
+  "finished_utc": "2026-11-23T23:27:57.548450+00:00",
+  "processor": "AMD Ryzen 7 5800X 8-Core Processor",
+  "logical_cpu": 8,
+  "threads": 1,
+  "compiler": "rustc 1.96.0",
+  "flags": [
+    "--edition=2021",
+    "-C",
+    "opt-level=3",
+    "-C",
+    "target-cpu=znver3",
+    "-C",
+    "codegen-units=1"
+  ],
+  "row_bytes": 128,
+  "rows": 19982,
+  "extraction_counts": {
+    "rated_blitz_games": 648250,
+    "invalid_or_out_of_month_game_timestamps": 542,
+    "pre_cutoff_observations": 866180,
+    "post_cutoff_observations": 429236,
+    "roster_observations_before_last_endpoint": 370197,
+    "outside_roster_observations_before_last_endpoint": 46899
+  },
+  "timed_windows": 24,
+  "verified_calls": 6048,
+  "measured_calls": 4752,
+  "qualifying_comparisons": 0,
+  "geometry_columns": [
+    "min",
+    "median",
+    "max"
+  ],
+  "geometry": {
+    "60s": {
+      "edits": [
+        10,
+        26,
+        52
+      ],
+      "median_edited_displacement": [
+        128,
+        181,
+        217
+      ],
+      "p95_edited_displacement": [
+        278,
+        387,
+        2721
+      ],
+      "maximum_edited_displacement": [
+        278,
+        787,
+        4111
+      ],
+      "affected_interval_rows": [
+        12660,
+        17761.5,
+        19001
+      ],
+      "minimum_unchanged_writes": [
+        1612,
+        4774,
+        8159
+      ]
+    },
+    "600s": {
+      "edits": [
+        84,
+        209.5,
+        353
+      ],
+      "median_edited_displacement": [
+        163,
+        182,
+        196
+      ],
+      "p95_edited_displacement": [
+        443,
+        683.5,
+        1095
+      ],
+      "maximum_edited_displacement": [
+        1670,
+        5113.5,
+        9680
+      ],
+      "affected_interval_rows": [
+        18585,
+        19694,
+        19937
+      ],
+      "minimum_unchanged_writes": [
+        8095,
+        13452,
+        15355
+      ]
+    }
+  },
+  "groups": {
+    "60s_flushed": {
+      "timed_windows": 12,
+      "passing_windows": 0,
+      "median_speedup": 0.840713361014193,
+      "min_speedup": 0.7276995305164319,
+      "max_speedup": 1.03862660944206,
+      "fastest_references": {
+        "delta_sort": 12
+      },
+      "windows_with_candidate_win": 1,
+      "passes_screen": false
+    },
+    "60s_copy_reset": {
+      "timed_windows": 12,
+      "passing_windows": 0,
+      "median_speedup": 0.850728045068375,
+      "min_speedup": 0.7276422764227642,
+      "max_speedup": 1.1666666666666667,
+      "fastest_references": {
+        "delta_sort": 12
+      },
+      "windows_with_candidate_win": 3,
+      "passes_screen": false
+    },
+    "600s_flushed": {
+      "timed_windows": 12,
+      "passing_windows": 0,
+      "median_speedup": 0.827000755419672,
+      "min_speedup": 0.7716562716562717,
+      "max_speedup": 0.9093567251461988,
+      "fastest_references": {
+        "delta_sort": 12
+      },
+      "windows_with_candidate_win": 0,
+      "passes_screen": false
+    },
+    "600s_copy_reset": {
+      "timed_windows": 12,
+      "passing_windows": 0,
+      "median_speedup": 0.8814585837505458,
+      "min_speedup": 0.7521423862887278,
+      "max_speedup": 1.0184672206832872,
+      "fastest_references": {
+        "delta_sort": 9,
+        "bulk_esm_right": 2,
+        "regional_esm_right": 1
+      },
+      "windows_with_candidate_win": 1,
+      "passes_screen": false
+    }
+  },
+  "model": "gpt-6.2-sol",
+  "external_compute_spend": 0,
+  "tokens": "not captured",
+  "session_cost": "not captured"
+}

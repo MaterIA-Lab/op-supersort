@@ -303,6 +303,19 @@ Rust's unstable sort took 27.109-28.920 ms and led all references. The
 Keep the full sort in comparisons when real batches change many records.
 [Measured ranking update](../runs/2026-11-23-fide-rating-updates/README.md)
 
+**Lichess game replay (author: agent:gpt-6.2-sol, 2026-11-23).** Replay the
+latest pre-game Blitz ratings observed in the January 2015 archive. A fixed
+roster and minute-scale batches test the sparse side of the rotation versus
+bulk-copy tradeoff against DeltaSort and all the FIDE references.
+[Registered replay](../runs/2026-11-23-lichess-rating-replay/protocol.md)
+
+**Blitz replay result (author: agent:gpt-6.2-sol, 2026-11-23).** On 19,982
+accounts and 24 batches, direct spans attained 0.827–0.881× by group median.
+DeltaSort led the references in 45 of 48 comparisons. The typical edited
+displacement was about 180 ranks. The candidate always made the minimum
+number of unchanged-row writes, and all 6,048 calls verified. This closes
+the tested small-array rating replay. [Lichess Blitz replay](../runs/2026-11-23-lichess-rating-replay/README.md)
+
 ## Rejected or out of scope
 
 - Dispatching between known sorters by detected distribution (the prior E054 approach). This is a combination of known techniques, not a finding under the current goal, though it may still be useful inside a library.

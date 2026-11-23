@@ -566,6 +566,33 @@
       "how_es": "Se comparan las listas oficiales de junio y julio de 2024 y se conservan las fichas presentes en ambas. El prototipo calcula el nuevo orden, mueve cada tramo de fichas sin cambios hasta su posición final y coloca las que tienen una puntuación nueva.",
       "compared_with_es": "DeltaSort, cuatro variantes de compactación y fusión, la ordenación estable e inestable de Rust y una variante por conteo de puntuaciones. Se incluye la reserva de memoria auxiliar de todos los métodos.",
       "faster_where_es": "Al actualizar 29.726 puntuaciones entre 464.388 fichas, el prototipo tardó 23-24 ms y la mejor referencia, la ordenación inestable de Rust, 27-29 ms. La mejora de 1,18-1,23× quedó por debajo del objetivo de 1,30× en las dos condiciones de caché."
+    },
+    {
+      "id": "2026-11-23-lichess-rating-replay",
+      "path": "runs/2026-11-23-lichess-rating-replay/",
+      "title": "Refreshing Blitz ratings from Lichess games",
+      "date": "2026-11-23 23:27",
+      "verdict": "failed",
+      "summary": "On 24 batches of real Blitz ratings for 19,982 accounts, direct span moves took 13–21% longer in the typical comparison. DeltaSort was the fastest reference in 45 of 48 comparisons.",
+      "model": "GPT-6.2 Sol (Codex, gpt-6.2-sol)",
+      "cost": "not captured",
+      "idea": "9. Move unchanged spans directly after a batch of key corrections",
+      "result": "0.827–0.881× median reference time divided by direct-span time. 0 of 48 comparisons passed.",
+      "baseline": "Fastest median of DeltaSort, four bulk merges, both Rust full sorts and counting with prefetched gathering",
+      "closes": [
+        "direct span moves for the tested historical Blitz rating refresh"
+      ],
+      "speedup": [
+        0.827,
+        0.881
+      ],
+      "how": "Reconstruct the latest reported Blitz rating for each account from game records. Apply one or ten minutes of changes by moving affected stretches of the sorted array directly into place.",
+      "compared_with": "DeltaSort, four ways of compacting and merging records, both Rust full sorts, and counting by rating followed by copying rows into order. Every method includes its temporary allocations.",
+      "faster_where": "On a 2.44 MiB array of 19,982 accounts, direct spans took 13–21% longer than the best reference in the median of each condition. DeltaSort led the references in 45 of 48 comparisons. No comparison reached 1.30×.",
+      "title_es": "Actualización de una clasificación de blitz con partidas de Lichess",
+      "how_es": "Se reconstruye la última puntuación de blitz observada de cada cuenta a partir de las partidas. El prototipo aplica los cambios de uno o diez minutos moviendo los tramos afectados directamente a su posición final.",
+      "compared_with_es": "DeltaSort, cuatro variantes de compactación y fusión, las dos ordenaciones completas de Rust y una variante que cuenta fichas por puntuación y las copia en orden. Todos los métodos incluyen la memoria temporal que reservan.",
+      "faster_where_es": "En un array de 2,44 MiB con 19.982 cuentas, el prototipo tardó entre un 13 % y un 21 % más que la mejor referencia en la mediana de cada condición. DeltaSort fue la referencia más rápida en 45 de 48 comparaciones. En ninguna se alcanzó el objetivo de 1,30×."
     }
   ]
 }

@@ -143,7 +143,7 @@ mod registered {
         minimum_writes: usize,
     }
 
-    fn load_fixture(path: &str) -> Result<RatingFixture, Box<dyn Error>> {
+    fn load_fixture(path: &str, minimum_rows: usize) -> Result<RatingFixture, Box<dyn Error>> {
         let mut lines = BufReader::new(File::open(path)?).lines();
         if lines.next().ok_or("missing fixture header")?? != "id,before,after" {
             return Err("expected id,before,after header".into());
@@ -175,7 +175,7 @@ mod registered {
                 changes.push((index, after.into()));
             }
         }
-        if initial.len() < 100_000 || changes.is_empty() {
+        if initial.len() < minimum_rows || changes.is_empty() {
             return Err("fixture did not pass the size and edit requirements".into());
         }
         initial.sort_by_key(|row| (row.key, row.id));
@@ -214,15 +214,17 @@ mod registered {
 
     pub fn benchmark() -> Result<(), Box<dyn Error>> {
         let args: Vec<_> = env::args().skip(1).collect();
-        let [path, minimum_writes, cpu] = args.as_slice() else {
-            return Err("usage: bench FIXTURE.csv MINIMUM_UNCHANGED_WRITES CPU".into());
+        let (path, minimum_writes, cpu, minimum_rows) = match args.as_slice() {
+            [path, minimum_writes, cpu] => (path, minimum_writes, cpu, 100_000),
+            [path, minimum_writes, cpu, min_rows] => (path, minimum_writes, cpu, min_rows.parse()?),
+            _ => return Err("usage: bench FIXTURE.csv MINIMUM_UNCHANGED_WRITES CPU [MIN_ROWS]".into()),
         };
         let cpu: usize = cpu.parse()?;
-        if cpu >= 1024 {
-            return Err("invalid logical CPU".into());
+        if cpu >= 1024 || minimum_rows == 0 {
+            return Err("invalid logical CPU or minimum fixture size".into());
         }
         pin(cpu)?;
-        let fixture = load_fixture(path)?;
+        let fixture = load_fixture(path, minimum_rows)?;
         if fixture.minimum_writes != minimum_writes.parse()? {
             return Err("fixture differs from the independent write-count oracle".into());
         }

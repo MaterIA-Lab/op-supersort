@@ -14,11 +14,14 @@ correction keys. A replay using 32,735 flight schedules and actual departures
 placed most updates close to their original positions. The prototype took
 29-31% longer than the fastest reference in the median replay day. Updating a
 chess ranking from real monthly lists moved records much farther and reached
-1.18-1.23× against Rust's fastest full sort. The real-data screens remain
+1.18–1.23× against Rust's fastest full sort. A smaller replay of Lichess
+Blitz ratings tested sparse batches and took 13–21% longer than the fastest
+reference in the median of each condition. The real-data screens remain
 below the 1.30× target. Novelty is still open.
 [Key correction experiment](runs/2026-11-23-key-correction-spans/README.md)
 [Flight replay](runs/2026-11-23-flight-key-corrections/README.md)
 [FIDE rating update](runs/2026-11-23-fide-rating-updates/README.md)
+[Lichess Blitz replay](runs/2026-11-23-lichess-rating-replay/README.md)
 
 ## What works so far
 
@@ -43,6 +46,7 @@ The caveats matter:
 
 ## What does not work
 
+- **Direct span moves on frequent Blitz rating refreshes.** Batches of one minute changed a median of 26 out of 19,982 rows, and a typical edited row moved about 181 places. DeltaSort led the references in 45 of 48 comparisons across both batch sizes and cache conditions. [Lichess Blitz replay](runs/2026-11-23-lichess-rating-replay/README.md)
 - **Direct span moves on monthly chess rating changes.** The prototype took 23-24 ms to apply 29,726 rating changes to 464,388 shared FIDE players. The fastest reference was Rust's unstable sort at 27-29 ms. This fell below the 1.30× target even though direct spans wrote about half as many unchanged rows as compaction and merge. [FIDE rating update](runs/2026-11-23-fide-rating-updates/README.md)
 - **Direct span moves on the flight schedule replay.** With an approximately 4 MiB array and daily batches of 63-108 corrections, the prototype missed the 1.3× gate on all 28 days in both cache regimes. DeltaSort was the fastest reference in 50 of 56 comparisons. [Flight replay](runs/2026-11-23-flight-key-corrections/README.md)
 - **Direct span moves for local correction batches.** DeltaSort was faster on both controls where new keys were selected within 256 positions of their original location. The prototype took 1.89–2.40 ms versus 1.64–2.26 ms, paired by seed. [Control results](runs/2026-11-23-key-correction-spans/README.md#development-controls)
@@ -61,17 +65,18 @@ The caveats matter:
 
 ## What comes next
 
-- Look for application traces with sparse tracked edits and wide rank displacement. The FIDE monthly pair demonstrates wide movement at 6.40% edits and gives a strong full-sort control. Review the batch scheduling against prior work. [Workload and boundaries](runs/2026-11-23-key-correction-spans/README.md)
+- Look for arrays larger than cache with sparse tracked edits and large typical changes in rank. Compare the scheduling with prior work on relocating records in place. [Workload and boundaries](runs/2026-11-23-key-correction-spans/README.md)
 
 ## All experiments
 
 Generated from the run logs by `scripts/build_progress.py`. Newest first.
 
 <!-- RUNS:START -->
-22 runs: 3 promising, 11 failed, 6 diagnostic, 2 setup.
+23 runs: 3 promising, 12 failed, 6 diagnostic, 2 setup.
 
 | Date | Run | Verdict | Result | What we learned |
 |---|---|---|---|---|
+| 2026-11-23 23:27 | [Refreshing Blitz ratings from Lichess games](runs/2026-11-23-lichess-rating-replay/) | ❌ failed | 0.827–0.881× median reference time divided by direct-span time. 0 of 48 comparisons passed. | On 24 batches of real Blitz ratings for 19,982 accounts, direct span moves took 13–21% longer in the typical comparison. DeltaSort was the fastest reference in 45 of 48 comparisons. |
 | 2026-11-23 01:39 | [Updating a chess ranking with monthly FIDE ratings](runs/2026-11-23-fide-rating-updates/) | ❌ failed | 1.178-1.230× against Rust's unstable full sort on the June to July 2024 transition | The frozen direct-span prototype reordered 464,388 FIDE rating records 1.18-1.23× as fast as Rust's unstable full sort, the fastest reference. All 252 calls were correct. Neither cache condition reached the 1.30× target. |
 | 2026-11-23 01:11 | [Flight departure time corrections](runs/2026-11-23-flight-key-corrections/) | ❌ failed | 0.761-0.775× median speedup, with 0/28 days passing in either cache regime | The direct-span prototype took 29-31% longer than the fastest reference in the median day of a 28-day replay. The sample contained 32,735 flights. DeltaSort was the fastest reference in 50 of 56 day and cache combinations. |
 | 2026-11-23 00:47 | [Direct span moves after key corrections](runs/2026-11-23-key-correction-spans/) | 🟡 promising | 1.810–2.102× across four registered holdout cells and 1.944–2.029× in the supplemental comparison | Applying a small batch of key corrections to a sorted array ran 1.81–2.10× as fast as the fastest measured reference on fresh 128 and 256 MiB cases. The prototype wrote about half as many unchanged rows. DeltaSort was faster when corrections stayed close to their original ranks. |
