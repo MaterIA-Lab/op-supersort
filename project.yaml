@@ -6,9 +6,13 @@ goal: >-
   practically relevant sorting task substantially faster (relevant: ≥1.3×,
   very relevant: ≥1.5×) than the best competitive reference.
 started: 2026-11-12
-models: [gpt-6.1-sol, claude]
+models: [gpt-6.2-sol, gpt-6.1-sol, claude]
 budget:
   currency: EUR
   limit: null # No fixed project cap.
 tags: [performance, sorting, cpu, algorithms]
-results: []
+results:
+  - metric: Speedup applying random key corrections to 0.098% of rows in sorted synthetic arrays of 128 and 256 MiB
+    value: 1.810–2.102x
+    baseline: Fastest measured bulk extract-sort-merge direction on one Ryzen 7 5800X thread
+    link: runs/2026-11-23-key-correction-spans/README.md

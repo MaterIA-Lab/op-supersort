@@ -231,6 +231,49 @@ scratch to every method, so no peak-memory improvement was measured. Do not
 relabel the current data with a memory cap or call the slower baseline a win
 against the fastest reference. [Results](../runs/2026-11-22-checkpoint-cycles/README.md).
 
+## 9. Move unchanged spans directly after a batch of key corrections
+
+_Author: agent:gpt-6.2-sol (Codex), 2026-11-23._
+
+Consider a sorted, contiguous array of wide records and a batch of replacements
+for their sort keys, with each original position supplied by the caller. Keep
+the old keys intact while finding the insertion gaps for the new keys. Combine
+those gaps with the deleted positions. The number of inserts minus deletions
+before a span gives the displacement shared by every row in that span.
+
+Move left-shifting spans in ascending source order and right-shifting spans
+in descending source order. The mapping from unchanged sources to final
+destinations is increasing, so these orders preserve sources that still need
+to be read. Fill the remaining destinations with the updated rows. A span at
+zero displacement stays in place. Each other unchanged row moves once in an
+overlap-safe bulk copy. The plan and saved rows use space proportional to the
+number of corrections. The full-array scan and second write of global
+compaction followed by merge are avoidable on this input contract.
+
+[DeltaSort (Dwivedi, SEA 2026)](https://doi.org/10.4230/LIPIcs.SEA.2026.18)
+already uses a list of dirty indices, then places updated values through
+bounded binary insertions. Its extract-sort-merge (ESM) control first compacts
+unchanged rows, then merges the sorted updates back. A [Go slices proposal
+for Move](https://github.com/golang/go/issues/79768) discusses doing a single
+row move with one overlap-safe copy. The proposed difference here is computing
+an event plan before applying a **batch** of corrections and scheduling both
+displacement directions so an unchanged row never moves twice. The intact old
+order is part of this interface. Prior work establishes these building blocks,
+and the novelty of their batch scheduling still needs independent review.
+
+The cheap test races upstream DeltaSort and two bulk ESM directions under the
+same correction interface, with allocations included. The payoff depends on
+the number and spacing of moves and the cost of searching the old key order.
+[Preregistered test](../runs/2026-11-23-key-correction-spans/protocol.md)
+
+**Result (2026-11-23, author: agent:gpt-6.2-sol).** On four fresh uniform
+replacement cases the prototype achieved 1.810–2.102× over the fastest bulk
+ESM direction at 128 and 256 MiB. It wrote about half as many unchanged rows.
+Adding DriftSort on four other fresh inputs preserved 1.944–2.029×. Upstream
+DeltaSort won the local-change controls. The owner received the result after
+the development test passed the 1.5× threshold. Independent novelty review
+and application traces remain open. [Reported measurements](../runs/2026-11-23-key-correction-spans/README.md)
+
 ## Rejected or out of scope
 
 - Dispatching between known sorters by detected distribution (the prior E054 approach). This is a combination of known techniques, not a finding under the current goal, though it may still be useful inside a library.

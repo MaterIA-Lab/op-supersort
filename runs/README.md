@@ -69,6 +69,8 @@ python -X utf8 runs/2026-11-15-compressed-key-bandwidth/analyze.py runs/2026-11-
 python -X utf8 runs/2026-11-15-smt-gather-helper/analyze.py runs/2026-11-15-smt-gather-helper/raw.csv
 python -X utf8 runs/2026-11-22-bitplane-sort/analyze.py runs/2026-11-22-bitplane-sort/raw.csv
 python -X utf8 runs/2026-11-22-checkpoint-cycles/analyze.py runs/2026-11-22-checkpoint-cycles/raw.csv
+python -X utf8 runs/2026-11-23-key-correction-spans/analyze.py holdout runs/2026-11-23-key-correction-spans/holdout.csv
+python -X utf8 runs/2026-11-23-key-correction-spans/analyze.py reference-audit runs/2026-11-23-key-correction-spans/reference-audit.csv
 python -X utf8 runs/2026-11-16-linux-producer-placement/analyze.py \
   runs/2026-11-16-linux-producer-placement/runner-1.csv \
   runs/2026-11-16-linux-producer-placement/runner-2.csv

@@ -2,19 +2,28 @@
 
 A living summary of what has been tried and what was learned, written for people. The detailed, agent-oriented state is in [notes/agent-brief.md](notes/agent-brief.md). The final summary will go in [SUMMARY.md](SUMMARY.md) when the project closes.
 
-_Last updated: 2026-11-22._
+_Last updated: 2026-11-23._
 
 ## Where we are
 
-No relevant finding has been confirmed. Saving a few original rows allowed
-interleaved in-place moves to cut a 128 MiB sort from 126-129 ms with ordinary
-cycles to 52-53 ms. A stronger reference using streaming writes and a copy back
-still took 48-49 ms, so the new version failed its speed target.
-[In-place permutation screen](runs/2026-11-22-checkpoint-cycles/README.md)
-
-Page remapping on Linux remains promising when sorted batches already have shareable pages. In a fuller test on two Linux machines, producing both batches and their merged view by adjusting page placement sped up the operation by 1.23–1.28× at 128 and 256 MiB with 2% overlap. The eight fresh cases fell below the 1.30× research target. [Research goal](GOAL.md) · [Linux producer benchmark](runs/2026-11-16-linux-producer-placement/README.md)
+Applying a batch of random key corrections to an already sorted array reached
+1.81–2.10× against the fastest measured reference on fresh synthetic inputs.
+All four held-out cases passed the 1.3× target and 1.5× reporting threshold at
+128 and 256 MiB. The result is promising. The tested class requires original
+positions and unapplied correction keys. Novelty and application data remain
+open. The owner received the result and the broad search is paused.
+[Key correction experiment](runs/2026-11-23-key-correction-spans/README.md)
 
 ## What works so far
+
+**Moving corrected batches directly into place.** Given roughly 0.1% random
+key replacements, the prototype plans the final moves before any keys change.
+It writes about half as many unchanged rows as compaction followed by merge.
+At 128 MiB, it took 13.6–14.5 ms versus 26.8–27.5 ms for the fastest reference.
+At 256 MiB, it took 29.7–33.5 ms versus 60.7–62.4 ms. Adding adaptive full
+sorting to the comparison on new inputs preserved a 1.94–2.03× gain. These
+results cover one Ryzen 7 5800X with one thread and include temporary memory
+allocation. [Measurements and tested conditions](runs/2026-11-23-key-correction-spans/README.md)
 
 **Merging sorted batches by remapping memory pages (promising).** Merging two already-sorted batches of large records usually means copying every byte into a new output. When long stretches of an input already sit at the right place relative to a page boundary, the program can ask the operating system to show those pages in the output instead of copying them. For synthetic batches that overlap at their edges, the speedup over the best merge into a new output was 1.33–1.36× when 37.5% of the output was reused. One seed reached 2.67× by reusing 75%. [Measured results and raw data](runs/2026-11-12-page-remapped-merge-candidate/summary.md)
 
@@ -28,9 +37,10 @@ The caveats matter:
 
 ## What does not work
 
+- **Direct span moves for local correction batches.** DeltaSort was faster on both controls where new keys were selected within 256 positions of their original location. The prototype took 1.89–2.40 ms versus 1.64–2.26 ms, paired by seed. [Control results](runs/2026-11-23-key-correction-spans/README.md#development-controls)
+- **Preparing new batches for page remapping in Linux.** Making two batches and a merged view by shifting page placement gave 1.23–1.28× at 128 and 256 MiB with 2% overlap. It fell below the 1.30× target on all eight fresh cases. [Linux producer benchmark](runs/2026-11-16-linux-producer-placement/README.md)
 - **Splitting permutation cycles with 64 saved rows.** The full 128 MiB sort took 7-10% longer than the fastest reference, which sorted compact keys, gathered records with streaming writes and copied them back. Interleaving beat ordinary cycles by 2.38-2.47x but did not pass the registered gate. The candidate needs much less payload scratch; this run allowed a full reusable buffer for every method. [Measured screen](runs/2026-11-22-checkpoint-cycles/README.md)
 - **Sorting 32-row groups by refining bit masks.** Building key-bit masks and traversing their prefixes took about 225 ns per group, compared with 37-39 ns for a direct AVX2 network. Even with eight possible keys it took more than twice the network's time. The network also postpones moving associated data until the final output. [Measured screen](runs/2026-11-22-bitplane-sort/README.md)
-- **Producing both batches with new Linux mappings.** The shifted layout reused about 98% of the fused output. Building the two batches took 80–84% of the total time. Setting up pages early saved time in the first read, with at most a 2.2 ms reduction in the total. Every fresh case missed the speed target. [Linux producer benchmark](runs/2026-11-16-linux-producer-placement/README.md)
 - **Shifting each input's starting position in a Windows producer.** With 2% overlap, choosing offsets doubled the fraction of bytes eligible for reuse. Producing both batches and the merged view still took 1.84–2.43 times as long as copying directly, including the first read. [Producer benchmark](runs/2026-11-16-producer-page-placement/README.md)
 - **Reusing whole pages when records from both sources alternate frequently.** More than 99% of the rows in each monthly airport pair fell within the common time range. The longest stretch from one input was 17 rows. It takes 32 rows to fill one page at 128 bytes per row. [Flight coverage diagnostic](runs/2026-11-16-flight-overlap/README.md)
 - **Compressing four-byte keys to three bytes between passes.** With eight workers and two intermediate memory transfers, the estimated gain after compression and reconstruction was 1.09–1.18×. The screen used sequential copying and missed the 1.30× gate in all four cases. [Bandwidth screen](runs/2026-11-15-compressed-key-bandwidth/README.md)
@@ -43,19 +53,18 @@ The caveats matter:
 
 ## What comes next
 
-- For in-place record sorting, retain streaming gather plus copy-back as a control. A design that moves fewer bytes must also demonstrate lower total time; compare any future positive candidate with IPS4o and a record-oriented SIMD merge. [Latest screen](runs/2026-11-22-checkpoint-cycles/README.md)
-- For page remapping, look for an actual workflow that already writes its sorted batches into shareable pages. The airport traces provide realistic overlapping layouts to screen for such a workflow. [Flight coverage diagnostic](runs/2026-11-16-flight-overlap/README.md)
-- Test other mechanisms that can remove a full memory pass or move a working set into cache. The tested bit-mask traversal is closed; a new small-batch design needs a cheaper way to produce the permutation than scalar traversal and must beat a direct SIMD tag network. [Idea backlog](notes/ideas.md)
+- The broad search is paused pending the owner's decision. The strongest validation target for this line is a workflow that receives unapplied key corrections and sometimes moves records far from their old positions. [Workload and boundaries](runs/2026-11-23-key-correction-spans/README.md)
 
 ## All experiments
 
 Generated from the run logs by `scripts/build_progress.py`. Newest first.
 
 <!-- RUNS:START -->
-19 runs: 2 promising, 9 failed, 6 diagnostic, 2 setup.
+20 runs: 3 promising, 9 failed, 6 diagnostic, 2 setup.
 
 | Date | Run | Verdict | Result | What we learned |
 |---|---|---|---|---|
+| 2026-11-23 00:47 | [Direct span moves after key corrections](runs/2026-11-23-key-correction-spans/) | 🟡 promising | 1.810–2.102× across four registered holdout cells and 1.944–2.029× in the supplemental comparison | Applying a small batch of key corrections to a sorted array ran 1.81–2.10× as fast as the fastest measured reference on fresh 128 and 256 MiB cases. The prototype wrote about half as many unchanged rows. DeltaSort was faster when corrections stayed close to their original ranks. |
 | 2026-11-22 22:26 | [Sparse saved-row cuts for in-place record permutation](runs/2026-11-22-checkpoint-cycles/) | ❌ failed | 0.908-0.931x across two primary seeds | Interleaved paths reduced the full sort from 126-129 ms with ordinary cycles to 52-53 ms, but streaming gather plus copy-back still won at 48-49 ms. Both primary inputs missed the speed target. |
 | 2026-11-22 22:09 | [Stable sorting through bitplane membership masks](runs/2026-11-22-bitplane-sort/) | ❌ failed | 0.163-0.175x across two primary seeds | Keeping the sort in bit masks took 5.71-6.15 times the direct AVX2 network's time on random byte keys. All 240 timed calls were correct, but neither primary seed approached the speed target. |
 | 2026-11-16 15:15 | [Producing two batches and their merged view on Linux](runs/2026-11-16-linux-producer-placement/) | ❌ failed | 1.231–1.280× on the eight holdout cases, with 0/8 meeting the 77% time limit | Adjusted page placement was 1.231–1.280× as fast as the best direct writer across eight fresh edge-overlap cases on two Linux runners. Every case missed the 1.30× target, and building the two batches took 80–84% of the remapping time. |
