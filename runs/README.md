@@ -56,7 +56,7 @@ After adding or editing a run, run `python scripts/build_progress.py`. CI fails 
 
 ## Check the published measurements
 
-These commands regenerate the tables from the tracked CSVs without running the benchmarks. Run them from the repository root with Python 3. Each run's README links its protocol, raw data, metadata and full reproduction commands. The metadata records the source commit used for each measurement.
+These commands regenerate the tables from the tracked CSVs without running the benchmarks. Run them from the repository root with Python 3. Each run's README links its protocol, raw data, metadata and full reproduction commands. The metadata records the source commit or source file digests for each measurement.
 
 ```sh
 python runs/2026-11-12-record-permutation/analyze.py runs/2026-11-12-record-permutation/raw.csv
@@ -77,6 +77,7 @@ python -X utf8 runs/2026-11-23-lichess-rating-replay/analyze.py
 python -X utf8 runs/2026-11-24-key-correction-decision/analyze.py synthetic
 python -X utf8 runs/2026-11-24-key-correction-decision/analyze.py january
 python -X utf8 runs/2026-11-24-varying-bit-argsort/analyze.py development
+python -X utf8 runs/2026-11-24-gpu-sort-return/analyze.py development
 python -X utf8 runs/2026-11-16-linux-producer-placement/analyze.py \
   runs/2026-11-16-linux-producer-placement/runner-1.csv \
   runs/2026-11-16-linux-producer-placement/runner-2.csv

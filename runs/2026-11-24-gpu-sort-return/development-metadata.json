@@ -1,0 +1,50 @@
+{
+  "stage": "development",
+  "started_utc": "2026-11-24T12:24:44.648005+00:00",
+  "finished_utc": "2026-11-24T12:25:17.899563+00:00",
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 3070",
+    "compute_capability": "8.6",
+    "device_bytes": 8589410304,
+    "driver_api": 13010,
+    "runtime": 12010,
+    "cub": 200001,
+    "msvc": 193431937,
+    "nvidia_driver": "591.86"
+  },
+  "host_processor": "AMD Ryzen 7 5800X 8-Core Processor",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "logical_cpu": 8,
+  "host_threads": 1,
+  "streams": 1,
+  "nvcc_version": [
+    "nvcc: NVIDIA (R) Cuda compiler driver",
+    "Copyright (c) 2005-2023 NVIDIA Corporation",
+    "Built on Mon_Apr__3_17:36:15_Pacific_Daylight_Time_2023",
+    "Cuda compilation tools, release 12.1, V12.1.105",
+    "Build cuda_12.1.r12.1/compiler.32688072_0"
+  ],
+  "flags": [
+    "-O3",
+    "--std=c++17",
+    "-arch=sm_86",
+    "--expt-relaxed-constexpr",
+    "--use-local-env",
+    "-Xcompiler=/O2,/arch:AVX2,/EHsc"
+  ],
+  "source_sha256": {
+    "runs/2026-11-24-gpu-sort-return/protocol.md": "37686d772b3934875d003ea05c526a1b35c1af0b719f07209a1188b97acf0398",
+    "prototypes/agents/gpu-sort-return/bench.cu": "e0675424aa8ff981032c42afbfe423ff1c5a74d650c19777a51b2ef6ee13ee84",
+    "prototypes/agents/gpu-sort-return/run.py": "a12b9bce6199ba16db3d723c8e01d91f027d5941424699da408f5663e8339b4b"
+  },
+  "binary_sha256": "ede79a5da765bc3ea2ab1ee13e0f03e21a2f0a292cb596a313433fb1d0af61e3",
+  "raw_sha256": "3fedcc25146f401294b98ca5dab72ceabbb8d1cc5ffa7a56ad7709c7a216d014",
+  "verified_calls": 324,
+  "warmups": 2,
+  "measured_calls_per_method": 7,
+  "model": "gpt-6.2-sol",
+  "tokens": "not captured",
+  "reasoning_setting": "not captured",
+  "session_cost": "not captured",
+  "external_compute_spend": 0
+}

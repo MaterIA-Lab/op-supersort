@@ -8,7 +8,7 @@ The project keeps exploring until a relevant finding appears: at least 1.3× fas
 
 ## Progress
 
-**Latest experiment.** Packing individual varying bits of 128-bit keys with their row indices reached 0.989–1.016× against trimming each 32-bit field on four modeled composite-key inputs. The exact ordering passed every check and the speedup fell short of the target. [Wide-key experiment](runs/2026-11-24-varying-bit-argsort/README.md) · [Earlier direct-span decision](runs/2026-11-24-key-correction-decision/README.md)
+**Latest experiment.** Returning compressed keys from the RTX 3070 cut transfer bytes by about half. Rebuilding the keys on the CPU cost more than the transfer saved, so a direct return was faster on every input. [GPU transfer experiment](runs/2026-11-24-gpu-sort-return/README.md) · [Earlier wide-key experiment](runs/2026-11-24-varying-bit-argsort/README.md)
 
 See [PROGRESS.md](PROGRESS.md) for what works and what does not, in plain language. Agents start from [notes/agent-brief.md](notes/agent-brief.md).
 
