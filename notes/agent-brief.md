@@ -16,6 +16,7 @@ Find a genuinely new, architecture-aware mechanism that sorts a practically rele
 
 | Line | Status | Evidence | Next step |
 |---|---|---|---|
+| Short-window merge ranks (idea 12) | Closed for cold 64-byte stable merges | 0.830-1.037× first and 0.738-0.998× repeated on four uniform cases. Both store variants passed 0/4 in each sweep. Replay with known ranks peaked at 1.280×. All 1,080 calls verified. | Retain branchless and SIMD streaming merges as references. [Results](../runs/2026-11-24-rank-window-merge/README.md) |
 | GPU-sorted return with shared prefixes (idea 11) | Closed on the registered GPU route | 0.348-0.579× against raw copies on four uniform inputs at 64 and 256 MiB. 49.61-49.90% fewer return bytes. The free-decoder phase estimate was 1.146-1.248×. All 324 calls verified. | Keep pinned raw CUB return as the reference. [GPU timings](../runs/2026-11-24-gpu-sort-return/README.md) |
 | Varying-bit tags for wide argsort (idea 10) | Closed on the registered shapes | 0.989–1.016× on 1.05 and 4.19 million composite keys against field trimming. Their 64-bit tags were identical. On the Morton control, per-bit selection repaired 0–2 indices versus 18–30 and reached 0.997–1.011×. All 280 calls verified. | Retain per-field trimming as a generic baseline for wide-key stable argsort. [Results](../runs/2026-11-24-varying-bit-argsort/README.md) |
 | Direct span moves for key corrections (idea 9) | Closed as an active research priority | The 128 MiB uniform replacements reached 1.004–1.137× with cache-buffered merging included, versus 2.030–2.249× against the prior references. Real scheduled-duration reconciliation on 525,370 flights gave 0.848–1.210× in 12 primary ID-based comparisons and 0/48 passes across all states. Typical edited displacement was about 25,000 ranks. | Keep the movement bound and both buffered references. Consider reopening if a specific workflow demonstrates value from lower scratch or robust gains over the buffered reference. [Decision](../runs/2026-11-24-key-correction-decision/README.md) · [Prior art](../runs/2026-11-24-key-correction-decision/prior-art.md) |
@@ -29,6 +30,8 @@ Find a genuinely new, architecture-aware mechanism that sorts a practically rele
 | Patching vqsort phases for uint32 random keys | Closed (prior research) | E055–E072 all failed; best saved about 4.4 of 9.4 ms needed. | Do not retry. |
 
 ## Do not retry
+
+- **Optimizing rank computation alone in the tested eight-key merge windows.** Replaying the same payload copies with a prepared plan reached 0.756-1.280× on the primary cases. The fastest reference already places each record in one pass. [Replay diagnostics](../runs/2026-11-24-rank-window-merge/README.md#what-the-replay-shows)
 
 - **Decoder-only optimization of the tested CUDA return format.** With the same CPU-side output obligation, the phase estimate gives at most 1.248× even with zero expansion time. The measured encodings all lost to a direct copy. [GPU transfer experiment](../runs/2026-11-24-gpu-sort-return/README.md)
 
@@ -54,6 +57,8 @@ Find a genuinely new, architecture-aware mechanism that sorts a practically rele
 
 ## Controls and references to beat
 
+- **Cold stable merge with 64-byte records and dense key columns.** A direct conditional-move loop with full-line streaming stores had the fastest median in seven of eight uniform evaluations. A bitonic four-tag carry merge with the same stores won the other. Both materialize the full records. [Implementation](../prototypes/agents/rank-window-merge/README.md)
+
 - **Initialized GPU sort returning to RAM.** Upload and run CUB radix sort with double buffers, then return full-width keys directly into pinned host output. Include one bulk copy and four adjacent copies. All six registered inputs had a raw winner. [Prototype](../prototypes/agents/gpu-sort-return/README.md)
 
 - **Wide-key stable argsort.** Start with a variable-bit scan, trim leading and trailing constants in each 32-bit field, pack an ordered prefix with the row index, VQSort and perform exact tie repair. It had the best reference median in all eight registered comparisons. It ran 2.63–3.29× as fast as a contiguous leading prefix on the composite inputs. [Implementation](../prototypes/agents/varying-bit-argsort/README.md)
@@ -71,6 +76,8 @@ Find a genuinely new, architecture-aware mechanism that sorts a practically rele
 - **Packed four-record groups.** A direct three-stage AVX2 compare-exchange network and the comparison-mask shuffle lookup both preserve ties using source slot tags. Batch the references just as the candidate is batched. [Controls](../runs/2026-11-14-four-row-ranks/README.md)
 
 ## Contracts used so far
+
+- **Short-window stable merge.** Two immutable sorted inputs with separate dense uint32 key columns, 64-byte records, a reused output buffer and one Windows thread. CLFLUSHOPT and MFENCE before timing. Uniform keys at 16 and 64 MiB plus one 16 MiB alternating-range control, two seeds each. [Protocol](../runs/2026-11-24-rank-window-merge/protocol.md)
 
 - **GPU sort with host output.** Reusable page-locked uint32 input and output, one pinned CPU thread, one RTX 3070 stream, CUB 2.0.1. Upload, sort, encoding, return, reconstruction and synchronization are timed. Uniform keys at 64 and 256 MiB plus a 64 MiB two-cluster control. [Protocol](../runs/2026-11-24-gpu-sort-return/protocol.md)
 
@@ -108,7 +115,7 @@ The [run index and analysis commands](../runs/README.md#check-the-published-meas
 ## Run ledger
 
 <!-- RUNS:START -->
-26 runs: 3 promising, 15 failed, 6 diagnostic, 2 setup.
+27 runs: 3 promising, 16 failed, 6 diagnostic, 2 setup.
 
 | Run | Date | Verdict | Idea | Result | Baseline | Closes | Opens | Model |
 |---|---|---|---|---|---|---|---|---|
@@ -138,6 +145,7 @@ The [run index and analysis commands](../runs/README.md#check-the-published-meas
 | [2026-11-24-key-correction-decision](../runs/2026-11-24-key-correction-decision/) | 2026-11-24 00:25 | failed | 9. Move unchanged spans directly after a batch of key corrections | 1.004–1.137× on the 128 MiB synthetic check and 0.848–1.210× on the primary flight comparisons | Fastest median per case including two cache-buffered merges, four bulk merges, DeltaSort, both Rust full sorts and counting gather where applicable | direct span moves as an active research priority | — | GPT-6.2 Sol (Codex, gpt-6.2-sol) |
 | [2026-11-24-varying-bit-argsort](../runs/2026-11-24-varying-bit-argsort/) | 2026-11-24 00:48 | failed | 10. Pack varying bits of wide keys together with row indices | 0.989–1.016× across four primary comparisons | Fastest verified median of field ranges, leading prefix, high-word key/value pairs and indirect pdqsort | per-bit compaction on the tested wide-key argsort inputs | use field-trimmed tags as a wide-key argsort reference | GPT-6.2 Sol (Codex, gpt-6.2-sol) |
 | [2026-11-24-gpu-sort-return](../runs/2026-11-24-gpu-sort-return/) | 2026-11-24 12:24 | failed | 11. Return GPU-sorted keys as narrow values and shared prefixes | 0.348-0.579× on four primary comparisons | Fastest verified median of one or four full-width copies and the three compressed controls after the same CUB sort | post-sort 16-bit return with host reconstruction under the measured GPU contract | — | GPT-6.2 Sol (Codex, gpt-6.2-sol) |
+| [2026-11-24-rank-window-merge](../runs/2026-11-24-rank-window-merge/) | 2026-11-24 15:58 | failed | 12. Write records directly to short-window merge ranks | 0.738-1.037× across the original and repeated primary comparisons | Fastest verified median of direct branching, branchless, bulk-span and bitonic SIMD key/index merges with the tested store variants | eight-key rank windows for cold stable merges of 64-byte records | — | GPT-6.2 Sol (Codex, gpt-6.2-sol) |
 
 Summaries, oldest first:
 
@@ -167,4 +175,5 @@ Summaries, oldest first:
 - **2026-11-24-key-correction-decision** (failed): A cache-buffered merge reduced the 128 MiB synthetic speedup to 1.004–1.137×. The prototype missed 1.30× in all 48 comparisons using real flight durations, so the project moves to another hypothesis.
 - **2026-11-24-varying-bit-argsort** (failed): Packing only varying bits gave nearly identical timings to trimming each field separately. It reached 0.989–1.016× against the fastest reference on four modeled composite-key inputs.
 - **2026-11-24-gpu-sort-return** (failed): The encoded return sent about half the bytes, and CPU reconstruction more than offset the transfer savings. Copying full keys won all six cases on the RTX 3070.
+- **2026-11-24-rank-window-merge** (failed): Comparing keys in short groups and placing records at their final ranks missed the 1.30× target in both timing runs. Replaying the same copies with the positions already known reached at most 1.280×.
 <!-- RUNS:END -->

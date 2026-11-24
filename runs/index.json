@@ -677,6 +677,33 @@
       "how_es": "Después de ordenar los números en la GPU, se envía la mitad baja de cada número y una tabla que indica dónde cambia la mitad alta. La CPU reconstruye cada tramo mientras se transfiere el siguiente.",
       "compared_with_es": "La misma ordenación en GPU con una copia directa en uno o cuatro bloques, claves comprimidas que se reconstruyen al final y diferencias de 16 bits respecto a la primera clave de cada grupo.",
       "faster_where_es": "Con 64 y 256 MiB de claves aleatorias de 32 bits, se transfirió alrededor de un 50% menos de datos. La ordenación completa tardó entre 1,73 y 2,88 veces lo que tardó la mejor copia directa. La copia directa también ganó en las dos pruebas con claves concentradas en dos rangos."
+    },
+    {
+      "id": "2026-11-24-rank-window-merge",
+      "path": "runs/2026-11-24-rank-window-merge/",
+      "title": "Placing records directly at their merge ranks",
+      "date": "2026-11-24 15:58",
+      "verdict": "failed",
+      "summary": "Comparing keys in short groups and placing records at their final ranks missed the 1.30× target in both timing runs. Replaying the same copies with the positions already known reached at most 1.280×.",
+      "model": "GPT-6.2 Sol (Codex, gpt-6.2-sol)",
+      "cost": "not captured",
+      "idea": "12. Write records directly to short-window merge ranks",
+      "result": "0.738-1.037× across the original and repeated primary comparisons",
+      "baseline": "Fastest verified median of direct branching, branchless, bulk-span and bitonic SIMD key/index merges with the tested store variants",
+      "closes": [
+        "eight-key rank windows for cold stable merges of 64-byte records"
+      ],
+      "speedup": [
+        0.738,
+        1.037
+      ],
+      "how": "Compare short groups from two sorted batches to find the final slots of the next records. Copy each record once, visiting all records from one batch in that group before the other.",
+      "compared_with": "Merges that choose the next row one at a time, copy consecutive runs in bulk, or use the CPU's vector instructions to merge several keys at once. The fastest references wrote straight to the output without bringing its old cache lines into cache.",
+      "faster_where": "On 16 and 64 MiB of randomly interleaved 64-byte records, the fastest version ran 0.738-1.037 times as fast as the best reference across both timing runs. The one small apparent gain disappeared when repeated.",
+      "title_es": "Copiar los registros directamente a su posición final al fusionar",
+      "how_es": "Se comparan grupos pequeños de claves de dos lotes ordenados para calcular las próximas posiciones de salida. Cada registro se copia una vez, primero los de un lote y después los del otro dentro de cada grupo.",
+      "compared_with_es": "Fusiones que eligen una fila cada vez, copian tramos completos o usan instrucciones vectoriales de la CPU para fusionar varias claves a la vez. Las referencias más rápidas escribían en la salida sin cargar en caché su contenido anterior.",
+      "faster_where_es": "Con 16 y 64 MiB de registros de 64 bytes intercalados al azar, la variante más rápida rindió entre 0,738× y 1,037× frente a la mejor referencia en las dos rondas de medición. La pequeña ventaja de un caso desapareció al repetirlo."
     }
   ]
 }

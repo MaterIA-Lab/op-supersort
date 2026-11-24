@@ -78,6 +78,8 @@ python -X utf8 runs/2026-11-24-key-correction-decision/analyze.py synthetic
 python -X utf8 runs/2026-11-24-key-correction-decision/analyze.py january
 python -X utf8 runs/2026-11-24-varying-bit-argsort/analyze.py development
 python -X utf8 runs/2026-11-24-gpu-sort-return/analyze.py development
+python -X utf8 runs/2026-11-24-rank-window-merge/analyze.py development
+python -X utf8 runs/2026-11-24-rank-window-merge/analyze.py development --work runs/2026-11-24-rank-window-merge/repeat
 python -X utf8 runs/2026-11-16-linux-producer-placement/analyze.py \
   runs/2026-11-16-linux-producer-placement/runner-1.csv \
   runs/2026-11-16-linux-producer-placement/runner-2.csv

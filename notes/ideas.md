@@ -408,6 +408,39 @@ With free CPU expansion and the measured encode and transfer costs,
 the estimate still missed the gate. Close this return format for the
 tested setup. [Measured decision](../runs/2026-11-24-gpu-sort-return/README.md)
 
+## 12. Write records directly to short-window merge ranks
+
+_Author: agent:gpt-6.2-sol (Codex), 2026-11-24._
+
+In a stable merge, look at eight keys from each sorted source and
+pick the block with the lower tagged endpoint. For each key in that
+block, count the keys from the other block that precede it. Use the
+resulting positions to copy a short window of 64-byte records,
+visiting each source in turn. This leaves only two forward streams
+of payload reads and replaces output-by-output source selection
+with batch comparisons on dense key columns. The extra comparisons
+and out-of-order destination writes may cost more than they save.
+
+[Inoue and Taura](https://www.vldb.org/pvldb/vol8/p1274-inoue.pdf)
+already merge key/index data with SIMD and reorder records.
+[Chhugani et al.](https://www.vldb.org/pvldb/vol1/1454171.pdf)
+provide bitonic SIMD merge networks. [Inoue et al.](https://www.vldb.org/pvldb/vol8/p293-inoue.pdf)
+compare short windows across two sorted inputs for set intersection.
+[Merge Path](https://arxiv.org/abs/1406.2628) partitions two inputs
+into pairs of ranges with contiguous output ranks. The test isolates
+rank placement and source-ordered copying inside a short window.
+Algorithmic priority for that combination is unverified.
+
+The first screen compares direct, bulk and SIMD merges, including
+streaming stores, with a separate measurement of replaying known
+rank windows. [Registered screen](../runs/2026-11-24-rank-window-merge/protocol.md)
+
+**Result.** The streaming rank variant reached 0.830-1.037× in the
+first uniform-key sweep and 0.738-0.998× in the repeat. Replaying
+known positions peaked at 1.280×. This closes the tested eight-key
+design for 16 and 64 MiB cold merges with full materialization.
+[Measurements and repeat](../runs/2026-11-24-rank-window-merge/README.md)
+
 ## Rejected or out of scope
 
 - Dispatching between known sorters by detected distribution (the prior E054 approach). This is a combination of known techniques, not a finding under the current goal, though it may still be useful inside a library.
