@@ -16,6 +16,7 @@ Find a genuinely new, architecture-aware mechanism that sorts a practically rele
 
 | Line | Status | Evidence | Next step |
 |---|---|---|---|
+| Masks for repeated keys with exceptions (idea 13) | Closed for one sampled key in each fixed 64-row block | 1.004-1.086× at 32 and 128 MiB with 1/8 replacements and 0/4 gate passes for either sorter. The mask sorted 9.0-10.1% more tags than exact contiguous runs. A 1/4-replacement control reached 1.132-1.138×. All 540 calls verified. | Keep SIMD-detected equal runs as a reference. [Results and geometry](../runs/2026-11-24-exception-mask-sort/README.md) |
 | Short-window merge ranks (idea 12) | Closed for cold 64-byte stable merges | 0.830-1.037× first and 0.738-0.998× repeated on four uniform cases. Both store variants passed 0/4 in each sweep. Replay with known ranks peaked at 1.280×. All 1,080 calls verified. | Retain branchless and SIMD streaming merges as references. [Results](../runs/2026-11-24-rank-window-merge/README.md) |
 | GPU-sorted return with shared prefixes (idea 11) | Closed on the registered GPU route | 0.348-0.579× against raw copies on four uniform inputs at 64 and 256 MiB. 49.61-49.90% fewer return bytes. The free-decoder phase estimate was 1.146-1.248×. All 324 calls verified. | Keep pinned raw CUB return as the reference. [GPU timings](../runs/2026-11-24-gpu-sort-return/README.md) |
 | Varying-bit tags for wide argsort (idea 10) | Closed on the registered shapes | 0.989–1.016× on 1.05 and 4.19 million composite keys against field trimming. Their 64-bit tags were identical. On the Morton control, per-bit selection repaired 0–2 indices versus 18–30 and reached 0.997–1.011×. All 280 calls verified. | Retain per-field trimming as a generic baseline for wide-key stable argsort. [Results](../runs/2026-11-24-varying-bit-argsort/README.md) |
@@ -30,6 +31,8 @@ Find a genuinely new, architecture-aware mechanism that sorts a practically rele
 | Patching vqsort phases for uint32 random keys | Closed (prior research) | E055–E072 all failed; best saved about 4.4 of 9.4 ms needed. | Do not retry. |
 
 ## Do not retry
+
+- **Single sampled key in fixed 64-row blocks for the measured burst shape.** Exact runs with VQSort led the references in all primary cases. A geometry audit put two sampled keys at 34-35% fewer tags than the single sample, while holding the measured output cost would require 37-58% less preparation and sorting time. Two-key geometry has no attached timing claim. [Geometry](../runs/2026-11-24-exception-mask-sort/README.md#geometry-and-remaining-budget)
 
 - **Optimizing rank computation alone in the tested eight-key merge windows.** Replaying the same payload copies with a prepared plan reached 0.756-1.280× on the primary cases. The fastest reference already places each record in one pass. [Replay diagnostics](../runs/2026-11-24-rank-window-merge/README.md#what-the-replay-shows)
 
@@ -57,6 +60,8 @@ Find a genuinely new, architecture-aware mechanism that sorts a practically rele
 
 ## Controls and references to beat
 
+- **Stable large records with repeated-key bursts.** AVX2 adjacent-key comparison, one `(key, run ordinal)` VQSort tag per equal run, and prefetched coalesced output with streaming stores. It was 1.547-1.622× faster than the best per-row tag method in the four noisy-burst cases. Both sides use the same writer. [Implementation](../prototypes/agents/exception-mask-sort/README.md)
+
 - **Cold stable merge with 64-byte records and dense key columns.** A direct conditional-move loop with full-line streaming stores had the fastest median in seven of eight uniform evaluations. A bitonic four-tag carry merge with the same stores won the other. Both materialize the full records. [Implementation](../prototypes/agents/rank-window-merge/README.md)
 
 - **Initialized GPU sort returning to RAM.** Upload and run CUB radix sort with double buffers, then return full-width keys directly into pinned host output. Include one bulk copy and four adjacent copies. All six registered inputs had a raw winner. [Prototype](../prototypes/agents/gpu-sort-return/README.md)
@@ -76,6 +81,8 @@ Find a genuinely new, architecture-aware mechanism that sorts a practically rele
 - **Packed four-record groups.** A direct three-stage AVX2 compare-exchange network and the comparison-mask shuffle lookup both preserve ties using source slot tags. Batch the references just as the candidate is batched. [Controls](../runs/2026-11-14-four-row-ranks/README.md)
 
 ## Contracts used so far
+
+- **Repeated-key bursts.** Immutable 64-byte records, parallel uint32 key column and a reused contiguous stable output. Scratch lifecycle timed, one pinned Windows thread and explicit cache flush. Bursts of 96-287 rows with 1/8 replacements at 32 and 128 MiB. Clean, 1/4-replacement and uniform controls at 32 MiB. [Protocol](../runs/2026-11-24-exception-mask-sort/protocol.md)
 
 - **Short-window stable merge.** Two immutable sorted inputs with separate dense uint32 key columns, 64-byte records, a reused output buffer and one Windows thread. CLFLUSHOPT and MFENCE before timing. Uniform keys at 16 and 64 MiB plus one 16 MiB alternating-range control, two seeds each. [Protocol](../runs/2026-11-24-rank-window-merge/protocol.md)
 
@@ -115,7 +122,7 @@ The [run index and analysis commands](../runs/README.md#check-the-published-meas
 ## Run ledger
 
 <!-- RUNS:START -->
-27 runs: 3 promising, 16 failed, 6 diagnostic, 2 setup.
+28 runs: 3 promising, 17 failed, 6 diagnostic, 2 setup.
 
 | Run | Date | Verdict | Idea | Result | Baseline | Closes | Opens | Model |
 |---|---|---|---|---|---|---|---|---|
@@ -146,6 +153,7 @@ The [run index and analysis commands](../runs/README.md#check-the-published-meas
 | [2026-11-24-varying-bit-argsort](../runs/2026-11-24-varying-bit-argsort/) | 2026-11-24 00:48 | failed | 10. Pack varying bits of wide keys together with row indices | 0.989–1.016× across four primary comparisons | Fastest verified median of field ranges, leading prefix, high-word key/value pairs and indirect pdqsort | per-bit compaction on the tested wide-key argsort inputs | use field-trimmed tags as a wide-key argsort reference | GPT-6.2 Sol (Codex, gpt-6.2-sol) |
 | [2026-11-24-gpu-sort-return](../runs/2026-11-24-gpu-sort-return/) | 2026-11-24 12:24 | failed | 11. Return GPU-sorted keys as narrow values and shared prefixes | 0.348-0.579× on four primary comparisons | Fastest verified median of one or four full-width copies and the three compressed controls after the same CUB sort | post-sort 16-bit return with host reconstruction under the measured GPU contract | — | GPT-6.2 Sol (Codex, gpt-6.2-sol) |
 | [2026-11-24-rank-window-merge](../runs/2026-11-24-rank-window-merge/) | 2026-11-24 15:58 | failed | 12. Write records directly to short-window merge ranks | 0.738-1.037× across the original and repeated primary comparisons | Fastest verified median of direct branching, branchless, bulk-span and bitonic SIMD key/index merges with the tested store variants | eight-key rank windows for cold stable merges of 64-byte records | — | GPT-6.2 Sol (Codex, gpt-6.2-sol) |
+| [2026-11-24-exception-mask-sort](../runs/2026-11-24-exception-mask-sort/) | 2026-11-24 16:16 | failed | 13. Sort repeated keys together across short exception gaps | 1.004-1.086× on four primary comparisons | Fastest verified median of per-row and contiguous equal-key run tags with VQSort and stable byte radix | single sampled key in each 64-row block for the registered sort | — | GPT-6.2 Sol (Codex, gpt-6.2-sol) |
 
 Summaries, oldest first:
 
@@ -176,4 +184,5 @@ Summaries, oldest first:
 - **2026-11-24-varying-bit-argsort** (failed): Packing only varying bits gave nearly identical timings to trimming each field separately. It reached 0.989–1.016× against the fastest reference on four modeled composite-key inputs.
 - **2026-11-24-gpu-sort-return** (failed): The encoded return sent about half the bytes, and CPU reconstruction more than offset the transfer savings. Copying full keys won all six cases on the RTX 3070.
 - **2026-11-24-rank-window-merge** (failed): Comparing keys in short groups and placing records at their final ranks missed the 1.30× target in both timing runs. Replaying the same copies with the positions already known reached at most 1.280×.
+- **2026-11-24-exception-mask-sort** (failed): A mask grouped nearby equal keys despite interruptions, but the fixed blocks produced more tags than exact runs on the four main inputs. The full sort reached 1.004-1.086× against the run-based reference.
 <!-- RUNS:END -->

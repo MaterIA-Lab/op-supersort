@@ -704,6 +704,33 @@
       "how_es": "Se comparan grupos pequeños de claves de dos lotes ordenados para calcular las próximas posiciones de salida. Cada registro se copia una vez, primero los de un lote y después los del otro dentro de cada grupo.",
       "compared_with_es": "Fusiones que eligen una fila cada vez, copian tramos completos o usan instrucciones vectoriales de la CPU para fusionar varias claves a la vez. Las referencias más rápidas escribían en la salida sin cargar en caché su contenido anterior.",
       "faster_where_es": "Con 16 y 64 MiB de registros de 64 bytes intercalados al azar, la variante más rápida rindió entre 0,738× y 1,037× frente a la mejor referencia en las dos rondas de medición. La pequeña ventaja de un caso desapareció al repetirlo."
+    },
+    {
+      "id": "2026-11-24-exception-mask-sort",
+      "path": "runs/2026-11-24-exception-mask-sort/",
+      "title": "Sorting repeated keys together across exception gaps",
+      "date": "2026-11-24 16:16",
+      "verdict": "failed",
+      "summary": "A mask grouped nearby equal keys despite interruptions, but the fixed blocks produced more tags than exact runs on the four main inputs. The full sort reached 1.004-1.086× against the run-based reference.",
+      "model": "GPT-6.2 Sol (Codex, gpt-6.2-sol)",
+      "cost": "not captured",
+      "idea": "13. Sort repeated keys together across short exception gaps",
+      "result": "1.004-1.086× on four primary comparisons",
+      "baseline": "Fastest verified median of per-row and contiguous equal-key run tags with VQSort and stable byte radix",
+      "closes": [
+        "single sampled key in each 64-row block for the registered sort"
+      ],
+      "speedup": [
+        1.004,
+        1.086
+      ],
+      "how": "In each group of up to 64 rows, give nearby repeats of one key a single sortable tag and store which positions it covers. Give exceptional rows their own tags. After sorting the tags, write the full records in order.",
+      "compared_with": "Sorting one tag per row and sorting one tag per consecutive run of equal keys. Each method uses the same two sorters and copies full records only into the final output.",
+      "faster_where": "With 32 and 128 MiB of records and one independent key replacement per eight rows on average, the mask ran 1.004-1.086 times as fast as the best reference. It reached 1.132-1.138 times as fast in the 32 MiB control with one replacement per four rows.",
+      "title_es": "Agrupar claves repetidas aunque haya excepciones intercaladas",
+      "how_es": "En cada bloque de hasta 64 filas, se asigna una sola ficha a las repeticiones de una clave y se guarda a qué posiciones corresponde. Las filas con claves distintas conservan sus propias fichas. Después se escriben los registros completos en orden.",
+      "compared_with_es": "Ordenar una ficha por fila y ordenar una ficha por tramo consecutivo de claves iguales. Cada método usa las mismas dos técnicas de ordenación y copia los registros completos al resultado final.",
+      "faster_where_es": "Con 32 y 128 MiB de registros y una clave reemplazada al azar de cada ocho de media, la máscara rindió entre 1,004× y 1,086× frente a la mejor referencia. En el control de 32 MiB con una de cada cuatro claves reemplazadas, alcanzó entre 1,132× y 1,138×."
     }
   ]
 }

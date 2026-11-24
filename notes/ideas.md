@@ -441,6 +441,39 @@ known positions peaked at 1.280×. This closes the tested eight-key
 design for 16 and 64 MiB cold merges with full materialization.
 [Measurements and repeat](../runs/2026-11-24-rank-window-merge/README.md)
 
+## 13. Sort repeated keys together across short exception gaps
+
+_Author: agent:gpt-6.2-sol (Codex), 2026-11-24._
+
+Give up to 64 nearby rows with the same sampled key one sortable tag
+and a match mask. A different key still receives its usual individual
+tag. The group and scalar tags sort together by key and source
+position. During final materialization the mask expands directly into
+copies of contiguous records. This can reduce temporary sort traffic
+when a relatively small number of different keys splits one repeated
+key into many runs. Every record is returned in stable order.
+
+[Abadi, Madden and Ferreira](https://doi.org/10.1145/1142473.1142548)
+already use run-length encodings and position-aware execution.
+[Patched integer codecs](https://arxiv.org/abs/1209.2137) already
+store an ordinary representation with side exceptions.
+[Inoue and Taura](https://www.vldb.org/pvldb/vol8/p1274-inoue.pdf)
+use key/index sorting and a late payload permutation. The tested
+combination sorts a mask-tagged group together with individual
+exceptions and expands only when writing the final order.
+Priority for that combination is unverified.
+
+The first screen charges mask formation and expansion and compares
+per-row tags and exact equal-key runs with shared configurable
+sorters and copy paths. [Registered screen](../runs/2026-11-24-exception-mask-sort/protocol.md)
+
+**Result.** At 1/8 replacements, the VQSort mask reached
+1.004-1.086× against exact runs and used 9.0-10.1% more tags.
+The 1/4-replacement control reached 1.132-1.138× at 32 MiB.
+The output phase dominated the primary timings. Close the
+single-key fixed-block implementation.
+[Measured decision](../runs/2026-11-24-exception-mask-sort/README.md)
+
 ## Rejected or out of scope
 
 - Dispatching between known sorters by detected distribution (the prior E054 approach). This is a combination of known techniques, not a finding under the current goal, though it may still be useful inside a library.

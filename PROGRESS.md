@@ -6,6 +6,12 @@ _Last updated: 2026-11-24._
 
 ## Where we are
 
+Using one tag for nearby equal keys despite intervening exceptions
+missed 1.30×. With 32 and 128 MiB of repeated-key records, sorting
+contiguous equal-key runs was the strongest control. The new mask
+reached 1.004-1.086× against it.
+[Repeated-key experiment](runs/2026-11-24-exception-mask-sort/README.md)
+
 Placing records at their final positions in groups of up to 15 fell
 short when merging two sorted batches. The fastest variant reached
 0.738-1.037× across the original timings and their repeat. With the
@@ -30,6 +36,13 @@ times as trimming each field individually.
 
 ## What works so far
 
+**Sorting groups of consecutive equal keys.** This existing technique
+ran 1.547-1.622× as fast as sorting one tag per row in four synthetic
+cases. The inputs had 32 or 128 MiB of 64-byte records, keys arriving
+in bursts and an average of one replacement per eight rows. Every
+reference returned the full records in stable order.
+[Repeated-key reference timings](runs/2026-11-24-exception-mask-sort/README.md)
+
 **Merging sorted batches by remapping memory pages (promising).** Merging two already-sorted batches of large records usually means copying every byte into a new output. When long stretches of an input already sit at the right place relative to a page boundary, the program can ask the operating system to show those pages in the output instead of copying them. For synthetic batches that overlap at their edges, the speedup over the best merge into a new output was 1.33–1.36× when 37.5% of the output was reused. One seed reached 2.67× by reusing 75%. [Measured results and raw data](runs/2026-11-12-page-remapped-merge-candidate/summary.md)
 
 The caveats matter:
@@ -41,6 +54,8 @@ The caveats matter:
 **Assembling disjoint archive batches.** With real batch sizes and synthetic record payloads, remapping was at least 1.5× faster than copying into a new output in seven of eight cases. With an already-resident buffer, remapping cleared 1.5× in the two cases where nearly every page lined up. This measures assembly of two already-ordered ranges. [Measured results](runs/2026-11-12-gharchive-disjoint-merge/summary.md)
 
 ## What does not work
+
+- **Selecting one repeated key per block of 64 rows.** With an average of one replacement in eight, the mask left 9-10% more tags to sort than exact contiguous runs. Its best control gain was 1.138× on 32 MiB with one replacement in four. Copying the output still took about 60% of the main-case time. [Timings and tag count audit](runs/2026-11-24-exception-mask-sort/README.md)
 
 - **Computing merge positions in short groups before copying records.** Both tests at 64 MiB took longer than a direct merge with streaming stores. Those stores write the output without fetching its old contents into cache. Both algorithms already read and write each record once. [Merge timing and repeatability](runs/2026-11-24-rank-window-merge/README.md)
 
@@ -67,17 +82,18 @@ The caveats matter:
 
 ## What comes next
 
-- Screen mechanisms that eliminate a record movement pass. For a cold merge of two sorted batches with dense key columns, compare against branchless and SIMD merges using streaming stores. [Idea backlog](notes/ideas.md) · [Merge reference](prototypes/agents/rank-window-merge/README.md)
+- Screen mechanisms that save record movement. Use exact equal-key runs as the reference for repeated-key sorts, and branchless and SIMD streaming stores for cold two-way merges. [Idea backlog](notes/ideas.md) · [Repeated-key reference](prototypes/agents/exception-mask-sort/README.md) · [Merge reference](prototypes/agents/rank-window-merge/README.md)
 
 ## All experiments
 
 Generated from the run logs by `scripts/build_progress.py`. Newest first.
 
 <!-- RUNS:START -->
-27 runs: 3 promising, 16 failed, 6 diagnostic, 2 setup.
+28 runs: 3 promising, 17 failed, 6 diagnostic, 2 setup.
 
 | Date | Run | Verdict | Result | What we learned |
 |---|---|---|---|---|
+| 2026-11-24 16:16 | [Sorting repeated keys together across exception gaps](runs/2026-11-24-exception-mask-sort/) | ❌ failed | 1.004-1.086× on four primary comparisons | A mask grouped nearby equal keys despite interruptions, but the fixed blocks produced more tags than exact runs on the four main inputs. The full sort reached 1.004-1.086× against the run-based reference. |
 | 2026-11-24 15:58 | [Placing records directly at their merge ranks](runs/2026-11-24-rank-window-merge/) | ❌ failed | 0.738-1.037× across the original and repeated primary comparisons | Comparing keys in short groups and placing records at their final ranks missed the 1.30× target in both timing runs. Replaying the same copies with the positions already known reached at most 1.280×. |
 | 2026-11-24 12:24 | [Compressing GPU-sorted keys for the trip back to RAM](runs/2026-11-24-gpu-sort-return/) | ❌ failed | 0.348-0.579× on four primary comparisons | The encoded return sent about half the bytes, and CPU reconstruction more than offset the transfer savings. Copying full keys won all six cases on the RTX 3070. |
 | 2026-11-24 00:48 | [Packing varying bits of wide keys into 64-bit sort tags](runs/2026-11-24-varying-bit-argsort/) | ❌ failed | 0.989–1.016× across four primary comparisons | Packing only varying bits gave nearly identical timings to trimming each field separately. It reached 0.989–1.016× against the fastest reference on four modeled composite-key inputs. |
