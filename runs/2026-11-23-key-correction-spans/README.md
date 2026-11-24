@@ -28,6 +28,11 @@ synthetic arrays on one machine. Algorithmic novelty and results on
 application traces still need independent validation. The owner was notified
 after the development gate and broad exploration was paused.
 
+**Follow-up on 2026-11-24.** Adding a cache-buffered merge reduced the
+128 MiB random-replacement speedup to 1.004–1.137× on four fresh
+comparisons. The new reference also led all the real flight-duration
+comparisons. [Continuation decision](../2026-11-24-key-correction-decision/README.md)
+
 ## Operation and references
 
 The caller starts with a contiguous array in `(key, id)` order and a batch of

@@ -593,6 +593,33 @@
       "how_es": "Se reconstruye la última puntuación de blitz observada de cada cuenta a partir de las partidas. El prototipo aplica los cambios de uno o diez minutos moviendo los tramos afectados directamente a su posición final.",
       "compared_with_es": "DeltaSort, cuatro variantes de compactación y fusión, las dos ordenaciones completas de Rust y una variante que cuenta fichas por puntuación y las copia en orden. Todos los métodos incluyen la memoria temporal que reservan.",
       "faster_where_es": "En un array de 2,44 MiB con 19.982 cuentas, el prototipo tardó entre un 13 % y un 21 % más que la mejor referencia en la mediana de cada condición. DeltaSort fue la referencia más rápida en 45 de 48 comparaciones. En ninguna se alcanzó el objetivo de 1,30×."
+    },
+    {
+      "id": "2026-11-24-key-correction-decision",
+      "path": "runs/2026-11-24-key-correction-decision/",
+      "title": "Direct span moves against cache-buffered merging",
+      "date": "2026-11-24 00:25",
+      "verdict": "failed",
+      "summary": "A cache-buffered merge reduced the 128 MiB synthetic speedup to 1.004–1.137×. The prototype missed 1.30× in all 48 comparisons using real flight durations, so the project moves to another hypothesis.",
+      "model": "GPT-6.2 Sol (Codex, gpt-6.2-sol)",
+      "cost": "not captured",
+      "idea": "9. Move unchanged spans directly after a batch of key corrections",
+      "result": "1.004–1.137× on the 128 MiB synthetic check and 0.848–1.210× on the primary flight comparisons",
+      "baseline": "Fastest median per case including two cache-buffered merges, four bulk merges, DeltaSort, both Rust full sorts and counting gather where applicable",
+      "closes": [
+        "direct span moves as an active research priority"
+      ],
+      "speedup": [
+        0.848,
+        1.21
+      ],
+      "how": "The prototype plans the corrected order and moves each affected stretch directly into place. The new reference reads a small block of records into cache and merges corrections while it writes that block back.",
+      "compared_with": "Two sizes of the new blocked merge, four earlier merges, DeltaSort and both Rust full sorts. The flight comparison also includes sorting by counting durations. All methods pay for temporary allocations.",
+      "faster_where": "The prototype reached 1.004–1.137× on four fresh 128 MiB comparisons with random changes. The 64 MiB flight replay reached 0.848–1.210× with lookup by ID in the primary cache condition. No flight comparison reached 1.30×.",
+      "title_es": "Movimiento directo de tramos frente a una fusión por bloques en caché",
+      "how_es": "El prototipo calcula el orden corregido y mueve cada tramo afectado a su posición final. La nueva referencia carga un bloque pequeño en caché y fusiona las correcciones mientras lo vuelca a la posición de salida.",
+      "compared_with_es": "Dos tamaños de la nueva fusión por bloques, las cuatro fusiones anteriores, DeltaSort y las dos ordenaciones completas de Rust. En vuelos se añade un método que cuenta registros por duración. Todos los métodos incluyen sus reservas temporales de memoria.",
+      "faster_where_es": "En cuatro comparaciones nuevas de 128 MiB con cambios aleatorios, el prototipo obtuvo entre 1,004× y 1,137×. En 64 MiB de datos de vuelos, con búsqueda por ID, obtuvo entre 0,848× y 1,210× en la condición principal. Ninguna comparación de vuelos alcanzó 1,30×."
     }
   ]
 }

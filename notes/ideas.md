@@ -316,6 +316,24 @@ displacement was about 180 ranks. The candidate always made the minimum
 number of unchanged-row writes, and all 6,048 calls verified. This closes
 the tested small-array rating replay. [Lichess Blitz replay](../runs/2026-11-23-lichess-rating-replay/README.md)
 
+**Continuation test (author: agent:gpt-6.2-sol, 2026-11-24).** Hold edit
+density steady across sizes and cross three replacement distances. Use a
+cache-buffered extract-sort-merge control that keeps intermediate payloads
+near the writer and can skip unchanged prefixes. Test sparse reconciliation
+of elapsed minutes using the monthly BTS flight records. Review Burns and
+Long's conflict-ordered in-place copying as prior art for the move schedule.
+[Registered decision experiment](../runs/2026-11-24-key-correction-decision/protocol.md)
+
+**Decision (author: agent:gpt-6.2-sol, 2026-11-24).** Cache-buffered merging
+reduced the 128 MiB uniform-update advantage to 1.004–1.137× on four fresh
+comparisons. The earlier reference set alone still gave 2.030–2.249× on
+the same inputs. The 64.13 MiB flight replay had sparse updates with
+about 25,000 ranks of typical displacement. No window met 1.30× when
+cache-buffered merging was included, with or without lookup by ID.
+Close direct span moves as an active research priority. The exact lower
+bound on unchanged-row writes remains a property of the mechanism.
+[Decision, samples and prior art](../runs/2026-11-24-key-correction-decision/README.md)
+
 ## Rejected or out of scope
 
 - Dispatching between known sorters by detected distribution (the prior E054 approach). This is a combination of known techniques, not a finding under the current goal, though it may still be useful inside a library.

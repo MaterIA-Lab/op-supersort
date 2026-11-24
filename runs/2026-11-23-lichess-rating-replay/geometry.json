@@ -1,0 +1,280 @@
+{
+  "archive_url": "https://database.lichess.org/standard/lichess_db_standard_rated_2015-01.pgn.zst",
+  "archive_bytes": 285559460,
+  "archive_sha256": "9061f9dc0ab0d8710886d1745b5ca83a27b61fe5e504f9dcd549218fa3598f57",
+  "extraction_counts": {
+    "rated_blitz_games": 648250,
+    "invalid_or_out_of_month_game_timestamps": 542,
+    "pre_cutoff_observations": 866180,
+    "post_cutoff_observations": 429236,
+    "roster": 19982,
+    "roster_observations_before_last_endpoint": 370197,
+    "outside_roster_observations_before_last_endpoint": 46899
+  },
+  "windows": [
+    {
+      "label": "2015-01-22T06:00Z/60s",
+      "seconds": 60,
+      "fixture_sha256": "2c106b00774ccef705d7f5a7b35b0d4cd26578f745c34206a1f6decdb8384144",
+      "edits": 13,
+      "median_edited_displacement": 128,
+      "p95_edited_displacement": 330,
+      "maximum_edited_displacement": 330,
+      "affected_interval_rows": 15315,
+      "minimum_unchanged_writes": 1612
+    },
+    {
+      "label": "2015-01-22T06:00Z/600s",
+      "seconds": 600,
+      "fixture_sha256": "8f2b1168b3311ea7746e491159e6ed6793693ef1e5e7b17f5ca2786308e668ff",
+      "edits": 112,
+      "median_edited_displacement": 164.5,
+      "p95_edited_displacement": 575,
+      "maximum_edited_displacement": 5436,
+      "affected_interval_rows": 19660,
+      "minimum_unchanged_writes": 12185
+    },
+    {
+      "label": "2015-01-22T12:00Z/60s",
+      "seconds": 60,
+      "fixture_sha256": "e29b87035c6357d3a4f6bf1d96ac6c5a12ea15b1b5567cb94e31d38647951a52",
+      "edits": 25,
+      "median_edited_displacement": 184,
+      "p95_edited_displacement": 2721,
+      "maximum_edited_displacement": 2774,
+      "affected_interval_rows": 13168,
+      "minimum_unchanged_writes": 5114
+    },
+    {
+      "label": "2015-01-22T12:00Z/600s",
+      "seconds": 600,
+      "fixture_sha256": "0c4c103a9b9e8a2d6fc3bfb497d06fad1805793ddd5b716b80e6fef5a1a002b1",
+      "edits": 212,
+      "median_edited_displacement": 193.0,
+      "p95_edited_displacement": 924,
+      "maximum_edited_displacement": 4484,
+      "affected_interval_rows": 19728,
+      "minimum_unchanged_writes": 10953
+    },
+    {
+      "label": "2015-01-22T18:00Z/60s",
+      "seconds": 60,
+      "fixture_sha256": "376bb0adf82d809534f652e12f29728ead5bb44d003603a00e33ecd167ea2138",
+      "edits": 38,
+      "median_edited_displacement": 181.5,
+      "p95_edited_displacement": 759,
+      "maximum_edited_displacement": 4111,
+      "affected_interval_rows": 18000,
+      "minimum_unchanged_writes": 8159
+    },
+    {
+      "label": "2015-01-22T18:00Z/600s",
+      "seconds": 600,
+      "fixture_sha256": "6bb94734df0af2ecf3c53cd3ce4723a3f4afef2cc756c895706c8247e3aba16a",
+      "edits": 335,
+      "median_edited_displacement": 187,
+      "p95_edited_displacement": 686,
+      "maximum_edited_displacement": 8058,
+      "affected_interval_rows": 19739,
+      "minimum_unchanged_writes": 13911
+    },
+    {
+      "label": "2015-01-25T06:00Z/60s",
+      "seconds": 60,
+      "fixture_sha256": "8deadad6ad51c1361600e29f451498d02d79a43d1302a2ce000e2defa4913212",
+      "edits": 19,
+      "median_edited_displacement": 217,
+      "p95_edited_displacement": 2686,
+      "maximum_edited_displacement": 2686,
+      "affected_interval_rows": 17605,
+      "minimum_unchanged_writes": 4434
+    },
+    {
+      "label": "2015-01-25T06:00Z/600s",
+      "seconds": 600,
+      "fixture_sha256": "c783491185927e542296d1d9fa213ec137fcfcb3a038ada39574a079118d94f1",
+      "edits": 113,
+      "median_edited_displacement": 163,
+      "p95_edited_displacement": 581,
+      "maximum_edited_displacement": 3670,
+      "affected_interval_rows": 19454,
+      "minimum_unchanged_writes": 9644
+    },
+    {
+      "label": "2015-01-25T12:00Z/60s",
+      "seconds": 60,
+      "fixture_sha256": "03bc7e50b4e540ac27a34f703cfa9840888d8d2a44784730b511538970bdb70f",
+      "edits": 28,
+      "median_edited_displacement": 163.0,
+      "p95_edited_displacement": 979,
+      "maximum_edited_displacement": 1616,
+      "affected_interval_rows": 17918,
+      "minimum_unchanged_writes": 5629
+    },
+    {
+      "label": "2015-01-25T12:00Z/600s",
+      "seconds": 600,
+      "fixture_sha256": "a4ec910a84bd5d2e209ad8ac4f69bc2a95c85738ef0eac88eeafabaa9b731a1c",
+      "edits": 215,
+      "median_edited_displacement": 196,
+      "p95_edited_displacement": 934,
+      "maximum_edited_displacement": 9680,
+      "affected_interval_rows": 19769,
+      "minimum_unchanged_writes": 13892
+    },
+    {
+      "label": "2015-01-25T18:00Z/60s",
+      "seconds": 60,
+      "fixture_sha256": "44419a441aa19e640bcffbc628176fd090ceb7c77fcebf7d7dd2071c64c10714",
+      "edits": 45,
+      "median_edited_displacement": 145,
+      "p95_edited_displacement": 292,
+      "maximum_edited_displacement": 2678,
+      "affected_interval_rows": 18892,
+      "minimum_unchanged_writes": 7149
+    },
+    {
+      "label": "2015-01-25T18:00Z/600s",
+      "seconds": 600,
+      "fixture_sha256": "4d1bea1c57a07b91018cad0e024792a551fa26080959049cb4645119a6aa7d46",
+      "edits": 353,
+      "median_edited_displacement": 177,
+      "p95_edited_displacement": 681,
+      "maximum_edited_displacement": 9489,
+      "affected_interval_rows": 19868,
+      "minimum_unchanged_writes": 15355
+    },
+    {
+      "label": "2015-01-28T06:00Z/60s",
+      "seconds": 60,
+      "fixture_sha256": "d94f3f7d55f94e458d98fb0dedd63a0fd21ff5f80627072ad5cbfa23173cd011",
+      "edits": 10,
+      "median_edited_displacement": 174.5,
+      "p95_edited_displacement": 278,
+      "maximum_edited_displacement": 278,
+      "affected_interval_rows": 12660,
+      "minimum_unchanged_writes": 1686
+    },
+    {
+      "label": "2015-01-28T06:00Z/600s",
+      "seconds": 600,
+      "fixture_sha256": "9abca99a1588a7d852c34388d7f2c0986a2f113880b2a7e6f02679451b364685",
+      "edits": 84,
+      "median_edited_displacement": 164.0,
+      "p95_edited_displacement": 443,
+      "maximum_edited_displacement": 1670,
+      "affected_interval_rows": 18912,
+      "minimum_unchanged_writes": 8095
+    },
+    {
+      "label": "2015-01-28T12:00Z/60s",
+      "seconds": 60,
+      "fixture_sha256": "042786ed274234a07df906c96b3b8315bd4d8ccdbfc20e948d187c14c795db12",
+      "edits": 27,
+      "median_edited_displacement": 198,
+      "p95_edited_displacement": 428,
+      "maximum_edited_displacement": 946,
+      "affected_interval_rows": 19001,
+      "minimum_unchanged_writes": 3641
+    },
+    {
+      "label": "2015-01-28T12:00Z/600s",
+      "seconds": 600,
+      "fixture_sha256": "7779122b6824491567febc945b5d3d17ae19993363d4c4060cdae94d98471a73",
+      "edits": 201,
+      "median_edited_displacement": 163,
+      "p95_edited_displacement": 708,
+      "maximum_edited_displacement": 4192,
+      "affected_interval_rows": 19631,
+      "minimum_unchanged_writes": 13779
+    },
+    {
+      "label": "2015-01-28T18:00Z/60s",
+      "seconds": 60,
+      "fixture_sha256": "02f9ef99212166c1766ea8cd5eab412085017b2b13336caff825118b860317bc",
+      "edits": 52,
+      "median_edited_displacement": 180.5,
+      "p95_edited_displacement": 339,
+      "maximum_edited_displacement": 400,
+      "affected_interval_rows": 18642,
+      "minimum_unchanged_writes": 5937
+    },
+    {
+      "label": "2015-01-28T18:00Z/600s",
+      "seconds": 600,
+      "fixture_sha256": "e1d8fc48671b00b06704b8bf1525ccc9c6df03c224d4c84ea64548a760f6bc29",
+      "edits": 315,
+      "median_edited_displacement": 193,
+      "p95_edited_displacement": 525,
+      "maximum_edited_displacement": 4791,
+      "affected_interval_rows": 19937,
+      "minimum_unchanged_writes": 15190
+    },
+    {
+      "label": "2015-01-31T06:00Z/60s",
+      "seconds": 60,
+      "fixture_sha256": "c6c135dccbfe447e4385bb7cabd796e98d6216686fa05565dcc2cf6032ed9f13",
+      "edits": 12,
+      "median_edited_displacement": 198.5,
+      "p95_edited_displacement": 346,
+      "maximum_edited_displacement": 346,
+      "affected_interval_rows": 15710,
+      "minimum_unchanged_writes": 1925
+    },
+    {
+      "label": "2015-01-31T06:00Z/600s",
+      "seconds": 600,
+      "fixture_sha256": "c056a977c7912cc51128d86ec157f99ca592f1e3dd9762343ac80b7e233c1384",
+      "edits": 86,
+      "median_edited_displacement": 179.0,
+      "p95_edited_displacement": 1095,
+      "maximum_edited_displacement": 6963,
+      "affected_interval_rows": 18585,
+      "minimum_unchanged_writes": 9873
+    },
+    {
+      "label": "2015-01-31T12:00Z/60s",
+      "seconds": 60,
+      "fixture_sha256": "25b4a08f5f048d16889ed1502de584639b1f7e3b89f9aaa2e0091c3142d78e8b",
+      "edits": 21,
+      "median_edited_displacement": 136,
+      "p95_edited_displacement": 332,
+      "maximum_edited_displacement": 400,
+      "affected_interval_rows": 14055,
+      "minimum_unchanged_writes": 3221
+    },
+    {
+      "label": "2015-01-31T12:00Z/600s",
+      "seconds": 600,
+      "fixture_sha256": "67c18e6b5a4ef147ae804bd6a38fdc32ade09b8ae0871de9a75892446a09c4ba",
+      "edits": 207,
+      "median_edited_displacement": 185,
+      "p95_edited_displacement": 528,
+      "maximum_edited_displacement": 2954,
+      "affected_interval_rows": 19162,
+      "minimum_unchanged_writes": 13571
+    },
+    {
+      "label": "2015-01-31T18:00Z/60s",
+      "seconds": 60,
+      "fixture_sha256": "4c00bc3fe9826f2856570ae83f940e1a7c1bc5793e661cf483a88f76713c7a25",
+      "edits": 33,
+      "median_edited_displacement": 186,
+      "p95_edited_displacement": 505,
+      "maximum_edited_displacement": 628,
+      "affected_interval_rows": 18912,
+      "minimum_unchanged_writes": 5119
+    },
+    {
+      "label": "2015-01-31T18:00Z/600s",
+      "seconds": 600,
+      "fixture_sha256": "1d0bd640b0a58ad50637d2e718169dcddbc85c19256401c0ff994c8db51de32d",
+      "edits": 332,
+      "median_edited_displacement": 188.5,
+      "p95_edited_displacement": 740,
+      "maximum_edited_displacement": 9193,
+      "affected_interval_rows": 19886,
+      "minimum_unchanged_writes": 13333
+    }
+  ]
+}

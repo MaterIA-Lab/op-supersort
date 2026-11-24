@@ -8,7 +8,7 @@ The project keeps exploring until a relevant finding appears: at least 1.3× fas
 
 ## Progress
 
-**Best measured result:** applying random key corrections to about 0.1% of the rows in an already sorted array ran 1.81–2.10× as fast as the best measured reference on fresh 128 and 256 MiB inputs. The method computes the layout before overwriting the old keys, then moves each affected unchanged row to its final position. The measurements use synthetic data on one machine. DeltaSort remains faster for the tested local corrections, and algorithmic novelty needs independent review. [Experiment](runs/2026-11-23-key-correction-spans/README.md)
+**Latest result.** Moving unchanged rows directly reached 1.004–1.137× on the 128 MiB synthetic recheck with a cache-buffered reference. It also missed 1.30× in every real flight-duration comparison. The earlier 1.81–2.10× result used the previous reference set. This closes the direct-span line as a research priority. [Follow-up and decision](runs/2026-11-24-key-correction-decision/README.md) · [Original experiment](runs/2026-11-23-key-correction-spans/README.md)
 
 See [PROGRESS.md](PROGRESS.md) for what works and what does not, in plain language. Agents start from [notes/agent-brief.md](notes/agent-brief.md).
 

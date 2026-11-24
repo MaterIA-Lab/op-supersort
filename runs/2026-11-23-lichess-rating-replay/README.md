@@ -96,10 +96,9 @@ references in the three cases where DeltaSort did not lead.
   expected rows. Peak process memory was not measured.
 - Model `gpt-6.2-sol`. External paid compute spend was zero. Model
   token use, reasoning setting and session cost were not captured.
-- The original timing archive and per-window geometry were saved under
-  `lab/2026-11-23/lichess-rating-replay/` before local tool access failed.
-  This entry publishes the recovered aggregate measurements. The
-  reproduction commands generate complete sample files on a supported host.
+- The original samples and metadata were recovered. The published archive
+  reproduces all the recorded summaries. [Timing samples](raw.csv.gz) ·
+  [Per-window geometry](geometry.json) · [Build metadata](metadata.json)
 
 This screen closes the tested small-array replay. The larger synthetic
 cases used random replacement keys and arrays of 128 and 256 MiB.
