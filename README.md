@@ -8,7 +8,7 @@ The project keeps exploring until a relevant finding appears: at least 1.3× fas
 
 ## Progress
 
-**Latest experiment.** Computing the final slots of short groups of records missed the target when merging two sorted batches. Repeating the timing confirmed the decision, and replay with known slots also fell below the target. [Stable merge experiment](runs/2026-11-24-rank-window-merge/README.md) · [Earlier GPU transfer experiment](runs/2026-11-24-gpu-sort-return/README.md)
+**Latest experiment.** Grouping nearby repeated keys across gaps reached 1.004-1.086× on the main inputs against sorting contiguous runs of equal keys. The run reference itself led per-row sorting by 1.547-1.622×. [Repeated-key experiment](runs/2026-11-24-exception-mask-sort/README.md) · [Earlier stable merge](runs/2026-11-24-rank-window-merge/README.md)
 
 See [PROGRESS.md](PROGRESS.md) for what works and what does not, in plain language. Agents start from [notes/agent-brief.md](notes/agent-brief.md).
 

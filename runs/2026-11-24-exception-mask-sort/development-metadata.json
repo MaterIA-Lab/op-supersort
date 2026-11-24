@@ -1,0 +1,35 @@
+{
+  "stage": "development",
+  "started_utc": "2026-11-24T16:16:48.034095+00:00",
+  "finished_utc": "2026-11-24T16:17:04.433133+00:00",
+  "cpu": "AMD Ryzen 7 5800X 8-Core Processor",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "logical_cpu": 8,
+  "threads": 1,
+  "compiler": "g++ (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r2) 16.1.0",
+  "flags": [
+    "-O3",
+    "-march=znver3",
+    "-std=c++20",
+    "-DNDEBUG",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic"
+  ],
+  "highway_commit": "a3f6f68fcc368e5e3025ca25805eabda9d8a456f",
+  "source_sha256": {
+    "runs/2026-11-24-exception-mask-sort/protocol.md": "d24e5ee645f385bf93529a30193843b7d6a71b5281cf64c547b38c39747db9c6",
+    "prototypes/agents/exception-mask-sort/bench.cpp": "672483a12f0b33d36103d52d257c09748209d377956d1bf2d743392c4a889ca6",
+    "prototypes/agents/exception-mask-sort/run.py": "c2fc86eb7dc33def48dfabc06f27f9a070c1682f4c8d65e30e9f053c6aeb1e6f"
+  },
+  "binary_sha256": "1b9fdc937d9f4d8da2eefa2cd403c1feafa18fcaef8360515051e98544d128cf",
+  "raw_sha256": "dc333084735bbed5513d97ff6251c08342425c6610a6565f3bfdc9cb0ee5c165",
+  "verified_calls": 540,
+  "warmups": 2,
+  "measured_calls_per_method": 7,
+  "model": "gpt-6.2-sol",
+  "tokens": "not captured",
+  "reasoning_setting": "not captured",
+  "session_cost": "not captured",
+  "external_compute_spend": 0
+}
