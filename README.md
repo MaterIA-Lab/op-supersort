@@ -8,7 +8,7 @@ The project keeps exploring until a relevant finding appears: at least 1.3× fas
 
 ## Progress
 
-**Latest experiment.** Returning compressed keys from the RTX 3070 cut transfer bytes by about half. Rebuilding the keys on the CPU cost more than the transfer saved, so a direct return was faster on every input. [GPU transfer experiment](runs/2026-11-24-gpu-sort-return/README.md) · [Earlier wide-key experiment](runs/2026-11-24-varying-bit-argsort/README.md)
+**Latest experiment.** Computing the final slots of short groups of records missed the target when merging two sorted batches. Repeating the timing confirmed the decision, and replay with known slots also fell below the target. [Stable merge experiment](runs/2026-11-24-rank-window-merge/README.md) · [Earlier GPU transfer experiment](runs/2026-11-24-gpu-sort-return/README.md)
 
 See [PROGRESS.md](PROGRESS.md) for what works and what does not, in plain language. Agents start from [notes/agent-brief.md](notes/agent-brief.md).
 
