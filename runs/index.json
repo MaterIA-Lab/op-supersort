@@ -650,6 +650,33 @@
       "how_es": "Se guardan los bits más altos que cambian entre registros en una etiqueta corta junto al número de fila. Se ordenan las etiquetas y se consulta la clave completa cuando dos prefijos empatan.",
       "compared_with_es": "Etiquetas que recortan cada campo, etiquetas con un solo prefijo, pares más anchos de clave y número de fila, y una ordenación de índices que compara las claves completas.",
       "faster_where_es": "Con 1,05 y 4,19 millones de claves compuestas simuladas, el prototipo obtuvo entre 0,989× y 1,016× frente a la mejor referencia. Recortar cada campo ya producía las mismas etiquetas en esas pruebas. En el control espacial hubo menos empates y el tiempo total fue parecido."
+    },
+    {
+      "id": "2026-11-24-gpu-sort-return",
+      "path": "runs/2026-11-24-gpu-sort-return/",
+      "title": "Compressing GPU-sorted keys for the trip back to RAM",
+      "date": "2026-11-24 12:24",
+      "verdict": "failed",
+      "summary": "The encoded return sent about half the bytes, and CPU reconstruction more than offset the transfer savings. Copying full keys won all six cases on the RTX 3070.",
+      "model": "GPT-6.2 Sol (Codex, gpt-6.2-sol)",
+      "cost": "not captured",
+      "idea": "11. Return GPU-sorted keys as narrow values and shared prefixes",
+      "result": "0.348-0.579× on four primary comparisons",
+      "baseline": "Fastest verified median of one or four full-width copies and the three compressed controls after the same CUB sort",
+      "closes": [
+        "post-sort 16-bit return with host reconstruction under the measured GPU contract"
+      ],
+      "speedup": [
+        0.348,
+        0.579
+      ],
+      "how": "After the GPU sorts the numbers, send the lower half of each number and a table of where the upper half changes. The CPU uses the table to rebuild each part of the array while the next part is in transit.",
+      "compared_with": "The same GPU sort with a direct copy in one or four parts, compressed keys decoded after transfer, and 16-bit differences from a base key in each group.",
+      "faster_where": "With 64 and 256 MiB of random 32-bit keys, transfer bytes fell about 50%. The full sort took 1.73-2.88 times as long as the best direct copy. Direct copying also won in both tests with keys concentrated in two ranges.",
+      "title_es": "Comprimir en la GPU las claves ordenadas antes de devolverlas a la RAM",
+      "how_es": "Después de ordenar los números en la GPU, se envía la mitad baja de cada número y una tabla que indica dónde cambia la mitad alta. La CPU reconstruye cada tramo mientras se transfiere el siguiente.",
+      "compared_with_es": "La misma ordenación en GPU con una copia directa en uno o cuatro bloques, claves comprimidas que se reconstruyen al final y diferencias de 16 bits respecto a la primera clave de cada grupo.",
+      "faster_where_es": "Con 64 y 256 MiB de claves aleatorias de 32 bits, se transfirió alrededor de un 50% menos de datos. La ordenación completa tardó entre 1,73 y 2,88 veces lo que tardó la mejor copia directa. La copia directa también ganó en las dos pruebas con claves concentradas en dos rangos."
     }
   ]
 }

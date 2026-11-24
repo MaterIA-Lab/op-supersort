@@ -6,6 +6,12 @@ _Last updated: 2026-11-24._
 
 ## Where we are
 
+On the RTX 3070, compressing the sorted output halved the data sent
+back to RAM. Reconstructing the array on the CPU cost more than the
+smaller transfer saved. A diagnostic with free reconstruction estimated
+1.15-1.25× on the four main inputs, below the 1.30× target.
+[GPU transfer experiment](runs/2026-11-24-gpu-sort-return/README.md)
+
 The strongest direct-span result narrowed to 1.004–1.137× on fresh 128 MiB
 synthetic inputs after adding a merge that uses small, cache-sized blocks.
 It also fell below the 1.30× target while updating 525,370 flight records
@@ -30,6 +36,8 @@ The caveats matter:
 
 ## What does not work
 
+- **Returning GPU-sorted keys as 16-bit suffixes and shared prefixes.** On 64 and 256 MiB of uniform 32-bit keys, the full sort took 1.73-2.88 times as long as direct copying with the same CUB sort. The same direct copy led both clustered controls. [GPU transfer timings](runs/2026-11-24-gpu-sort-return/README.md)
+
 - **Selecting every varying bit individually to pack wide sort keys.** With up to 4.19 million modeled composite keys, the prototype reached 0.989–1.016× against trimming each field. The spatial control also came out close to parity. Both methods produce an exact ordered list of source positions. [Wide-key experiment](runs/2026-11-24-varying-bit-argsort/README.md)
 - **Direct span moves as a replacement for cache-buffered merging.** The new reference brings the 128 MiB random-update comparison close to parity. It led the references in all 48 comparisons that used real corrections to flight durations. Direct spans always moved the minimum number of unchanged records. [Decision experiment](runs/2026-11-24-key-correction-decision/README.md)
 - **Direct span moves on frequent Blitz rating refreshes.** Batches of one minute changed a median of 26 out of 19,982 rows, and a typical edited row moved about 181 places. DeltaSort led the references in 45 of 48 comparisons across both batch sizes and cache conditions. [Lichess Blitz replay](runs/2026-11-23-lichess-rating-replay/README.md)
@@ -51,17 +59,18 @@ The caveats matter:
 
 ## What comes next
 
-- Screen a different mechanism from the idea backlog. Keep field-trimmed tags as a reference for wide-key ordered indexes. [Idea backlog](notes/ideas.md) · [Wide-key reference](prototypes/agents/varying-bit-argsort/README.md)
+- Screen a different mechanism from the idea backlog. Keep the raw pinned transfer as the GPU-return reference and field-trimmed tags as the wide-key reference. [Idea backlog](notes/ideas.md) · [GPU reference](prototypes/agents/gpu-sort-return/README.md) · [Wide-key reference](prototypes/agents/varying-bit-argsort/README.md)
 
 ## All experiments
 
 Generated from the run logs by `scripts/build_progress.py`. Newest first.
 
 <!-- RUNS:START -->
-25 runs: 3 promising, 14 failed, 6 diagnostic, 2 setup.
+26 runs: 3 promising, 15 failed, 6 diagnostic, 2 setup.
 
 | Date | Run | Verdict | Result | What we learned |
 |---|---|---|---|---|
+| 2026-11-24 12:24 | [Compressing GPU-sorted keys for the trip back to RAM](runs/2026-11-24-gpu-sort-return/) | ❌ failed | 0.348-0.579× on four primary comparisons | The encoded return sent about half the bytes, and CPU reconstruction more than offset the transfer savings. Copying full keys won all six cases on the RTX 3070. |
 | 2026-11-24 00:48 | [Packing varying bits of wide keys into 64-bit sort tags](runs/2026-11-24-varying-bit-argsort/) | ❌ failed | 0.989–1.016× across four primary comparisons | Packing only varying bits gave nearly identical timings to trimming each field separately. It reached 0.989–1.016× against the fastest reference on four modeled composite-key inputs. |
 | 2026-11-24 00:25 | [Direct span moves against cache-buffered merging](runs/2026-11-24-key-correction-decision/) | ❌ failed | 1.004–1.137× on the 128 MiB synthetic check and 0.848–1.210× on the primary flight comparisons | A cache-buffered merge reduced the 128 MiB synthetic speedup to 1.004–1.137×. The prototype missed 1.30× in all 48 comparisons using real flight durations, so the project moves to another hypothesis. |
 | 2026-11-23 23:27 | [Refreshing Blitz ratings from Lichess games](runs/2026-11-23-lichess-rating-replay/) | ❌ failed | 0.827–0.881× median reference time divided by direct-span time. 0 of 48 comparisons passed. | On 24 batches of real Blitz ratings for 19,982 accounts, direct span moves took 13–21% longer in the typical comparison. DeltaSort was the fastest reference in 45 of 48 comparisons. |

@@ -374,6 +374,40 @@ repair under per-bit selection and 18–30 under field trimming, at
 0.997–1.011×. Close the tested per-bit design. Retain field trimming as
 a reference. [Verified results](../runs/2026-11-24-varying-bit-argsort/README.md)
 
+## 11. Return GPU-sorted keys as narrow values and shared prefixes
+
+_Author: agent:gpt-6.2-sol (Codex), 2026-11-24._
+
+Sort ordinary uint32 keys on a discrete GPU. In the resulting order, the
+upper 16 bits change at most 65,535 times. A GPU thread can record the start
+of each run where the upper bits change, and every thread writes only its key's
+lower 16 bits. Send the run starts first and queue transfers of the narrow
+array in four contiguous tiles. The host expands each tile while the next
+is in flight, using its rank in the run table to recover the shared prefix.
+This targets PCIe return bandwidth on data whose input keys can be fully
+random. The sorted uint32 array still ends in host RAM.
+
+[Elias–Fano](https://vigna.di.unimi.it/algoweb/EliasFano.pdf) already separates
+high and low bits of monotone integers. [Stehle and Jacobsen](https://www.eliasstehle.com/publication/sort/)
+overlap PCIe transfers with GPU sorting. [Lemire and Boytsov](https://doi.org/10.1002/spe.2203)
+use SIMD to expand packed integers, and [nvCOMP](https://docs.nvidia.com/cuda/nvcomp/)
+provides GPU integer codecs. Compression and transfer overlap are established
+techniques. The mechanism being screened uses sorted rank boundaries for an
+independently transferable low-half plane with one fixed-size metadata copy.
+It needs no variable-length packet layout or histogram atomics. The novelty
+of this combination for a host-to-host sort is unverified.
+
+The first test charges CPU expansion and transfer scheduling, races a pinned
+raw copy and a packed frame-of-reference control, and uses the same CUB sort
+in every method. [Registered screen](../runs/2026-11-24-gpu-sort-return/protocol.md)
+
+**Result.** The serial and overlapping encodings lost to raw copying
+at 64 and 256 MiB. The candidate sent about half the bytes and ran
+0.348-0.579× as fast as a direct return on the four primary inputs.
+With free CPU expansion and the measured encode and transfer costs,
+the estimate still missed the gate. Close this return format for the
+tested setup. [Measured decision](../runs/2026-11-24-gpu-sort-return/README.md)
+
 ## Rejected or out of scope
 
 - Dispatching between known sorters by detected distribution (the prior E054 approach). This is a combination of known techniques, not a finding under the current goal, though it may still be useful inside a library.
