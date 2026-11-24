@@ -12,7 +12,11 @@ budget:
   limit: null # No fixed project cap.
 tags: [performance, sorting, cpu, algorithms]
 results:
-  - metric: Speedup applying random key corrections to 0.098% of rows in sorted synthetic arrays of 128 and 256 MiB
-    value: 1.810–2.102x
-    baseline: Fastest measured bulk extract-sort-merge direction on one Ryzen 7 5800X thread
-    link: runs/2026-11-23-key-correction-spans/README.md
+  - metric: Direct-span speed ratio on fresh 128 MiB synthetic arrays with 0.098% random key replacements
+    value: 1.004–1.137x
+    baseline: Fastest cache-buffered merge in each case on one Ryzen 7 5800X thread
+    link: runs/2026-11-24-key-correction-decision/README.md
+  - metric: Direct-span speed ratio reconciling real flight durations in a 64.13 MiB array with lookup by ID and copy reset
+    value: 0.848–1.210x
+    baseline: Fastest cache-buffered merge per window
+    link: runs/2026-11-24-key-correction-decision/README.md

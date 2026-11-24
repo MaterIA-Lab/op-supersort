@@ -1,0 +1,51 @@
+{
+  "started_utc": "2026-11-23T23:27:52.740496+00:00",
+  "finished_utc": "2026-11-23T23:27:57.548450+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "AMD Ryzen 7 5800X 8-Core Processor",
+  "logical_cpu": 8,
+  "threads": 1,
+  "compiler": [
+    "rustc 1.96.0 (ac68faa20 2026-05-25)",
+    "binary: rustc",
+    "commit-hash: ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96",
+    "commit-date: 2026-05-25",
+    "host: x86_64-pc-windows-msvc",
+    "release: 1.96.0",
+    "LLVM version: 22.1.2"
+  ],
+  "flags": [
+    "--edition=2021",
+    "-C",
+    "opt-level=3",
+    "-C",
+    "target-cpu=znver3",
+    "-C",
+    "codegen-units=1"
+  ],
+  "row_bytes": 128,
+  "warmups": 3,
+  "measured_rounds_per_state": 11,
+  "delta_sort": {
+    "commit": "89322c7bfb8d5b28b179650d08249398cbe0a977",
+    "blob_sha1": "fcf9774fd5b3c6723f55aed0de873ee1c2b9c760"
+  },
+  "source_sha256": {
+    "runs/2026-11-23-lichess-rating-replay/protocol.md": "df20b607ee2217db18bcac0eedeb3a9213c98195971c9968231e3d10e31ac130",
+    "prototypes/agents/lichess-rating-replay/prepare.py": "bbef8c06691ce9467dc7f9b29667ce515b6c7918c4b159796e2233c71100017c",
+    "prototypes/agents/lichess-rating-replay/run.py": "819fd3e70d5484f7bc8665c4090c09ce14a6a5874e78df891b2b29cec8861d47",
+    "prototypes/agents/fide-rating-updates/bench.rs": "9612b50dc7426bf2ac647423efe984c1ba5d2b485fed920531e5062c876f5487",
+    "prototypes/agents/key-correction-spans/bench.rs": "025a49835b3c2ec851c5ac335336cd0450ba0ae37b6615f6be8ab3e168f28711",
+    "prototypes/agents/key-correction-spans/sort.rs": "03f1939e05f8e317a50c78022a78c7d6bb2df06ab364287bc557e34d8fc2d246"
+  },
+  "geometry_sha256": "415c87eba0ce236d3e0fd9afece8be47e60893f5b7c9d4d58c5639006edf7153",
+  "binary_sha256": "e5f82c65ce424649aececcbd37c69a1416b1590ddab55c8eacf1bfc9b7a39d2b",
+  "raw_gzip_sha256": "10d017a87d4e55c271b277098e9c7a521e18b4212796634fa4e9d4afe3bdb41b",
+  "verified_calls": 6048,
+  "timing": "complete apply-and-sort call including all temporary allocations and frees",
+  "model": "gpt-6.2-sol",
+  "reasoning_setting": "not captured",
+  "tokens": "not captured",
+  "session_cost": "not captured",
+  "external_compute_spend": 0
+}

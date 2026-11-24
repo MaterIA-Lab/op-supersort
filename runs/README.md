@@ -73,6 +73,9 @@ python -X utf8 runs/2026-11-23-key-correction-spans/analyze.py holdout runs/2026
 python -X utf8 runs/2026-11-23-key-correction-spans/analyze.py reference-audit runs/2026-11-23-key-correction-spans/reference-audit.csv
 python -X utf8 runs/2026-11-23-flight-key-corrections/analyze.py
 python -X utf8 runs/2026-11-23-fide-rating-updates/analyze.py
+python -X utf8 runs/2026-11-23-lichess-rating-replay/analyze.py
+python -X utf8 runs/2026-11-24-key-correction-decision/analyze.py synthetic
+python -X utf8 runs/2026-11-24-key-correction-decision/analyze.py january
 python -X utf8 runs/2026-11-16-linux-producer-placement/analyze.py \
   runs/2026-11-16-linux-producer-placement/runner-1.csv \
   runs/2026-11-16-linux-producer-placement/runner-2.csv

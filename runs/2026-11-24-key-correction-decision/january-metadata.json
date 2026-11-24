@@ -1,0 +1,69 @@
+{
+  "stage": "january",
+  "started_utc": "2026-11-24T00:23:08.013969+00:00",
+  "finished_utc": "2026-11-24T00:25:30.529489+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "AMD Ryzen 7 5800X 8-Core Processor",
+  "logical_cpu": 8,
+  "threads": 1,
+  "compiler": [
+    "rustc 1.96.0 (ac68faa20 2026-05-25)",
+    "binary: rustc",
+    "commit-hash: ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96",
+    "commit-date: 2026-05-25",
+    "host: x86_64-pc-windows-msvc",
+    "release: 1.96.0",
+    "LLVM version: 22.1.2"
+  ],
+  "flags": [
+    "--edition=2021",
+    "-C",
+    "opt-level=3",
+    "-C",
+    "target-cpu=znver3",
+    "-C",
+    "codegen-units=1"
+  ],
+  "timing": "complete sorting call including scratch; flight calls update the key-by-ID state",
+  "row_bytes": 128,
+  "warmups": 2,
+  "repeats": 5,
+  "delta_sort": {
+    "commit": "89322c7bfb8d5b28b179650d08249398cbe0a977",
+    "blob": "fcf9774fd5b3c6723f55aed0de873ee1c2b9c760"
+  },
+  "frozen_sort_blob": "620f2088acb104fe6fb19189339432cedbdf6abf",
+  "source_sha256": {
+    "runs/2026-11-24-key-correction-decision/protocol.md": "3db6726f70d7ef6f584fcc37a53178657d816213e4dfcd645563a9db6720fa35",
+    "prototypes/agents/key-correction-decision/bench.rs": "aacea300f919532bb469fc9043ce9ea17f1b2127948367eaeec8054c6c1a50c1",
+    "prototypes/agents/key-correction-decision/buffered.rs": "593917a35d8456d87135808869e6edb5460851e12f858a48b94d12e1c52074dc",
+    "prototypes/agents/key-correction-decision/run.py": "8d6777ab83b8b50845f5888841e30ce50cf501a82874eba5301290c52635afbf",
+    "prototypes/agents/key-correction-decision/prepare_flights.py": "ddaf9cdfd0ffb1151ec3e9722d715811841d1c85cec40845eb205e77128d93f8",
+    "prototypes/agents/key-correction-spans/sort.rs": "03f1939e05f8e317a50c78022a78c7d6bb2df06ab364287bc557e34d8fc2d246",
+    "prototypes/agents/key-correction-spans/bench.rs": "025a49835b3c2ec851c5ac335336cd0450ba0ae37b6615f6be8ab3e168f28711"
+  },
+  "phase_source_sha256": "6388f538a2cf5c0a079630102b337b1a7680931e0238be09147c3b3f410c6a67",
+  "binary_sha256": "1478498899c32ba4f7ffe1aa0111730eda72e7fa839388fb0f6dae967a66bc97",
+  "raw_gzip_sha256": "f9ce0c20cbca9621567657efb076a66de21fefab5f00f1de84afe21d1ce1dad4",
+  "verified_calls": 4032,
+  "flight_source": {
+    "archive_url": "https://www.transtats.bts.gov/PREZIP/On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2024_1.zip",
+    "archive_sha256": "fe089b45523f9d4ac0ccd0e176a543d274e914ee5ae5bd384dbaafc7dc06ebfd",
+    "archive_bytes": 27573265,
+    "member": "On_Time_Reporting_Carrier_On_Time_Performance_(1987_present)_2024_1.csv",
+    "counts": {
+      "source_rows": 547271,
+      "roster_rows": 525370,
+      "different_durations": 512417,
+      "cancelled_or_diverted": 21901
+    },
+    "observations_sha256": "bc5c4b324ced2fd550201ce9aad931a3e3f1cb83b2c07d2cc52154d7f7404c29",
+    "observation_bytes": 8,
+    "row_bytes_in_benchmark": 128
+  },
+  "model": "gpt-6.2-sol",
+  "tokens": "not captured",
+  "reasoning_setting": "not captured",
+  "session_cost": "not captured",
+  "external_compute_spend": 0
+}
