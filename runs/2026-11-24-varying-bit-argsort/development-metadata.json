@@ -1,0 +1,39 @@
+{
+  "stage": "development",
+  "started_utc": "2026-11-24T00:48:13.983430+00:00",
+  "finished_utc": "2026-11-24T00:48:40.621049+00:00",
+  "cpu": "AMD Ryzen 7 5800X 8-Core Processor",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "logical_cpu": 8,
+  "threads": 1,
+  "compiler": "16.1.0",
+  "flags": [
+    "-O3",
+    "-march=znver3",
+    "-mavx2",
+    "-mbmi2",
+    "-DNDEBUG",
+    "-std=c++20",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic"
+  ],
+  "highway_commit": "a3f6f68fcc368e5e3025ca25805eabda9d8a456f",
+  "pdqsort_blob": "36360cd1d69d0bd6977d9ba2313b10612b889142",
+  "source_sha256": {
+    "runs/2026-11-24-varying-bit-argsort/protocol.md": "e2545ce75511163b58d6316b0387aa0bce4517d6bce99d592b85f4c3f983b148",
+    "prototypes/agents/varying-bit-argsort/argsort.hpp": "d22cbeec52d30b77bc69a596d0e0a08c7679d4673856752d0cd1c2966e4bb70b",
+    "prototypes/agents/varying-bit-argsort/bench.cpp": "ed9f2fb78f5e5c87b219c1ad7ed5bef12771e3d718cf5969197c450dc29df93c",
+    "prototypes/agents/varying-bit-argsort/run.py": "13e59076c757bb8a619c64347a75efac692832fc90e8e559cf15ced3c86d8987"
+  },
+  "binary_sha256": "ad0c01ddcc53526471f743754ff57100a39ca77f91402bc90bb5a0e5a1220f5d",
+  "raw_sha256": "feaff8429a4ebc2cdd0928573bf37608581e024c0f9a6618f56999c04adc5237",
+  "verified_calls": 280,
+  "warmups": 2,
+  "measured_calls_per_method": 5,
+  "model": "gpt-6.2-sol",
+  "tokens": "not captured",
+  "reasoning_setting": "not captured",
+  "session_cost": "not captured",
+  "external_compute_spend": 0
+}

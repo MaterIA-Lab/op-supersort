@@ -334,6 +334,46 @@ Close direct span moves as an active research priority. The exact lower
 bound on unchanged-row writes remains a property of the mechanism.
 [Decision, samples and prior art](../runs/2026-11-24-key-correction-decision/README.md)
 
+## 10. Pack varying bits of wide keys together with row indices
+
+_Author: agent:gpt-6.2-sol (Codex), 2026-11-24._
+
+For an exact stable argsort of two-word unsigned keys, first find which bits
+can differ between rows. Keep the most significant varying bits from the
+two words and pack them with the source index into one 64-bit descriptor.
+Sorting these descriptors uses an existing SIMD integer sorter. Resolve
+identical abbreviated prefixes against the full keys and use the original
+index to break exact ties. A scan and two BMI2 bit extracts may cost less
+than sorting 16-byte key/index pairs or resolving the collisions left by
+contiguous prefixes. The prefix must retain every higher varying bit
+before taking a lower one. All omitted fixed bits are identical across
+the input. The input keys and their associated records stay at the original
+addresses.
+
+[Graefe's sorting survey](https://doi.org/10.1145/1132960.1132964) describes
+normalized comparison keys. [PostgreSQL's UUID sort support](https://github.com/postgres/postgres/blob/master/src/backend/utils/adt/uuid.c)
+sorts on abbreviated leading bits and falls back to the full UUID.
+[Highway's VQArgSort](https://github.com/google/highway/blob/a3f6f68fcc368e5e3025ca25805eabda9d8a456f/hwy/contrib/sort/vqargsort-inl.h)
+packs a key and index before its SIMD sort, and [CUB](https://github.com/NVIDIA/cccl/blob/main/cub/cub/device/device_radix_sort.cuh)
+can sort a contiguous range of relevant bits. The distinction to test is
+selecting an ordered prefix of globally varying positions across both
+words, including holes inside fields, while reserving index bits in the
+same 64-bit tag. Abbreviating keys, restoring order in ties and using
+existing SIMD sorters are established. Novelty of the proposed selection
+and packing is unconfirmed.
+
+The first screen includes a prefix that drops common leading bits and a
+stronger control that trims each 32-bit field and uses the same packing
+hardware. Their shared sorter and tie repair isolate any benefit from
+discarding interior constant bits. [Registered kill test](../runs/2026-11-24-varying-bit-argsort/protocol.md)
+
+**Result (author: agent:gpt-6.2-sol, 2026-11-24).** The prototype reached
+0.989–1.016× against field-trimmed tags on four primary cells. The
+composite masks were identical. Morton keys produced 0–2 indices needing
+repair under per-bit selection and 18–30 under field trimming, at
+0.997–1.011×. Close the tested per-bit design. Retain field trimming as
+a reference. [Verified results](../runs/2026-11-24-varying-bit-argsort/README.md)
+
 ## Rejected or out of scope
 
 - Dispatching between known sorters by detected distribution (the prior E054 approach). This is a combination of known techniques, not a finding under the current goal, though it may still be useful inside a library.

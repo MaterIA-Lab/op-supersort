@@ -1,0 +1,631 @@
+{
+  "verified_calls": 280,
+  "measured_calls": 200,
+  "passed_primary": false,
+  "cells": [
+    {
+      "rows": 1048576,
+      "shape": "composite",
+      "seed": 49331,
+      "fastest_reference": "field_ranges",
+      "speedup": 1.0161175603932227,
+      "passed": false,
+      "paired_wins": 3,
+      "times_ns": {
+        "varying_bits": {
+          "total_ns": 15746800,
+          "prepare_ns": 2951100,
+          "sort_ns": 10321200,
+          "finish_ns": 2642200
+        },
+        "field_ranges": {
+          "total_ns": 16000600,
+          "prepare_ns": 3128600,
+          "sort_ns": 10165000,
+          "finish_ns": 2592600
+        },
+        "leading_prefix": {
+          "total_ns": 52679500,
+          "prepare_ns": 2616800,
+          "sort_ns": 10238000,
+          "finish_ns": 39548900
+        },
+        "high_word_pairs": {
+          "total_ns": 67745100,
+          "prepare_ns": 2930900,
+          "sort_ns": 23489200,
+          "finish_ns": 41484300
+        },
+        "pdqsort_indices": {
+          "total_ns": 94757200,
+          "prepare_ns": 609200,
+          "sort_ns": 94152100,
+          "finish_ns": 0
+        }
+      },
+      "geometry": {
+        "varying_bits": {
+          "variable_bits": 56,
+          "prefix_bits": 44,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 8388608
+        },
+        "field_ranges": {
+          "variable_bits": 56,
+          "prefix_bits": 44,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 8388608
+        },
+        "leading_prefix": {
+          "variable_bits": 56,
+          "prefix_bits": 44,
+          "repaired": 1048576,
+          "largest_repair": 37,
+          "scratch_bytes": 8388608
+        },
+        "high_word_pairs": {
+          "variable_bits": 56,
+          "prefix_bits": 64,
+          "repaired": 1048576,
+          "largest_repair": 37,
+          "scratch_bytes": 16777216
+        },
+        "pdqsort_indices": {
+          "variable_bits": 56,
+          "prefix_bits": 0,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 0
+        }
+      }
+    },
+    {
+      "rows": 1048576,
+      "shape": "composite",
+      "seed": 93817,
+      "fastest_reference": "field_ranges",
+      "speedup": 1.0096062804507175,
+      "passed": false,
+      "paired_wins": 4,
+      "times_ns": {
+        "varying_bits": {
+          "total_ns": 15947900,
+          "prepare_ns": 2974200,
+          "sort_ns": 10180100,
+          "finish_ns": 2628900
+        },
+        "field_ranges": {
+          "total_ns": 16101100,
+          "prepare_ns": 3151700,
+          "sort_ns": 10364700,
+          "finish_ns": 2653900
+        },
+        "leading_prefix": {
+          "total_ns": 52214900,
+          "prepare_ns": 2499100,
+          "sort_ns": 10145500,
+          "finish_ns": 39705400
+        },
+        "high_word_pairs": {
+          "total_ns": 67382400,
+          "prepare_ns": 3039300,
+          "sort_ns": 23323900,
+          "finish_ns": 41474500
+        },
+        "pdqsort_indices": {
+          "total_ns": 92764000,
+          "prepare_ns": 590500,
+          "sort_ns": 92131400,
+          "finish_ns": 0
+        }
+      },
+      "geometry": {
+        "varying_bits": {
+          "variable_bits": 56,
+          "prefix_bits": 44,
+          "repaired": 2,
+          "largest_repair": 2,
+          "scratch_bytes": 8388608
+        },
+        "field_ranges": {
+          "variable_bits": 56,
+          "prefix_bits": 44,
+          "repaired": 2,
+          "largest_repair": 2,
+          "scratch_bytes": 8388608
+        },
+        "leading_prefix": {
+          "variable_bits": 56,
+          "prefix_bits": 44,
+          "repaired": 1048576,
+          "largest_repair": 38,
+          "scratch_bytes": 8388608
+        },
+        "high_word_pairs": {
+          "variable_bits": 56,
+          "prefix_bits": 64,
+          "repaired": 1048576,
+          "largest_repair": 38,
+          "scratch_bytes": 16777216
+        },
+        "pdqsort_indices": {
+          "variable_bits": 56,
+          "prefix_bits": 0,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 0
+        }
+      }
+    },
+    {
+      "rows": 4194304,
+      "shape": "composite",
+      "seed": 49331,
+      "fastest_reference": "field_ranges",
+      "speedup": 1.0148601619576483,
+      "passed": false,
+      "paired_wins": 3,
+      "times_ns": {
+        "varying_bits": {
+          "total_ns": 71203800,
+          "prepare_ns": 14403700,
+          "sort_ns": 45822500,
+          "finish_ns": 10755000
+        },
+        "field_ranges": {
+          "total_ns": 72261900,
+          "prepare_ns": 13633300,
+          "sort_ns": 45840300,
+          "finish_ns": 11107500
+        },
+        "leading_prefix": {
+          "total_ns": 190370600,
+          "prepare_ns": 11956200,
+          "sort_ns": 45073100,
+          "finish_ns": 133411700
+        },
+        "high_word_pairs": {
+          "total_ns": 221780900,
+          "prepare_ns": 12782900,
+          "sort_ns": 69931300,
+          "finish_ns": 139495600
+        },
+        "pdqsort_indices": {
+          "total_ns": 504243000,
+          "prepare_ns": 2220700,
+          "sort_ns": 502045000,
+          "finish_ns": 0
+        }
+      },
+      "geometry": {
+        "varying_bits": {
+          "variable_bits": 56,
+          "prefix_bits": 42,
+          "repaired": 50,
+          "largest_repair": 2,
+          "scratch_bytes": 33554432
+        },
+        "field_ranges": {
+          "variable_bits": 56,
+          "prefix_bits": 42,
+          "repaired": 50,
+          "largest_repair": 2,
+          "scratch_bytes": 33554432
+        },
+        "leading_prefix": {
+          "variable_bits": 56,
+          "prefix_bits": 42,
+          "repaired": 4194304,
+          "largest_repair": 100,
+          "scratch_bytes": 33554432
+        },
+        "high_word_pairs": {
+          "variable_bits": 56,
+          "prefix_bits": 64,
+          "repaired": 4194304,
+          "largest_repair": 100,
+          "scratch_bytes": 67108864
+        },
+        "pdqsort_indices": {
+          "variable_bits": 56,
+          "prefix_bits": 0,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 0
+        }
+      }
+    },
+    {
+      "rows": 4194304,
+      "shape": "composite",
+      "seed": 93817,
+      "fastest_reference": "field_ranges",
+      "speedup": 0.9887874586815919,
+      "passed": false,
+      "paired_wins": 2,
+      "times_ns": {
+        "varying_bits": {
+          "total_ns": 69823600,
+          "prepare_ns": 13623000,
+          "sort_ns": 46287000,
+          "finish_ns": 10586300
+        },
+        "field_ranges": {
+          "total_ns": 69040700,
+          "prepare_ns": 13065300,
+          "sort_ns": 45510100,
+          "finish_ns": 10827800
+        },
+        "leading_prefix": {
+          "total_ns": 193504000,
+          "prepare_ns": 12503700,
+          "sort_ns": 46702200,
+          "finish_ns": 133967100
+        },
+        "high_word_pairs": {
+          "total_ns": 221345900,
+          "prepare_ns": 13234500,
+          "sort_ns": 69989200,
+          "finish_ns": 139206100
+        },
+        "pdqsort_indices": {
+          "total_ns": 497823200,
+          "prepare_ns": 2334100,
+          "sort_ns": 495387700,
+          "finish_ns": 0
+        }
+      },
+      "geometry": {
+        "varying_bits": {
+          "variable_bits": 56,
+          "prefix_bits": 42,
+          "repaired": 40,
+          "largest_repair": 2,
+          "scratch_bytes": 33554432
+        },
+        "field_ranges": {
+          "variable_bits": 56,
+          "prefix_bits": 42,
+          "repaired": 40,
+          "largest_repair": 2,
+          "scratch_bytes": 33554432
+        },
+        "leading_prefix": {
+          "variable_bits": 56,
+          "prefix_bits": 42,
+          "repaired": 4194304,
+          "largest_repair": 102,
+          "scratch_bytes": 33554432
+        },
+        "high_word_pairs": {
+          "variable_bits": 56,
+          "prefix_bits": 64,
+          "repaired": 4194304,
+          "largest_repair": 102,
+          "scratch_bytes": 67108864
+        },
+        "pdqsort_indices": {
+          "variable_bits": 56,
+          "prefix_bits": 0,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 0
+        }
+      }
+    },
+    {
+      "rows": 1048576,
+      "shape": "morton",
+      "seed": 49331,
+      "fastest_reference": "field_ranges",
+      "speedup": 1.0109538113217256,
+      "passed": false,
+      "paired_wins": 3,
+      "times_ns": {
+        "varying_bits": {
+          "total_ns": 15547100,
+          "prepare_ns": 2933700,
+          "sort_ns": 10017000,
+          "finish_ns": 2601200
+        },
+        "field_ranges": {
+          "total_ns": 15717400,
+          "prepare_ns": 2943400,
+          "sort_ns": 9969100,
+          "finish_ns": 2620000
+        },
+        "leading_prefix": {
+          "total_ns": 43117100,
+          "prepare_ns": 2721600,
+          "sort_ns": 10173200,
+          "finish_ns": 30056400
+        },
+        "high_word_pairs": {
+          "total_ns": 48171400,
+          "prepare_ns": 2832200,
+          "sort_ns": 13912300,
+          "finish_ns": 31466000
+        },
+        "pdqsort_indices": {
+          "total_ns": 93602800,
+          "prepare_ns": 587900,
+          "sort_ns": 92957300,
+          "finish_ns": 0
+        }
+      },
+      "geometry": {
+        "varying_bits": {
+          "variable_bits": 54,
+          "prefix_bits": 44,
+          "repaired": 2,
+          "largest_repair": 2,
+          "scratch_bytes": 8388608
+        },
+        "field_ranges": {
+          "variable_bits": 54,
+          "prefix_bits": 44,
+          "repaired": 30,
+          "largest_repair": 2,
+          "scratch_bytes": 8388608
+        },
+        "leading_prefix": {
+          "variable_bits": 54,
+          "prefix_bits": 44,
+          "repaired": 1048576,
+          "largest_repair": 98,
+          "scratch_bytes": 8388608
+        },
+        "high_word_pairs": {
+          "variable_bits": 54,
+          "prefix_bits": 64,
+          "repaired": 1048576,
+          "largest_repair": 98,
+          "scratch_bytes": 16777216
+        },
+        "pdqsort_indices": {
+          "variable_bits": 54,
+          "prefix_bits": 0,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 0
+        }
+      }
+    },
+    {
+      "rows": 1048576,
+      "shape": "morton",
+      "seed": 93817,
+      "fastest_reference": "field_ranges",
+      "speedup": 0.9972629469810567,
+      "passed": false,
+      "paired_wins": 2,
+      "times_ns": {
+        "varying_bits": {
+          "total_ns": 15271900,
+          "prepare_ns": 2637500,
+          "sort_ns": 10017400,
+          "finish_ns": 2575300
+        },
+        "field_ranges": {
+          "total_ns": 15230100,
+          "prepare_ns": 2695800,
+          "sort_ns": 10000900,
+          "finish_ns": 2584500
+        },
+        "leading_prefix": {
+          "total_ns": 42457300,
+          "prepare_ns": 2676400,
+          "sort_ns": 10036300,
+          "finish_ns": 29764900
+        },
+        "high_word_pairs": {
+          "total_ns": 48931500,
+          "prepare_ns": 3028200,
+          "sort_ns": 14047800,
+          "finish_ns": 31470500
+        },
+        "pdqsort_indices": {
+          "total_ns": 92948300,
+          "prepare_ns": 609300,
+          "sort_ns": 92306700,
+          "finish_ns": 0
+        }
+      },
+      "geometry": {
+        "varying_bits": {
+          "variable_bits": 54,
+          "prefix_bits": 44,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 8388608
+        },
+        "field_ranges": {
+          "variable_bits": 54,
+          "prefix_bits": 44,
+          "repaired": 18,
+          "largest_repair": 2,
+          "scratch_bytes": 8388608
+        },
+        "leading_prefix": {
+          "variable_bits": 54,
+          "prefix_bits": 44,
+          "repaired": 1048576,
+          "largest_repair": 93,
+          "scratch_bytes": 8388608
+        },
+        "high_word_pairs": {
+          "variable_bits": 54,
+          "prefix_bits": 64,
+          "repaired": 1048576,
+          "largest_repair": 93,
+          "scratch_bytes": 16777216
+        },
+        "pdqsort_indices": {
+          "variable_bits": 54,
+          "prefix_bits": 0,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 0
+        }
+      }
+    },
+    {
+      "rows": 1048576,
+      "shape": "uniform",
+      "seed": 49331,
+      "fastest_reference": "field_ranges",
+      "speedup": 0.9861075152027987,
+      "passed": false,
+      "paired_wins": 3,
+      "times_ns": {
+        "varying_bits": {
+          "total_ns": 15835900,
+          "prepare_ns": 3010800,
+          "sort_ns": 10168500,
+          "finish_ns": 2617700
+        },
+        "field_ranges": {
+          "total_ns": 15615900,
+          "prepare_ns": 2933400,
+          "sort_ns": 10188100,
+          "finish_ns": 2583000
+        },
+        "leading_prefix": {
+          "total_ns": 15619900,
+          "prepare_ns": 2318600,
+          "sort_ns": 10082700,
+          "finish_ns": 2552300
+        },
+        "high_word_pairs": {
+          "total_ns": 27535700,
+          "prepare_ns": 3113200,
+          "sort_ns": 22350600,
+          "finish_ns": 2097700
+        },
+        "pdqsort_indices": {
+          "total_ns": 81792800,
+          "prepare_ns": 588600,
+          "sort_ns": 81216300,
+          "finish_ns": 0
+        }
+      },
+      "geometry": {
+        "varying_bits": {
+          "variable_bits": 128,
+          "prefix_bits": 44,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 8388608
+        },
+        "field_ranges": {
+          "variable_bits": 128,
+          "prefix_bits": 44,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 8388608
+        },
+        "leading_prefix": {
+          "variable_bits": 128,
+          "prefix_bits": 44,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 8388608
+        },
+        "high_word_pairs": {
+          "variable_bits": 128,
+          "prefix_bits": 64,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 16777216
+        },
+        "pdqsort_indices": {
+          "variable_bits": 128,
+          "prefix_bits": 0,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 0
+        }
+      }
+    },
+    {
+      "rows": 1048576,
+      "shape": "uniform",
+      "seed": 93817,
+      "fastest_reference": "field_ranges",
+      "speedup": 0.9821716155007549,
+      "passed": false,
+      "paired_wins": 1,
+      "times_ns": {
+        "varying_bits": {
+          "total_ns": 15896000,
+          "prepare_ns": 3189700,
+          "sort_ns": 10127300,
+          "finish_ns": 2570500
+        },
+        "field_ranges": {
+          "total_ns": 15612600,
+          "prepare_ns": 2913500,
+          "sort_ns": 10099500,
+          "finish_ns": 2543100
+        },
+        "leading_prefix": {
+          "total_ns": 15709400,
+          "prepare_ns": 2968600,
+          "sort_ns": 10085800,
+          "finish_ns": 2651700
+        },
+        "high_word_pairs": {
+          "total_ns": 27195200,
+          "prepare_ns": 2752500,
+          "sort_ns": 22428000,
+          "finish_ns": 2115800
+        },
+        "pdqsort_indices": {
+          "total_ns": 80459900,
+          "prepare_ns": 557600,
+          "sort_ns": 79940700,
+          "finish_ns": 0
+        }
+      },
+      "geometry": {
+        "varying_bits": {
+          "variable_bits": 128,
+          "prefix_bits": 44,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 8388608
+        },
+        "field_ranges": {
+          "variable_bits": 128,
+          "prefix_bits": 44,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 8388608
+        },
+        "leading_prefix": {
+          "variable_bits": 128,
+          "prefix_bits": 44,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 8388608
+        },
+        "high_word_pairs": {
+          "variable_bits": 128,
+          "prefix_bits": 64,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 16777216
+        },
+        "pdqsort_indices": {
+          "variable_bits": 128,
+          "prefix_bits": 0,
+          "repaired": 0,
+          "largest_repair": 0,
+          "scratch_bytes": 0
+        }
+      }
+    }
+  ]
+}

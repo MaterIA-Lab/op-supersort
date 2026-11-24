@@ -620,6 +620,36 @@
       "how_es": "El prototipo calcula el orden corregido y mueve cada tramo afectado a su posición final. La nueva referencia carga un bloque pequeño en caché y fusiona las correcciones mientras lo vuelca a la posición de salida.",
       "compared_with_es": "Dos tamaños de la nueva fusión por bloques, las cuatro fusiones anteriores, DeltaSort y las dos ordenaciones completas de Rust. En vuelos se añade un método que cuenta registros por duración. Todos los métodos incluyen sus reservas temporales de memoria.",
       "faster_where_es": "En cuatro comparaciones nuevas de 128 MiB con cambios aleatorios, el prototipo obtuvo entre 1,004× y 1,137×. En 64 MiB de datos de vuelos, con búsqueda por ID, obtuvo entre 0,848× y 1,210× en la condición principal. Ninguna comparación de vuelos alcanzó 1,30×."
+    },
+    {
+      "id": "2026-11-24-varying-bit-argsort",
+      "path": "runs/2026-11-24-varying-bit-argsort/",
+      "title": "Packing varying bits of wide keys into 64-bit sort tags",
+      "date": "2026-11-24 00:48",
+      "verdict": "failed",
+      "summary": "Packing only varying bits gave nearly identical timings to trimming each field separately. It reached 0.989–1.016× against the fastest reference on four modeled composite-key inputs.",
+      "model": "GPT-6.2 Sol (Codex, gpt-6.2-sol)",
+      "cost": "not captured",
+      "idea": "10. Pack varying bits of wide keys together with row indices",
+      "result": "0.989–1.016× across four primary comparisons",
+      "baseline": "Fastest verified median of field ranges, leading prefix, high-word key/value pairs and indirect pdqsort",
+      "closes": [
+        "per-bit compaction on the tested wide-key argsort inputs"
+      ],
+      "opens": [
+        "use field-trimmed tags as a wide-key argsort reference"
+      ],
+      "speedup": [
+        0.989,
+        1.016
+      ],
+      "how": "Keep the highest bits that differ between rows in a short tag together with the original row number. Sort the tags and consult the full keys only where abbreviated prefixes tie.",
+      "compared_with": "Tags that trim each field, tags that keep one leading prefix, wider key-and-row-number pairs, and sorting row numbers by comparing the complete keys.",
+      "faster_where": "With 1.05 and 4.19 million modeled composite keys, the prototype reached 0.989–1.016× against the fastest reference. Trimming fields already gave the same abbreviated keys in those cases. The spatial control had fewer ties with per-bit packing and similar total time.",
+      "title_es": "Empaquetar los bits variables de claves anchas en etiquetas de 64 bits",
+      "how_es": "Se guardan los bits más altos que cambian entre registros en una etiqueta corta junto al número de fila. Se ordenan las etiquetas y se consulta la clave completa cuando dos prefijos empatan.",
+      "compared_with_es": "Etiquetas que recortan cada campo, etiquetas con un solo prefijo, pares más anchos de clave y número de fila, y una ordenación de índices que compara las claves completas.",
+      "faster_where_es": "Con 1,05 y 4,19 millones de claves compuestas simuladas, el prototipo obtuvo entre 0,989× y 1,016× frente a la mejor referencia. Recortar cada campo ya producía las mismas etiquetas en esas pruebas. En el control espacial hubo menos empates y el tiempo total fue parecido."
     }
   ]
 }
