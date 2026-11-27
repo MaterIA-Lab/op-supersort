@@ -8,7 +8,7 @@ The project keeps exploring until a relevant finding appears: at least 1.3× fas
 
 ## Progress
 
-**Latest experiment.** Grouping nearby repeated keys across gaps reached 1.004-1.086× on the main inputs against sorting contiguous runs of equal keys. The run reference itself led per-row sorting by 1.547-1.622×. [Repeated-key experiment](runs/2026-11-24-exception-mask-sort/README.md) · [Earlier stable merge](runs/2026-11-24-rank-window-merge/README.md)
+**Latest experiment.** Caching packed rank groups across sliding windows reached 0.647–0.950× against the fastest reference. Packing again from a shared sorted input led at width 32. Updating a sorted array led at width 64. [Rolling argsort experiment](runs/2026-11-27-rolling-rank-chunks/README.md) · [Earlier repeated-key experiment](runs/2026-11-24-exception-mask-sort/README.md)
 
 See [PROGRESS.md](PROGRESS.md) for what works and what does not, in plain language. Agents start from [notes/agent-brief.md](notes/agent-brief.md).
 

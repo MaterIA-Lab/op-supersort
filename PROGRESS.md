@@ -2,9 +2,14 @@
 
 A living summary of what has been tried and what was learned, written for people. The detailed, agent-oriented state is in [notes/agent-brief.md](notes/agent-brief.md). The final summary will go in [SUMMARY.md](SUMMARY.md) when the project closes.
 
-_Last updated: 2026-11-24._
+_Last updated: 2026-11-27._
 
 ## Where we are
+
+Reusing groups of sorted indices between overlapping windows missed
+the 1.30× target. The best variant ran at 0.647–0.950× the speed of
+the fastest reference in two passes on the same synthetic inputs.
+[Rolling argsort experiment](runs/2026-11-27-rolling-rank-chunks/README.md)
 
 Using one tag for nearby equal keys despite intervening exceptions
 missed 1.30×. With 32 and 128 MiB of repeated-key records, sorting
@@ -36,6 +41,13 @@ times as trimming each field individually.
 
 ## What works so far
 
+**Sorting the shared input of short windows once.** For windows of 32
+keys, the reference that packed the active indices again for every
+window ran 1.395–1.589× as fast as the best incremental update on
+uniform keys. With windows of 64, incremental updating won. Both
+passes used synthetic inputs and the same seeds.
+[Reference timings](runs/2026-11-27-rolling-rank-chunks/README.md#what-the-references-showed)
+
 **Sorting groups of consecutive equal keys.** This existing technique
 ran 1.547-1.622× as fast as sorting one tag per row in four synthetic
 cases. The inputs had 32 or 128 MiB of 64-byte records, keys arriving
@@ -54,6 +66,8 @@ The caveats matter:
 **Assembling disjoint archive batches.** With real batch sizes and synthetic record payloads, remapping was at least 1.5× faster than copying into a new output in seven of eight cases. With an already-resident buffer, remapping cleared 1.5× in the two cases where nearly every page lined up. This measures assembly of two already-ordered ranges. [Measured results](runs/2026-11-12-gharchive-disjoint-merge/summary.md)
 
 ## What does not work
+
+- **Keeping packed groups between overlapping windows.** The caches saved some packing work. The complete sorts still took longer than packing every window again from the same shared order. [Rolling argsort timings](runs/2026-11-27-rolling-rank-chunks/README.md)
 
 - **Selecting one repeated key per block of 64 rows.** With an average of one replacement in eight, the mask left 9-10% more tags to sort than exact contiguous runs. Its best control gain was 1.138× on 32 MiB with one replacement in four. Copying the output still took about 60% of the main-case time. [Timings and tag count audit](runs/2026-11-24-exception-mask-sort/README.md)
 
@@ -82,6 +96,7 @@ The caveats matter:
 
 ## What comes next
 
+- Keep shared-order packing and incremental updates as controls for new short-window sorts. Use fresh series before drawing conclusions about the advantage at width 32. [Rolling argsort references](runs/2026-11-27-rolling-rank-chunks/README.md#what-the-references-showed)
 - Screen mechanisms that save record movement. Use exact equal-key runs as the reference for repeated-key sorts, and branchless and SIMD streaming stores for cold two-way merges. [Idea backlog](notes/ideas.md) · [Repeated-key reference](prototypes/agents/exception-mask-sort/README.md) · [Merge reference](prototypes/agents/rank-window-merge/README.md)
 
 ## All experiments
@@ -89,10 +104,11 @@ The caveats matter:
 Generated from the run logs by `scripts/build_progress.py`. Newest first.
 
 <!-- RUNS:START -->
-28 runs: 3 promising, 17 failed, 6 diagnostic, 2 setup.
+29 runs: 3 promising, 18 failed, 6 diagnostic, 2 setup.
 
 | Date | Run | Verdict | Result | What we learned |
 |---|---|---|---|---|
+| 2026-11-27 13:55 | [Reusing packed rank groups across sliding windows](runs/2026-11-27-rolling-rank-chunks/) | ❌ failed | 0.647–0.950× on primary inputs across two passes | Keeping already packed indices between adjacent windows was slower than packing them again, even though only one or two groups changed. The fastest cached variant ran at 0.647–0.950× the speed of the best reference on the main inputs. |
 | 2026-11-24 16:16 | [Sorting repeated keys together across exception gaps](runs/2026-11-24-exception-mask-sort/) | ❌ failed | 1.004-1.086× on four primary comparisons | A mask grouped nearby equal keys despite interruptions, but the fixed blocks produced more tags than exact runs on the four main inputs. The full sort reached 1.004-1.086× against the run-based reference. |
 | 2026-11-24 15:58 | [Placing records directly at their merge ranks](runs/2026-11-24-rank-window-merge/) | ❌ failed | 0.738-1.037× across the original and repeated primary comparisons | Comparing keys in short groups and placing records at their final ranks missed the 1.30× target in both timing runs. Replaying the same copies with the positions already known reached at most 1.280×. |
 | 2026-11-24 12:24 | [Compressing GPU-sorted keys for the trip back to RAM](runs/2026-11-24-gpu-sort-return/) | ❌ failed | 0.348-0.579× on four primary comparisons | The encoded return sent about half the bytes, and CPU reconstruction more than offset the transfer savings. Copying full keys won all six cases on the RTX 3070. |
