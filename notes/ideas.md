@@ -474,6 +474,40 @@ The output phase dominated the primary timings. Close the
 single-key fixed-block implementation.
 [Measured decision](../runs/2026-11-24-exception-mask-sort/README.md)
 
+## 14. Reuse packed rank groups across sliding windows
+
+_Author: agent:gpt-6.2-sol._
+
+For offline rolling argsort, sort the union of 32 neighboring windows
+once by key and original position. Split that order into groups of
+eight positions and keep a packed vector of the active indices in
+each group. When one index expires and another arrives, update their
+membership bits and rebuild just the affected groups. Every window can
+then be written with short contiguous vector stores. The potential
+savings come from avoiding a fresh key search and array shift per
+window, and from keeping the packed groups that survive each step.
+
+Suomela's sorting-based median filter already sorts input blocks and
+updates sorted lists as its window slides. Van der Horst's full window sorters
+reuse sorted subranges with merge. Highway already implements AVX2 lane
+packing from a mask. The mechanism under test is keeping those packed
+vectors live in fixed union-rank groups across windows and refreshing
+only the groups with membership changes. This is a working novelty
+hypothesis for fully materialized rolling argsort.
+[Suomela](https://arxiv.org/abs/1406.1717) · [Van der Horst, Chapter 6](https://pure.tue.nl/ws/files/2187891/200811194.pdf) · [Highway](https://github.com/google/highway)
+
+The [registered kill test](../runs/2026-11-27-rolling-rank-chunks/protocol.md)
+compares against incremental sorted arrays, an independent sort per
+window and two ways to emit active members from the same sorted union.
+
+**Result.** Both cached variants missed the 77% time limit on both
+passes. The fastest cached variant reached 0.647–0.950× on the
+uniform cases. Stateless packing led at width 32. An incremental
+sorted array with streaming output led at width 64. With the same
+cached output policy, retaining groups took 1.024–1.406× as long as
+packing all the groups again across the measured inputs.
+[Results and raw data](../runs/2026-11-27-rolling-rank-chunks/README.md)
+
 ## Rejected or out of scope
 
 - Dispatching between known sorters by detected distribution (the prior E054 approach). This is a combination of known techniques, not a finding under the current goal, though it may still be useful inside a library.

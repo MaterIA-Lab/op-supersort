@@ -1,0 +1,40 @@
+{
+  "stage": "development",
+  "started_utc": "2026-11-27T13:55:06.778651+00:00",
+  "finished_utc": "2026-11-27T13:55:14.265454+00:00",
+  "cpu": "AMD Ryzen 7 5800X 8-Core Processor",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "logical_cpu": 8,
+  "threads": 1,
+  "compiler": "g++ (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r2) 16.1.0",
+  "flags": [
+    "-O3",
+    "-march=znver3",
+    "-std=c++20",
+    "-DNDEBUG",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic"
+  ],
+  "highway_commit": "a3f6f68fcc368e5e3025ca25805eabda9d8a456f",
+  "widths": [
+    32,
+    64
+  ],
+  "windows": 131072,
+  "source_sha256": {
+    "runs/2026-11-27-rolling-rank-chunks/protocol.md": "00f917394074fb995de6837c4c83115b0c68e495240402c94c436d0953ebdcbf",
+    "prototypes/agents/rolling-rank-chunks/bench.cpp": "98c96ed7b19cfe264a0cbde811b21b6fdd80f1b262b5d60a9a0d83afd5769685",
+    "prototypes/agents/rolling-rank-chunks/run.py": "b110f7b335e7cf8aa8fe59252fea721ac66a6825c7c10f78d93ca8d3a51d3be9"
+  },
+  "binary_sha256": "287056106ed94e1a1382b637787e6a2123564536e119aee83b2b1638c4fe07f0",
+  "raw_sha256": "d18386bd2fe8c8c22d1f79e949dc33b1a40f5e752e2107a505b2b14d7a3ccfb3",
+  "verified_calls": 648,
+  "warmups": 2,
+  "measured_calls_per_method": 7,
+  "model": "gpt-6.2-sol",
+  "tokens": "not captured",
+  "reasoning_setting": "not captured",
+  "session_cost": "not captured",
+  "external_compute_spend": 0
+}

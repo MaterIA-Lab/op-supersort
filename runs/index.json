@@ -731,6 +731,33 @@
       "how_es": "En cada bloque de hasta 64 filas, se asigna una sola ficha a las repeticiones de una clave y se guarda a qué posiciones corresponde. Las filas con claves distintas conservan sus propias fichas. Después se escriben los registros completos en orden.",
       "compared_with_es": "Ordenar una ficha por fila y ordenar una ficha por tramo consecutivo de claves iguales. Cada método usa las mismas dos técnicas de ordenación y copia los registros completos al resultado final.",
       "faster_where_es": "Con 32 y 128 MiB de registros y una clave reemplazada al azar de cada ocho de media, la máscara rindió entre 1,004× y 1,086× frente a la mejor referencia. En el control de 32 MiB con una de cada cuatro claves reemplazadas, alcanzó entre 1,132× y 1,138×."
+    },
+    {
+      "id": "2026-11-27-rolling-rank-chunks",
+      "path": "runs/2026-11-27-rolling-rank-chunks/",
+      "title": "Reusing packed rank groups across sliding windows",
+      "date": "2026-11-27 13:55",
+      "verdict": "failed",
+      "summary": "Keeping already packed indices between adjacent windows was slower than packing them again, even though only one or two groups changed. The fastest cached variant ran at 0.647–0.950× the speed of the best reference on the main inputs.",
+      "model": "GPT-6.2 Sol (Codex, gpt-6.2-sol)",
+      "cost": "not captured",
+      "idea": "14. Reuse packed rank groups across sliding windows",
+      "result": "0.647–0.950× on primary inputs across two passes",
+      "baseline": "Fastest verified median across independent sorts, incremental sorted arrays and stateless extraction from a shared sorted union",
+      "closes": [
+        "cached packed rank groups for 32- and 64-element sliding windows"
+      ],
+      "speedup": [
+        0.647,
+        0.95
+      ],
+      "how": "Sort the combined inputs of several adjacent windows once. Keep the active indices in packed groups of eight ranks, and rebuild only the groups affected by the departing and arriving indices.",
+      "compared_with": "Sorting each window by itself, editing the previous window's sorted order, and sorting a shared union once and packing the active indices again for each window.",
+      "faster_where": "Both cached variants lost on 131,072 synthetic windows of 32 or 64 keys. Packing again from the shared order was the fastest reference at width 32. Updating a small sorted array with streaming output stores was fastest at width 64.",
+      "title_es": "Reutilizar grupos de índices ordenados entre ventanas deslizantes",
+      "how_es": "Ordenar de una vez los datos compartidos por varias ventanas consecutivas. Guardar en grupos compactos los índices de cada ventana y actualizar solo los grupos donde entra o sale un índice.",
+      "compared_with_es": "Ordenar cada ventana por separado, actualizar el orden anterior, y ordenar los datos compartidos y volver a compactar los índices en cada ventana.",
+      "faster_where_es": "Las dos variantes quedaron por detrás en 131.072 ventanas sintéticas de 32 o 64 claves. Con 32 claves ganó volver a compactar las posiciones. Con 64 ganó actualizar una lista pequeña y escribir la salida directamente."
     }
   ]
 }
